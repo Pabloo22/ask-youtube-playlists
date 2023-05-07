@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "qa-system"
+version = "0.1.0"
+description = "A Question-Answering application for the Huberman Lab Podcast."
+authors = ["Pabloo22 <pablete.arino@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "src.qa_system"}]
+
+[tool.poetry.dependencies]
+python = "^3.8.1"
+torch = "^2.0.0"
+transformers = "^4.28.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.1"
+mypy = "^1.2.0"
+flake8 = "^6.0.0"
+tox = "^4.5.1"
+pytest-cov = "^4.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.flake8]
+max-line-length = 79
+max-complexity = 18
+select = ["B","C","E","F","W","T4","B9"]
