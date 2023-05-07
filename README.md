@@ -46,13 +46,13 @@ both approaches. The CLI application will prompt users to input their questions 
 interface.
 
 ## :books: Resources
-Resources that we found useful for this project.
+Resources and tutorials that we found useful for this project.
 
-### PyTorch
+### :fire: PyTorch
 - **How to learn PyTorch?**: [YouTube, How to learn PyTorch? (3 easy steps) | 2021](https://www.youtube.com/watch?v=2n_uoGOPoVk)
 - **Official tutorial**: https://pytorch.org/tutorials/
 - **Blog**: [Understanding PyTorch with an example: a step-by-step tutorial](https://towardsdatascience.com/understanding-pytorch-with-an-example-a-step-by-step-tutorial-81fc5f8c4e8e)
 
-### Set Up the Project :hammer_and_wrench:
+### :gear: Set Up
 - **Poetry**: [YouTube, How to Create and Use Virtual Environments in Python With Poetry](https://youtu.be/0f3moPe_bhk)
 - **Automated testing**: [YouTube, Automated Testing in Python with pytest, tox, and GitHub Actions](https://youtu.be/DhUpxWjOhME)
