@@ -12,7 +12,6 @@ Work in progress
 7. Download the podcast transcripts and timestamps from 
 [Kaggle](https://www.kaggle.com/datasets/piyusharma/andrew-huberman-podcast-transcripts-95-episodes) and place them 
 in the `data/raw` folder.
-8. Run `make process_data` to process the raw data and save it in the `data/processed` folder.
 
 ## Objective
 The idea consists of creating an application that answers questions about 
@@ -42,11 +41,11 @@ purpose.
 summarizing the relevant information. Models like GPT can be employed for this task.
 
 Our application will offer users the option to choose between the two question-answering modes, so we will implement 
-both approaches. The CLI application will prompt users to input their questions and display results within the 
+both approaches. The web application will prompt users to input their questions and display results within the 
 interface.
 
 ## :books: Resources
-Resources and tutorials that we found useful for this project.
+Resources and tutorials that we have found useful for this project.
 
 ### :fire: PyTorch
 - **How to learn PyTorch?**: [YouTube, How to learn PyTorch? (3 easy steps) | 2021](https://www.youtube.com/watch?v=2n_uoGOPoVk)
