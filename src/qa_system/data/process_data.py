@@ -12,13 +12,10 @@ and I'm a professor
 ...
 
 This script filters out the timestamps. The expected output is:
-ANDREW HUBERMAN: Welcome to
-the Huberman Lab podcast,
-where we discuss science
-and science-based tools
-for everyday life.
-I'm Andrew Huberman,
-and I'm a professor
+0.0,ANDREW HUBERMAN: Welcome to the Huberman Lab podcast,
+2.22,where we discuss science and science-based tools
+4.89,for everyday life.
+9.13,I'm Andrew Huberman, and I'm a professor
 ...
 """
 import dotenv
