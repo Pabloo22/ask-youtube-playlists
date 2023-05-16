@@ -22,4 +22,4 @@ def test_filter_episode_transcript():
 
 
 if __name__ == "__main__":
-    pytest.main(["-v", __file__])
+    pytest.main(["-vv", __file__])
