@@ -5,7 +5,7 @@ description = "A Question-Answering application for the Huberman Lab Podcast."
 authors = ["Pabloo22 <pablete.arino@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "src/qa_system"}]
+packages = [{include = "src/qa_system"}, {include = "src/qa_system/data"}]
 
 [tool.poetry.dependencies]
 python = "^3.8.1"
