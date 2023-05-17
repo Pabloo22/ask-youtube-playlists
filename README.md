@@ -55,3 +55,6 @@ Resources and tutorials that we have found useful for this project.
 ### :gear: Set Up
 - **Poetry**: [YouTube, How to Create and Use Virtual Environments in Python With Poetry](https://youtu.be/0f3moPe_bhk)
 - **Automated testing**: [YouTube, Automated Testing in Python with pytest, tox, and GitHub Actions](https://youtu.be/DhUpxWjOhME)
+
+### :mag: Information Retrieval
+- **Semantic Search with S-BERT**: [Medium article, Semantic Search with S-BERT is all you need](https://medium.com/mlearning-ai/semantic-search-with-s-bert-is-all-you-need-951bc710e160)
