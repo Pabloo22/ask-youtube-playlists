@@ -39,11 +39,16 @@ def filter_episode_transcript(raw_episode_transcript: str) -> str:
     for line in split_newline:
         # Remove the brackets and the text inside them.
         line = re.sub(r"\[(.*?)\]", "", line)
+        # If the line is empty, skip it.
+        if re.match(r"^\d+.\d+ $", line):
+            continue
         # If the line starts with a timestamp, add a new line.
         if re.match(r"^\d+.\d+", line):
             filtered_episode_transcript += "\n"
-        # In the line, insert a comma after the timestamp.
-        line = re.sub(r"(\d+.\d+)", r"\1\t", line)
+        else:
+            filtered_episode_transcript += " "
+        # Remove the space after the timestamp.
+        line = re.sub(r"(\d+.\d+)\s", r"\1\t", line)
         filtered_episode_transcript += line
 
     return filtered_episode_transcript[1:]  # Remove the first newline.
