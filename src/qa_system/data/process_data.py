@@ -1,35 +1,30 @@
-"""Filters the Episode-i.txt files from the data/raw/transcripts folder and saves them
-to data/processed/transcripts folder.
-
-These text files follow the format:
-0.0 ANDREW HUBERMAN: Welcome to
-the Huberman Lab podcast,
-2.22 where we discuss science
-and science-based tools
-4.89 for everyday life.
-9.13 I'm Andrew Huberman,
-and I'm a professor
-...
-
-This script filters out the timestamps. The expected output is:
-0.0,ANDREW HUBERMAN: Welcome to the Huberman Lab podcast,
-2.22,where we discuss science and science-based tools
-4.89,for everyday life.
-9.13,I'm Andrew Huberman, and I'm a professor
-...
-"""
-import dotenv
-import os
 import re
 
-from .load_data import load_raw_episode_transcript
 
+def filter_episode_transcript(raw_episode_transcript: str, separator=r"\t") -> str:
+    """Filters the Episode-i.txt files from the data/raw/transcripts folder and saves them
+    to data/processed/transcripts folder.
 
-def filter_episode_transcript(raw_episode_transcript: str) -> str:
-    """Filters out the timestamps from the raw episode transcript.
+    These text files follow the format:
+    0.0 ANDREW HUBERMAN: Welcome to
+    the Huberman Lab podcast,
+    2.22 where we discuss science
+    and science-based tools
+    4.89 for everyday life.
+    9.13 I'm Andrew Huberman,
+    and I'm a professor
+    ...
+
+    This script filters out the timestamps. The expected output is:
+    0.0\tANDREW HUBERMAN: Welcome to the Huberman Lab podcast,
+    2.22\twhere we discuss science and science-based tools
+    4.89\tfor everyday life.
+    9.13\tI'm Andrew Huberman, and I'm a professor
+    ...
 
     Args:
         raw_episode_transcript (str): The raw episode transcript.
+        separator (str): The separator between the timestamp and the sentence.
 
     Returns:
         filtered_episode_transcript (str): The filtered episode transcript.
@@ -48,7 +43,7 @@ def filter_episode_transcript(raw_episode_transcript: str) -> str:
         else:
             filtered_episode_transcript += " "
         # Remove the space after the timestamp.
-        line = re.sub(r"(\d+.\d+)\s", r"\1\t", line)
+        line = re.sub(r"(\d+.\d+)\s", fr"\1{separator}", line)
         filtered_episode_transcript += line
 
     return filtered_episode_transcript[1:]  # Remove the first newline.

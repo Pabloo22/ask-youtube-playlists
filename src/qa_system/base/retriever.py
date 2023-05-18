@@ -3,8 +3,10 @@ import pandas as pd
 import pathlib
 from typing import List, Union
 
+from qa_system.data import PodcastDataset
 
-class InformationRetriever(abc.ABC):
+
+class Retriever(abc.ABC):
     """
     Base class for Information Retrieval component of the application.
 
@@ -21,7 +23,7 @@ class InformationRetriever(abc.ABC):
         self.data_path = pathlib.Path(data_path)
         self.data = None
 
-    def preprocess(self):
+    def encode(self):
         """Preprocesses the data.
 
         This method should be overridden by subclasses to include specific preprocessing steps such as text cleaning,
@@ -34,7 +36,7 @@ class InformationRetriever(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def retrieve(self, question: str) -> pd.DataFrame:
+    def query(self, question: str) -> PodcastDataset:
         """Identifies relevant transcripts based on the user's question.
 
         This is an abstract method that should be implemented by all subclasses. It takes a user's question and returns
@@ -44,5 +46,5 @@ class InformationRetriever(abc.ABC):
             question (str): The user's question.
 
         Returns:
-            context
+            Context
         """

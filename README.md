@@ -44,6 +44,33 @@ Our application will offer users the option to choose between the two question-a
 both approaches. The web application will prompt users to input their questions and display results within the 
 interface.
 
+## :file_folder: Project Structure 
+The source code is organized in two main components. The first component is the... 
+
+### Question-Answering System Package
+The Question-Answering system package contains the code for the different components of the system. The code contained in this package is not dependent on the specific web application framework used to deploy 
+the system or any specific data sources. 
+
+The sub-package `base` contains the base classes for the question answering system. These classes are used to define the interfaces for the
+different components of the system. The main classes are:
+
+- **Embedder**: Interface for the embedding component of the system. This component is responsible for generating
+embeddings for the user's question and the relevant information from the podcast dataset.
+- **InformationRetriever**: Interface for the information retrieval component.
+- **ExtractiveQuestionAnswerer**: Interface for the extractive question answering component.
+- **AbstractiveQuestionAnswerer**: Interface for the abstractive question answering component.
+
+This allows us to define different implementations for each component of the system and easily switch between them.
+These implementations are defined in the sub-packages `information_retrieval`, and `question_answering`,
+which will be used by...
+
+### The Web Application
+This package contains the code for the web application. The code inside this package requires the data sources to be
+available and the .env file to be correctly configured. It also 
+contains the sub-package `data` which contains the code for loading and
+preprocessing the transcripts and timestamps from the podcast dataset downloaded from 
+[Kaggle](https://www.kaggle.com/datasets/piyusharma/andrew-huberman-podcast-transcripts-95-episodes).
+
 ## :books: Resources
 Resources and tutorials that we have found useful for this project.
 
