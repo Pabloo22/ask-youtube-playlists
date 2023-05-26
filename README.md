@@ -1,17 +1,5 @@
 # Huberman Lab Podcast Q&A System
-Work in progress
-
-## :rocket: Installation 
-
-1. Clone the repository.
-2. Duplicate the `.env.template` file and rename it to `.env`.
-3. Fill in the environment variables in the `.env` file.
-4. Install [Poetry](https://python-poetry.org/) if you don't have it already.
-5. Run `poetry install` to install the dependencies in a virtual environment.
-6. Run `poetry shell` to activate the virtual environment.
-7. Download the podcast transcripts and timestamps from 
-[Kaggle](https://www.kaggle.com/datasets/piyusharma/andrew-huberman-podcast-transcripts-95-episodes) and place them 
-in the `data/raw` folder.
+App in current development.
 
 ## Objective
 The idea consists of creating an application that answers questions about 
@@ -43,6 +31,26 @@ summarizing the relevant information. Models like GPT can be employed for this t
 Our application will offer users the option to choose between the two question-answering modes, so we will implement 
 both approaches. The web application will prompt users to input their questions and display results within the 
 interface.
+
+## :rocket: Installation 
+
+### First step: Manually Installation
+1. Clone the repository.
+2. Duplicate the `.env.template` file and rename it to `.env`.
+3. Fill in the environment variables in the `.env` file.
+4. Install [Poetry](https://python-poetry.org/) and Python if you don't have them already.
+5. Run `poetry install` to install the dependencies in a virtual environment.
+6. Run `poetry shell` to activate the virtual environment.
+7. Download the podcast transcripts and timestamps from 
+[Kaggle](https://www.kaggle.com/datasets/piyusharma/andrew-huberman-podcast-transcripts-95-episodes) and place them 
+in the `data/raw` folder.
+
+### Second step: Download the pre-trained models and preprocess the data
+1. Set to true/false the models you want to download in the `.env` file.
+2. Run the following command:
+```shell
+python install_app.py
+```
 
 ## :file_folder: Project Structure 
 The source code is organized in two main components. The first component is the... 
