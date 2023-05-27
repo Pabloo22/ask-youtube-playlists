@@ -1,0 +1,3 @@
+gpt-2:
+  model_size: small  # small, medium, large, xl
+  use_model: True

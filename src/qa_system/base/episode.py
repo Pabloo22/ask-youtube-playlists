@@ -34,7 +34,7 @@ class Episode:
         """Chunks the episode into smaller episodes.
 
         Args:
-            chunk_size (int): The size of each chunk.
+            chunk_size (int): The size of each chunk in characters.
 
         Returns:
             Episode: The chunked episode.

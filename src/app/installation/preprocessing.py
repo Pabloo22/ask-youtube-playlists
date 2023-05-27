@@ -4,7 +4,7 @@ import os
 import pathlib
 import re
 
-from qa_system.base import Retriever, TranscriptDataFrame, TimestampDataFrame, Episode
+from qa_system.base import Retriever, TranscriptDataFrame, TimestampDataFrame, Episode, EpisodeDataFrame
 
 
 NUMBER_OF_EPISODES = 95
@@ -103,7 +103,7 @@ def _get_timestamp_dataset(timestamp_text: str) -> TimestampDataFrame:
     """
 
 
-def _merge(transcript_dataset: TranscriptDataFrame, timestamp_dataset: TimestampDataFrame) -> Episode:
+def _merge(transcript_dataset: TranscriptDataFrame, timestamp_dataset: TimestampDataFrame) -> EpisodeDataFrame:
     """Merges the transcript and timestamp datasets.
 
     Args:
@@ -127,7 +127,7 @@ def _load_episode(transcript_path: pathlib.Path, timestamp_path: pathlib.Path) -
 
     episode_dataset = _merge(transcript_dataset, timestamp_dataset)
 
-    return episode_dataset
+    return Episode(episode_dataset)
 
 
 def _chunk_episode(episode_dataset: Episode, max_chunk_length: int) -> Episode:
@@ -136,6 +136,15 @@ def _chunk_episode(episode_dataset: Episode, max_chunk_length: int) -> Episode:
     Args:
         episode_dataset: The episode dataset.
         max_chunk_length: The maximum length of a chunk in characters.
+    """
+
+
+def _encode_episode(episode_dataset: Episode, retriever: Retriever) -> np.ndarray:
+    """Encodes the episode dataset using the retriever model.
+
+    Args:
+        episode_dataset: The episode dataset.
+        retriever: The retriever model.
     """
 
 
@@ -169,7 +178,7 @@ def _episode_pipeline(transcript_path: pathlib.Path,
 
     # Encode the episode dataset and save it to a .npy file.
     embeddings_dir = data_dir / "embeddings"
-    episode_array = episode_dataset_chunked.encode(retriever)
+    episode_array = _encode_episode(episode_dataset_chunked, retriever)
     episode_vector_path = embeddings_dir / f"Episode-{episode_number}.npy"
     np.save(episode_vector_path, episode_array)
 
