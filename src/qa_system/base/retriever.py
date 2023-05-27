@@ -1,50 +1,38 @@
 import abc
-import pandas as pd
-import pathlib
-from typing import List, Union
+import numpy as np
+from dataenforce import Dataset
 
-from qa_system.data import PodcastDataset
+
+QueryResultDataFrame = Dataset["score": float, "index": int]
 
 
 class Retriever(abc.ABC):
-    """
-    Base class for Information Retrieval component of the application.
+    """Base class for Information Retrieval component of the application."""
 
-    This class should be inherited by specific information retrieval
-    models which will implement the methods for identifying relevant
-    podcast transcripts based on a user's question.
-
-    Attributes:
-        data_path (Union[str, pathlib.Path]): Path to the dataset. It will consider all files in the directory
-            that have the extension .csv.
-    """
-
-    def __init__(self, data_path: Union[str, pathlib.Path]):
-        self.data_path = pathlib.Path(data_path)
-        self.data = None
-
-    def encode(self):
-        """Preprocesses the data.
+    @abc.abstractmethod
+    def encode(self, text: str) -> np.ndarray:
+        """Converts text into a vector representation.
 
         This method should be overridden by subclasses to include specific preprocessing steps such as text cleaning,
         tokenization, and so on. The base class method does nothing and should be called with super().preprocess() in
         the overriding method.
 
+        Args:
+            text (str): The text to be preprocessed.
+
         Returns:
-            None
+            np.ndarray: The vector representation of the text.
         """
-        pass
 
     @abc.abstractmethod
-    def query(self, question: str) -> PodcastDataset:
+    def query(self, question: str) -> QueryResultDataFrame:
         """Identifies relevant transcripts based on the user's question.
-
-        This is an abstract method that should be implemented by all subclasses. It takes a user's question and returns
-        a subs
 
         Args:
             question (str): The user's question.
 
         Returns:
-            Context
+            QueryResultDataFrame: The dataframe containing the results of the query. It has two columns: score and
+                index. The score is the similarity between the question and the transcript. The index is the
+                index of the text transcript in the episode.
         """
