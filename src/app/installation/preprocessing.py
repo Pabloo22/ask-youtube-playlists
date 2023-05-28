@@ -105,9 +105,11 @@ def _get_transcript_dataset(transcript_text: str) -> TranscriptDataFrame:
 
     return transcript_dataset
 
+
 def _convert_to_seconds(time):
     time = time.split(':')
     return int(time[0])*3600 + int(time[1])*60 + int(time[2])
+
 
 def _get_timestamp_dataset(timestamp_text: str) -> TimestampDataFrame:
     """Returns a dataframe containing the timestamp data.
@@ -150,6 +152,7 @@ def _merge(transcript_dataset: TranscriptDataFrame, timestamp_dataset: Timestamp
         merged_dataset.loc[indices, 'section'] = section
 
     return merged_dataset
+
 
 def _load_episode(transcript_path: pathlib.Path, timestamp_path: pathlib.Path) -> Episode:
     """Returns a dataframe containing the episode data.
