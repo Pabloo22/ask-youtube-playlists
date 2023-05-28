@@ -1,12 +1,13 @@
 [tool.poetry]
 name = "qa-system"
 version = "0.1.0"
-description = "A Question-Answering application for the Huberman Lab Podcast."
+description = "A Question-Answering application for Youtube videos and playlists"
 authors = ["Pabloo22 <pablete.arino@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [
     { include = "qa_system", from = "src" },
+    { include = "app", from = "src" }
 ]
 
 [tool.poetry.dependencies]
@@ -18,6 +19,7 @@ python-dotenv = "^1.0.0"
 pandas = "^2.0.1"
 sentence-transformers = "^2.2.2"
 dataenforce = "^0.1.2"
+langchain = "^0.0.182"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"

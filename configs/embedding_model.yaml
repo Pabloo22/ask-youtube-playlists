@@ -1,0 +1,3 @@
+embedding_model:
+  name: sentence-transformers/msmarco-distilbert-base-dot-v5
+  chunk_size: 512

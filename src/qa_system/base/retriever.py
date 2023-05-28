@@ -14,7 +14,7 @@ class Retriever(abc.ABC):
     """Base class for Information Retrieval component of the application."""
 
     @abc.abstractmethod
-    def encode(self, text: str, return_tensor: bool = False) -> Union[np.ndarray, torch.Tensor]:
+    def encode(self, text: str) -> Union[np.ndarray, torch.Tensor]:
         """Converts text into a vector representation.
 
         This method should be overridden by subclasses to include specific preprocessing steps such as text cleaning,
@@ -23,17 +23,16 @@ class Retriever(abc.ABC):
 
         Args:
             text (str): The text to be preprocessed.
-            return_tensor (bool): Whether to return a tensor or np.ndarray.
 
         Returns:
             np.ndarray: The vector representation of the text.
         """
 
-    def load_episode(self):
+    def load_episodes(self):
         pass
 
     @abc.abstractmethod
-    def query(self, question: torch.Tensor, ) -> QueryResultDataFrame:
+    def query(self, question: str) -> QueryResultDataFrame:
         """Identifies relevant transcripts based on the user's question.
 
         Args:

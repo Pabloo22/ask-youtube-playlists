@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from dataenforce import Dataset
 from typing import Optional
@@ -12,11 +13,13 @@ class Episode:
     """Wrapper class for the pandas dataframe containing the episode data.
 
     Attributes:
-        data (EpisodeDataFrame): The dataset.
+        data (EpisodeDataFrame): The dataset. It has three columns: timestamp, text, and section.
+        embeddings (np.ndarray): The embeddings of the episode.
     """
 
-    def __init__(self, data: EpisodeDataFrame):
+    def __init__(self, data: EpisodeDataFrame, embeddings: Optional[np.ndarray] = None):
         self.data = data
+        self.embeddings = embeddings
 
     def get_context(self, start: float, end: Optional[float] = None) -> str:
         """Returns the context between two timestamps.
@@ -30,13 +33,13 @@ class Episode:
         """
         raise NotImplementedError
 
-    def chunk(self, chunk_size: int) -> 'Episode':
-        """Chunks the episode into smaller episodes.
+    def collapse_into_passages(self, size: int) -> "Episode":
+        """Collapses the episode into passages of a given size.
 
         Args:
-            chunk_size (int): The size of each chunk in characters.
+            size (int): The size of the passages.
 
         Returns:
-            Episode: The chunked episode.
+            Episode: The episode with the passages.
         """
         raise NotImplementedError
