@@ -1,5 +1,6 @@
 import dotenv
 import numpy as np
+import pandas as pd
 import os
 import pathlib
 import re
@@ -93,7 +94,20 @@ def _get_transcript_dataset(transcript_text: str) -> TranscriptDataFrame:
     Args:
         transcript_text: The transcript text.
     """
+    # Add a separator between the timestamp and the sentence.
+    transcript_text = _add_separator(transcript_text)
+    # Split the text into lines.
+    transcript_lines = transcript_text.split("\n")
+    # Split the lines into columns.
+    transcript_columns = [line.split("\t") for line in transcript_lines]
+    # Create the dataframe.
+    transcript_dataset = pd.DataFrame(transcript_columns, columns=["timestamp", "text"])
 
+    return transcript_dataset
+
+def _convert_to_seconds(time):
+    time = time.split(':')
+    return int(time[0])*3600 + int(time[1])*60 + int(time[2])
 
 def _get_timestamp_dataset(timestamp_text: str) -> TimestampDataFrame:
     """Returns a dataframe containing the timestamp data.
@@ -101,6 +115,15 @@ def _get_timestamp_dataset(timestamp_text: str) -> TimestampDataFrame:
     Args:
         timestamp_text: The timestamp text.
     """
+    # Split the text into lines.
+    timestamp_lines = timestamp_text.split("\n")
+    # Split the lines into columns.
+    timestamp_columns = [[_convert_to_seconds(line.split(" ")[0]),
+                          " ".join(line.split(" ")[1:])] for line in timestamp_lines]
+    # Create the dataframe.
+    timestamp_dataset = pd.DataFrame(timestamp_columns, columns=["timestamp", "section"])
+
+    return timestamp_dataset
 
 
 def _merge(transcript_dataset: TranscriptDataFrame, timestamp_dataset: TimestampDataFrame) -> EpisodeDataFrame:
@@ -110,7 +133,23 @@ def _merge(transcript_dataset: TranscriptDataFrame, timestamp_dataset: Timestamp
         transcript_dataset: The transcript dataset.
         timestamp_dataset: The timestamp dataset.
     """
+    merged_dataset = transcript_dataset.copy()
+    # Add the section column
+    merged_dataset['section'] = None
 
+    for i in range(len(timestamp_dataset)-1):
+        # Get the timestamps
+        start = timestamp_dataset.iloc[i]['timestamp']
+        end = timestamp_dataset.iloc[i+1]['timestamp']
+        # Get the section
+        section = timestamp_dataset.iloc[i]['section']
+        # Get the indices of the rows that have the timestamps between the start and the end
+        indices = transcript_dataset[(transcript_dataset['timestamp'] >= start) &
+                                     (transcript_dataset['timestamp'] < end)].index
+        # Add the section to the rows
+        merged_dataset.loc[indices, 'section'] = section
+
+    return merged_dataset
 
 def _load_episode(transcript_path: pathlib.Path, timestamp_path: pathlib.Path) -> Episode:
     """Returns a dataframe containing the episode data.

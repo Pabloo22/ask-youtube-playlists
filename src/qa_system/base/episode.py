@@ -4,7 +4,7 @@ from typing import Optional
 
 
 TranscriptDataFrame = Dataset["timestamp": float, "text": object]
-TimestampDataFrame = Dataset["timestamp": pd.Timestamp, "section": object]
+TimestampDataFrame = Dataset["timestamp": float, "section": object]
 EpisodeDataFrame = Dataset[TranscriptDataFrame, "section": object]
 
 
