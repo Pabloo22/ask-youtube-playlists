@@ -1,13 +1,12 @@
 [tool.poetry]
-name = "qa-system"
+name = "ask_youtube_playlists"
 version = "0.1.0"
 description = "A Question-Answering application for Youtube videos and playlists"
 authors = ["Pabloo22 <pablete.arino@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [
-    { include = "qa_system", from = "src" },
-    { include = "app", from = "src" }
+    { include = "ask_youtube_playlists" }
 ]
 
 [tool.poetry.dependencies]
