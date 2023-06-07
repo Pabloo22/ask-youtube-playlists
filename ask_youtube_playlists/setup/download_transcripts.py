@@ -1,39 +1,47 @@
 """Code to download the transcripts from YouTube."""
-from pytube import Playlist
+import pathlib
+import pytube
 import json
-from youtube_transcript_api import YouTubeTranscriptApi
+import logging
+import youtube_transcript_api
 
 
-def get_playlist_info(url):
-    playlist = Playlist(url)
+def get_playlist_info(url: str):
+    playlist = pytube.Playlist(url)
 
     # Dict to hold title-ID pairs
     video_dict = {}
 
     for video in playlist.videos:
         video_dict[video.title] = video.video_id
-        # print(video.title, video.video_id)
 
     return video_dict
 
 
-def download_transcript(video_title, video_id, output_file):
+def download_transcript(video_title: str,
+                        video_id: str,
+                        output_path: pathlib.Path,
+                        logger: logging.Logger = None):
     try:
         # Download transcript with youtube_transcript_api
-        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['en', 'en-US'])
+        transcript = youtube_transcript_api.YouTubeTranscriptApi.get_transcript(video_id, languages=['en', 'en-US'])
 
         # Save transcript to a JSON file
-        with open(output_file, 'w', encoding='utf-8') as file:
+        with open(output_path, 'w', encoding='utf-8') as file:
             # Put the title and the video ID at the top of the JSON file and then dump the transcript
             json.dump({
                 'title': video_title,
                 'video_id': video_id,
                 'transcript': transcript}, file, ensure_ascii=False, indent=4)
 
-        print(f'Transcript has been saved to {output_file}')
+        # print(f'Transcript has been saved to {output_file}')
+        if logger is not None:
+            logger.info(f'Transcript has been saved to {output_path}')
 
     except Exception as e:
-        print('An error occurred:', str(e))
+        # print('An error occurred:', str(e))
+        if logger is not None:
+            logger.error(f'An error occurred: {str(e)}')
 
 
 def download_playlist(url):
@@ -44,13 +52,18 @@ def download_playlist(url):
         download_transcript(video_title, video_id, output_file)
 
 
+def _replace_newlines(json_file: dict):
+    """Replace \n with a space"""
+    for segment in json_file['transcript']:
+        segment['text'] = segment['text'].replace('\n', ' ')
+
+
 def create_chunked_data(file, max_chunk_size, min_overlap_size):
     with open(file, 'r') as f:
         json_file = json.load(f)
 
     # Replace \n with a space
-    for segment in json_file['transcript']:
-        segment['text'] = segment['text'].replace('\n', ' ')
+    _replace_newlines(json_file)
 
     segment_lengths = [len(json_file['transcript'][segment]['text']) for segment in range(len(json_file['transcript']))]
 

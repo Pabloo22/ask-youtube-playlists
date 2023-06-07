@@ -19,6 +19,8 @@ pandas = "^2.0.1"
 sentence-transformers = "^2.2.2"
 dataenforce = "^0.1.2"
 langchain = "^0.0.182"
+pytube = "^15.0.0"
+youtube-transcript-api = "^0.6.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
