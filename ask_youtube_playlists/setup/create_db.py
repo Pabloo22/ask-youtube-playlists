@@ -20,7 +20,7 @@ def get_embedding_model(model_type: str = "sentence-transformers",
 
     object_mapper = {
         "sentence-transformers": embeddings.SentenceTransformerEmbeddings,
-        "openai": embeddings.OpenAIEmbeddings,
+        # "openai": embeddings.OpenAIEmbeddings,
     }
 
     if model_type not in object_mapper:

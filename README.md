@@ -1,12 +1,36 @@
-# Huberman Lab Podcast Q&A System
-App in current development.
+# Ask Your Favorite YouTube Playlist
+This web application allows users to ask questions about any YouTube playlist.
 
-## Objective
-The idea consists of creating an application that answers questions about 
-the [Huberman Lab podcast](https://hubermanlab.com/) which discusses 
-science and science-based tools for everyday life. We will make 
-use of a dataset with the transcripts of the first 95 episodes that is available on 
-[Kaggle](https://www.kaggle.com/datasets/piyusharma/andrew-huberman-podcast-transcripts-95-episodes). 
+## Overview
+After following the steps described in the [Installation](#rocket-installation) section, the user can run the web.
+application by executing the following command:
+```shell
+make run_app
+```
+The web application will be available at `http://localhost:8000/`.
+
+### Download the YouTube playlist
+Before asking any question, we need to download the transcripts and timestamps from the YouTube playlist.
+
+To complete this task, we use the YouTube API to download the transcripts and timestamps from the episodes of the
+playlist introduced by the user. The transcripts and timestamps are stored inside the `$DATA_PATH/playlist_name/raw` 
+folder.
+
+The `$DATA_PATH` is defined in the `.env` file. The playlist name is the name of the playlist introduced by the user.
+
+Inside this file, you will find files `episode-i.json` that follow the structure:
+
+```json
+
+
+
+### 
+
+
+
+First, 
+The idea consists of creating an application that answers questions about any YouTube playlist. The application
+will
 The task will be divided in two steps:
 
 1. **Information Retrieval**:
