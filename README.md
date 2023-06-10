@@ -7,7 +7,6 @@ application by executing the following command:
 ```shell
 make run_app
 ```
-The web application will be available at `http://localhost:8000/`.
 
 ### Download the YouTube playlist
 Before asking any question, we need to download the transcripts and timestamps from the YouTube playlist.
@@ -22,10 +21,7 @@ Inside this file, you will find files `episode-i.json` that follow the structure
 
 ```json
 
-
-
-### 
-
+```
 
 
 First, 
