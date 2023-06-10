@@ -1,4 +1,4 @@
-"""This module contains the functions neccessary to fully install the app.
+"""This module contains the functions necessary to fully install the app.
 
 The installation process consists of the following steps:
 1. Download the models.
