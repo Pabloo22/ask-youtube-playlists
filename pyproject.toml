@@ -2,7 +2,9 @@
 name = "ask_youtube_playlists"
 version = "0.1.0"
 description = "A Question-Answering application for Youtube videos and playlists"
-authors = ["Pabloo22 <pablete.arino@gmail.com>"]
+authors = ["Pabloo22 <pablo.arino@alumnos.upm.es>",
+           "Beatpc <beatriz.p.correia@student.put.poznan.pl>",
+           "alvarola17 <alvaro.laguna@alumnos.upm.es>"]
 license = "MIT"
 readme = "README.md"
 packages = [
@@ -38,6 +40,16 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.flake8]
+files = ["ask_youtube_playlists", "tests", "web_app"]
 max-line-length = 79
 max-complexity = 18
+ignore = ["F401"]
 select = ["B","C","E","F","W","T4","B9"]
+
+[tool.mypy]
+files = ["ask_youtube_playlists", "tests", "web_app"]
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
