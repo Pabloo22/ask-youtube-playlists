@@ -19,10 +19,40 @@ The `$DATA_PATH` is defined in the `.env` file. The playlist name is the name of
 
 Inside this file, you will find files `episode-i.json` that follow the structure:
 
-```json
-
+```python
+[
+    {
+        "text": "Hey there",
+        "start": 7.58,
+        "duration": 6.13,
+        "url": "https://www.youtube.com/watch?v=...",
+        "title": "Title of the video",
+    },
+    {
+        "text": "how are you",
+        "start": 14.08,
+        "duration": 7.58,
+        "url": "https://www.youtube.com/watch?v=...",
+        "title": "Title of the video",
+    },
+    # ...
+]
 ```
+After processing the data, a new set of `.json` files will be created inside the `$DATA_PATH/playlist_name/processed`
+folder. These files will contain the following structure:
 
+```python
+[
+    {
+        "text": "Hey there how are you...",
+        "start": 7.58,
+        "duration": 34.08,
+        "url": "https://www.youtube.com/watch?v=...",
+        "title": "Title of the video",
+    },
+    # ...
+]
+```
 
 First, 
 The idea consists of creating an application that answers questions about any YouTube playlist. The application
