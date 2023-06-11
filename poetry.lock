@@ -815,20 +815,21 @@ files = [
 
 [[package]]
 name = "langchain"
-version = "0.0.182"
+version = "0.0.197"
 description = "Building applications with LLMs through composability"
 category = "main"
 optional = false
 python-versions = ">=3.8.1,<4.0"
 files = [
-    {file = "langchain-0.0.182-py3-none-any.whl", hash = "sha256:81d8877f482306030c0de1d81f0269ce8a2a8de19535d5f0a7a57f05214875b2"},
-    {file = "langchain-0.0.182.tar.gz", hash = "sha256:138068fd66e29d2e11038b1207d59d6a7794de7b0755145449959e24fc9bb56b"},
+    {file = "langchain-0.0.197-py3-none-any.whl", hash = "sha256:ad587f538d2b041584bfdf45a138ab9660ae3975f167fb75c89b7fc06a560a7f"},
+    {file = "langchain-0.0.197.tar.gz", hash = "sha256:2e3bb04b3f1837b43ddaf09d4a1a0a190c1c787d864b2a472cf78120f1bc12d7"},
 ]
 
 [package.dependencies]
 aiohttp = ">=3.8.3,<4.0.0"
 async-timeout = {version = ">=4.0.0,<5.0.0", markers = "python_version < \"3.11\""}
 dataclasses-json = ">=0.5.7,<0.6.0"
+langchainplus-sdk = ">=0.0.7"
 numexpr = ">=2.8.4,<3.0.0"
 numpy = ">=1,<2"
 openapi-schema-pydantic = ">=1.2,<2.0"
@@ -839,16 +840,33 @@ SQLAlchemy = ">=1.4,<3"
 tenacity = ">=8.1.0,<9.0.0"
 
 [package.extras]
-all = ["O365 (>=2.0.26,<3.0.0)", "aleph-alpha-client (>=2.15.0,<3.0.0)", "anthropic (>=0.2.6,<0.3.0)", "arxiv (>=1.4,<2.0)", "atlassian-python-api (>=3.36.0,<4.0.0)", "azure-ai-formrecognizer (>=3.2.1,<4.0.0)", "azure-ai-vision (>=0.11.1b1,<0.12.0)", "azure-cognitiveservices-speech (>=1.28.0,<2.0.0)", "azure-cosmos (>=4.4.0b1,<5.0.0)", "azure-identity (>=1.12.0,<2.0.0)", "beautifulsoup4 (>=4,<5)", "clickhouse-connect (>=0.5.14,<0.6.0)", "cohere (>=3,<4)", "deeplake (>=3.3.0,<4.0.0)", "docarray[hnswlib] (>=0.32.0,<0.33.0)", "duckduckgo-search (>=2.8.6,<3.0.0)", "elasticsearch (>=8,<9)", "faiss-cpu (>=1,<2)", "google-api-python-client (==2.70.0)", "google-search-results (>=2,<3)", "gptcache (>=0.1.7)", "html2text (>=2020.1.16,<2021.0.0)", "huggingface_hub (>=0,<1)", "jina (>=3.14,<4.0)", "jinja2 (>=3,<4)", "jq (>=1.4.1,<2.0.0)", "lancedb (>=0.1,<0.2)", "langkit (>=0.0.1.dev3,<0.1.0)", "lark (>=1.1.5,<2.0.0)", "lxml (>=4.9.2,<5.0.0)", "manifest-ml (>=0.0.1,<0.0.2)", "momento (>=1.5.0,<2.0.0)", "neo4j (>=5.8.1,<6.0.0)", "networkx (>=2.6.3,<3.0.0)", "nlpcloud (>=1,<2)", "nltk (>=3,<4)", "nomic (>=1.0.43,<2.0.0)", "openai (>=0,<1)", "openlm (>=0.0.5,<0.0.6)", "opensearch-py (>=2.0.0,<3.0.0)", "pdfminer-six (>=20221105,<20221106)", "pexpect (>=4.8.0,<5.0.0)", "pgvector (>=0.1.6,<0.2.0)", "pinecone-client (>=2,<3)", "pinecone-text (>=0.4.2,<0.5.0)", "psycopg2-binary (>=2.9.5,<3.0.0)", "pyowm (>=3.3.0,<4.0.0)", "pypdf (>=3.4.0,<4.0.0)", "pytesseract (>=0.3.10,<0.4.0)", "pyvespa (>=0.33.0,<0.34.0)", "qdrant-client (>=1.1.2,<2.0.0)", "redis (>=4,<5)", "requests-toolbelt (>=1.0.0,<2.0.0)", "sentence-transformers (>=2,<3)", "spacy (>=3,<4)", "steamship (>=2.16.9,<3.0.0)", "tensorflow-text (>=2.11.0,<3.0.0)", "tiktoken (>=0.3.2,<0.4.0)", "torch (>=1,<3)", "transformers (>=4,<5)", "weaviate-client (>=3,<4)", "wikipedia (>=1,<2)", "wolframalpha (==5.0.0)"]
+all = ["O365 (>=2.0.26,<3.0.0)", "aleph-alpha-client (>=2.15.0,<3.0.0)", "anthropic (>=0.2.6,<0.3.0)", "arxiv (>=1.4,<2.0)", "atlassian-python-api (>=3.36.0,<4.0.0)", "awadb (>=0.3.2,<0.4.0)", "azure-ai-formrecognizer (>=3.2.1,<4.0.0)", "azure-ai-vision (>=0.11.1b1,<0.12.0)", "azure-cognitiveservices-speech (>=1.28.0,<2.0.0)", "azure-cosmos (>=4.4.0b1,<5.0.0)", "azure-identity (>=1.12.0,<2.0.0)", "beautifulsoup4 (>=4,<5)", "clickhouse-connect (>=0.5.14,<0.6.0)", "cohere (>=3,<4)", "deeplake (>=3.3.0,<4.0.0)", "docarray[hnswlib] (>=0.32.0,<0.33.0)", "duckduckgo-search (>=2.8.6,<3.0.0)", "elasticsearch (>=8,<9)", "faiss-cpu (>=1,<2)", "google-api-python-client (==2.70.0)", "google-auth (>=2.18.1,<3.0.0)", "google-search-results (>=2,<3)", "gptcache (>=0.1.7)", "html2text (>=2020.1.16,<2021.0.0)", "huggingface_hub (>=0,<1)", "jina (>=3.14,<4.0)", "jinja2 (>=3,<4)", "jq (>=1.4.1,<2.0.0)", "lancedb (>=0.1,<0.2)", "langkit (>=0.0.1.dev3,<0.1.0)", "lark (>=1.1.5,<2.0.0)", "lxml (>=4.9.2,<5.0.0)", "manifest-ml (>=0.0.1,<0.0.2)", "momento (>=1.5.0,<2.0.0)", "nebula3-python (>=3.4.0,<4.0.0)", "neo4j (>=5.8.1,<6.0.0)", "networkx (>=2.6.3,<3.0.0)", "nlpcloud (>=1,<2)", "nltk (>=3,<4)", "nomic (>=1.0.43,<2.0.0)", "openai (>=0,<1)", "openlm (>=0.0.5,<0.0.6)", "opensearch-py (>=2.0.0,<3.0.0)", "pdfminer-six (>=20221105,<20221106)", "pexpect (>=4.8.0,<5.0.0)", "pgvector (>=0.1.6,<0.2.0)", "pinecone-client (>=2,<3)", "pinecone-text (>=0.4.2,<0.5.0)", "psycopg2-binary (>=2.9.5,<3.0.0)", "pymongo (>=4.3.3,<5.0.0)", "pyowm (>=3.3.0,<4.0.0)", "pypdf (>=3.4.0,<4.0.0)", "pytesseract (>=0.3.10,<0.4.0)", "pyvespa (>=0.33.0,<0.34.0)", "qdrant-client (>=1.1.2,<2.0.0)", "redis (>=4,<5)", "requests-toolbelt (>=1.0.0,<2.0.0)", "sentence-transformers (>=2,<3)", "singlestoredb (>=0.6.1,<0.7.0)", "spacy (>=3,<4)", "steamship (>=2.16.9,<3.0.0)", "tensorflow-text (>=2.11.0,<3.0.0)", "tigrisdb (>=1.0.0b6,<2.0.0)", "tiktoken (>=0.3.2,<0.4.0)", "torch (>=1,<3)", "transformers (>=4,<5)", "weaviate-client (>=3,<4)", "wikipedia (>=1,<2)", "wolframalpha (==5.0.0)"]
 azure = ["azure-ai-formrecognizer (>=3.2.1,<4.0.0)", "azure-ai-vision (>=0.11.1b1,<0.12.0)", "azure-cognitiveservices-speech (>=1.28.0,<2.0.0)", "azure-core (>=1.26.4,<2.0.0)", "azure-cosmos (>=4.4.0b1,<5.0.0)", "azure-identity (>=1.12.0,<2.0.0)", "openai (>=0,<1)"]
 cohere = ["cohere (>=3,<4)"]
 docarray = ["docarray[hnswlib] (>=0.32.0,<0.33.0)"]
 embeddings = ["sentence-transformers (>=2,<3)"]
-extended-testing = ["atlassian-python-api (>=3.36.0,<4.0.0)", "beautifulsoup4 (>=4,<5)", "bibtexparser (>=1.4.0,<2.0.0)", "chardet (>=5.1.0,<6.0.0)", "gql (>=3.4.1,<4.0.0)", "html2text (>=2020.1.16,<2021.0.0)", "jq (>=1.4.1,<2.0.0)", "lxml (>=4.9.2,<5.0.0)", "pandas (>=2.0.1,<3.0.0)", "pdfminer-six (>=20221105,<20221106)", "psychicapi (>=0.2,<0.3)", "pymupdf (>=1.22.3,<2.0.0)", "pypdf (>=3.4.0,<4.0.0)", "pypdfium2 (>=4.10.0,<5.0.0)", "requests-toolbelt (>=1.0.0,<2.0.0)", "scikit-learn (>=1.2.2,<2.0.0)", "telethon (>=1.28.5,<2.0.0)", "tqdm (>=4.48.0)", "zep-python (>=0.30,<0.31)"]
+extended-testing = ["atlassian-python-api (>=3.36.0,<4.0.0)", "beautifulsoup4 (>=4,<5)", "bibtexparser (>=1.4.0,<2.0.0)", "chardet (>=5.1.0,<6.0.0)", "gql (>=3.4.1,<4.0.0)", "html2text (>=2020.1.16,<2021.0.0)", "jq (>=1.4.1,<2.0.0)", "lxml (>=4.9.2,<5.0.0)", "pandas (>=2.0.1,<3.0.0)", "pdfminer-six (>=20221105,<20221106)", "psychicapi (>=0.5,<0.6)", "py-trello (>=0.19.0,<0.20.0)", "pymupdf (>=1.22.3,<2.0.0)", "pypdf (>=3.4.0,<4.0.0)", "pypdfium2 (>=4.10.0,<5.0.0)", "pyspark (>=3.4.0,<4.0.0)", "requests-toolbelt (>=1.0.0,<2.0.0)", "scikit-learn (>=1.2.2,<2.0.0)", "telethon (>=1.28.5,<2.0.0)", "tqdm (>=4.48.0)", "zep-python (>=0.31)"]
 llms = ["anthropic (>=0.2.6,<0.3.0)", "cohere (>=3,<4)", "huggingface_hub (>=0,<1)", "manifest-ml (>=0.0.1,<0.0.2)", "nlpcloud (>=1,<2)", "openai (>=0,<1)", "openlm (>=0.0.5,<0.0.6)", "torch (>=1,<3)", "transformers (>=4,<5)"]
 openai = ["openai (>=0,<1)", "tiktoken (>=0.3.2,<0.4.0)"]
 qdrant = ["qdrant-client (>=1.1.2,<2.0.0)"]
 text-helpers = ["chardet (>=5.1.0,<6.0.0)"]
+
+[[package]]
+name = "langchainplus-sdk"
+version = "0.0.8"
+description = "Client library to connect to the LangChainPlus LLM Tracing and Evaluation Platform."
+category = "main"
+optional = false
+python-versions = ">=3.8.1,<4.0"
+files = [
+    {file = "langchainplus_sdk-0.0.8-py3-none-any.whl", hash = "sha256:027388b1185f52e8edfe7c819d8a0abc51ef8921738a49adf9c62af0122996e9"},
+    {file = "langchainplus_sdk-0.0.8.tar.gz", hash = "sha256:c4497fba224edc080451e38b2bdba18d9a7b54d530239cd6f12a8d4a89e8eee5"},
+]
+
+[package.dependencies]
+pydantic = ">=1,<2"
+requests = ">=2,<3"
+tenacity = ">=8.1.0,<9.0.0"
 
 [[package]]
 name = "lazy-object-proxy"
@@ -1668,39 +1686,6 @@ pytest = ">=4.6"
 
 [package.extras]
 testing = ["fields", "hunter", "process-tests", "pytest-xdist", "six", "virtualenv"]
-
-[[package]]
-name = "pytest-flake8"
-version = "1.1.0"
-description = "pytest plugin to check FLAKE8 requirements"
-category = "dev"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pytest-flake8-1.1.0.tar.gz", hash = "sha256:358d449ca06b80dbadcb43506cd3e38685d273b4968ac825da871bd4cc436202"},
-    {file = "pytest_flake8-1.1.0-py2.py3-none-any.whl", hash = "sha256:f1b19dad0b9f0aa651d391c9527ebc20ac1a0f847aa78581094c747462bfa182"},
-]
-
-[package.dependencies]
-flake8 = ">=3.5"
-pytest = ">=3.5"
-
-[[package]]
-name = "pytest-mypy"
-version = "0.6.2"
-description = "Mypy static type checker plugin for Pytest"
-category = "dev"
-optional = false
-python-versions = "~=3.4"
-files = [
-    {file = "pytest-mypy-0.6.2.tar.gz", hash = "sha256:2560a9b27d59bb17810d12ec3402dfc7c8e100e40539a70d2814bcbb27240f27"},
-    {file = "pytest_mypy-0.6.2-py3-none-any.whl", hash = "sha256:76e705cfd3800bf2b534738e792245ac5bb8d780698d0f8cd6c79032cc5e9923"},
-]
-
-[package.dependencies]
-filelock = ">=3.0"
-mypy = {version = ">=0.700", markers = "python_version >= \"3.8\""}
-pytest = {version = ">=3.5", markers = "python_version >= \"3.5\""}
 
 [[package]]
 name = "python-dateutil"
@@ -2845,4 +2830,4 @@ requests = "*"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1"
-content-hash = "ef9b54342791db3abbb55bb4375d8587a2c03fe42b2d9f8da2be57052bab9dcc"
+content-hash = "4af34374950479cb0fbe611cf8933a0f09bf303b8ce33086b8a2eb2e04466c81"
