@@ -151,8 +151,8 @@ def create_chunked_data(file_path: str,
     for chunk_index in chunks_indices:
         text_list = []
         duration_sum = 0
-        for segment in json_file['transcript'][
-                       chunk_index[0]:chunk_index[1] + 1]:
+        start, end = chunk_index
+        for segment in json_file['transcript'][start:end + 1]:
             text_list.append(segment['text'])
             duration_sum += segment['duration']
         chunks.append({
