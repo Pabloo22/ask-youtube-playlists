@@ -34,13 +34,6 @@ pylint = "^2.17.4"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.flake8]
-files = ["ask_youtube_playlists", "tests", "web_app"]
-max-line-length = 79
-max-complexity = 18
-ignore = ["F401"]
-select = ["B","C","E","F","W","T4","B9"]
-
 [tool.mypy]
 files = ["ask_youtube_playlists", "tests", "web_app"]
 check_untyped_defs = true
