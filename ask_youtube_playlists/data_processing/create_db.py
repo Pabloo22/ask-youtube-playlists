@@ -4,6 +4,7 @@ from langchain import embeddings
 from langchain.schema import Document
 from langchain import vectorstores
 import os
+import pathlib
 import json
 from typing import List, Union, Optional
 
@@ -103,4 +104,21 @@ def extract_documents_from_json(json_path: Union[str, os.PathLike], text_key: st
     json_data = read_json(json_path)
     documents = _extract_documents_from_list_of_dicts(json_data, text_key=text_key)
     return documents
+
+
+def extract_json_files_from_directory(directory_path: Union[str, os.PathLike],
+                                      start_with: str = "") -> List[pathlib.Path]:
+    """Extracts the json files path from a directory.
+
+    Args:
+        directory_path (Union[str, os.PathLike]): Path to the directory with the json files. Usually
+            .../data/playlist_name/processed.
+        start_with (str): The json files must start with this string. Defaults to "".
+    """
+    directory_path = pathlib.Path(directory_path)
+    json_files = list(directory_path.glob(f"{start_with}*.json"))
+    return json_files
+
+
+
 
