@@ -1,15 +1,18 @@
 """Functions to create the Vector database."""
+import os
+import pathlib
+import json
+
+from typing import List, Union
+
 from langchain.embeddings import base
 from langchain import embeddings
 from langchain.schema import Document
 from langchain import vectorstores
-import os
-import pathlib
-import json
-from typing import List, Union
 
 
-def get_embedding_model(model_type: str = "sentence-transformers", **kwargs) -> base.Embeddings:
+def get_embedding_model(model_type: str = "sentence-transformers",
+                        **kwargs) -> base.Embeddings:
     """Returns the embedding model.
 
     Args:
@@ -38,10 +41,12 @@ def get_vectorstore(embedding_model: base.Embeddings,
     """Returns a vector store that contains the vectors of the documents.
 
     Note:
-        In order to be able to make the vector store persistent, the `vector_store_type` should be `chroma-db`
-        and the `kwargs` should contain the `persist_directory` argument with the path to the directory where
-        the vector store will be saved or loaded from. The `persist_directory` is where Chroma will store its database
-        files on disk, and load them on start.
+        In order to be able to make the vector store persistent, the
+        `vector_store_type` should be `chroma-db` and the `kwargs` should
+        contain the `persist_directory` argument with the path to the directory
+        where the vector store will be saved or loaded from. The
+        `persist_directory` is where Chroma will store its database files on
+        disk, and load them on start.
 
     Args:
         embedding_model (Embeddings): Embedding function.
@@ -50,20 +55,25 @@ def get_vectorstore(embedding_model: base.Embeddings,
         **kwargs: Additional arguments passed to the `from_documents` method.
 
     Raises:
-        ValueError: If the `persist_directory` argument is not provided when the vector store type is `chroma-db`.
+        ValueError: If the `persist_directory` argument is not provided when
+            the vector store type is `chroma-db`.
     """
 
     if vector_store_type == "chroma-db" and "persist_directory" not in kwargs:
-        raise ValueError("The `persist_directory` argument should be provided when the vector store "
-                         "type is `chroma-db`. If you want to use an in-memory vector store, "
-                         "set the `vector_store_type` argument to `in-memory`.")
+        raise ValueError(
+            "The `persist_directory` argument should be provided when the "
+            "vector store type is `chroma-db`. If you want to use an in-memory"
+            " vector store, set the `vector_store_type` argument to "
+            "`in-memory`.")
 
     object_mapper = {
         "chroma-db": vectorstores.Chroma,
         "in-memory": vectorstores.DocArrayInMemorySearch,
     }
 
-    vectorstore = object_mapper[vector_store_type].from_documents(documents, embedding_model, **kwargs)
+    vectorstore = object_mapper[vector_store_type].from_documents(
+        documents, embedding_model, **kwargs
+    )
     return vectorstore
 
 
@@ -75,22 +85,27 @@ def _read_json(json_path: Union[str, os.PathLike]) -> Union[List[dict], dict]:
     return json_data
 
 
-def _extract_documents_from_list_of_dicts(json_data: List[dict], text_key: str = "text") -> List[Document]:
+def _extract_documents_from_list_of_dicts(json_data: List[dict],
+                                          text_key: str = "text") -> \
+        List[Document]:
     """Extracts documents from a list of dictionaries."""
     documents = []
     for item in json_data:
         if text_key not in item:
             raise KeyError(f"Key {text_key} not found in item {item}.")
         text = item[text_key]
-        metadata = {key: value for key, value in item.items() if key != text_key}
-        document = Document(text, metadata)
+        metadata = {key: value for key, value in item.items() if
+                    key != text_key}
+        document = Document(page_content=text, metadata=metadata)
         documents.append(document)
 
     return documents
 
 
-def _extract_documents_from_json(json_path: Union[str, os.PathLike], text_key: str = "text") -> List[Document]:
-    """Reads a json file with the youtube video transcripts format and creates a list of documents.
+def _extract_documents_from_json(json_path: Union[str, os.PathLike],
+                                 text_key: str = "text") -> List[Document]:
+    """Reads a json file with the youtube video transcripts format and creates
+    a list of documents.
 
     The json file should have the following format:
     [{
@@ -105,7 +120,8 @@ def _extract_documents_from_json(json_path: Union[str, os.PathLike], text_key: s
         ...
     },
     ...]
-    It must have at least the `text` field. The other fields are stored as metadata.
+    It must have at least the `text` field. The other fields are stored as
+    metadata.
 
     Args:
         json_path (Union[str, os.PathLike]): Path to the json file.
@@ -116,18 +132,21 @@ def _extract_documents_from_json(json_path: Union[str, os.PathLike], text_key: s
     """
 
     json_data = _read_json(json_path)
-    documents = _extract_documents_from_list_of_dicts(json_data, text_key=text_key)
+    documents = _extract_documents_from_list_of_dicts(json_data,
+                                                      text_key=text_key)
     return documents
 
 
 def _extract_json_files_from_directory(directory_path: Union[str, os.PathLike],
-                                       start_with: str = "") -> List[pathlib.Path]:
+                                       start_with: str = "") -> List[
+    pathlib.Path]:
     """Extracts the json files path from a directory.
 
     Args:
-        directory_path (Union[str, os.PathLike]): Path to the directory with the json files. Usually
-            .../data/playlist_name/processed.
-        start_with (str): The json files must start with this string. Defaults to "".
+        directory_path (Union[str, os.PathLike]): Path to the directory with
+            the json files. Usually .../data/playlist_name/processed.
+        start_with (str): The json files must start with this string. Defaults
+            to "".
     """
     directory_path = pathlib.Path(directory_path)
     json_files = list(directory_path.glob(f"{start_with}*.json"))
@@ -140,15 +159,18 @@ def get_documents_from_directory(directory_path: Union[str, os.PathLike],
     """Extracts the documents from a directory with json files.
 
     Args:
-        directory_path (Union[str, os.PathLike]): Path to the directory with the json files. Usually
-            .../data/playlist_name/processed.
-        start_with (str): The json files must start with this string. Defaults to "".
+        directory_path (Union[str, os.PathLike]): Path to the directory with
+            the json files. Usually .../data/playlist_name/processed.
+        start_with (str): The json files must start with this string. Defaults
+            to "".
         text_key (str): The key of the text field. Defaults to "text".
     """
-    json_files = _extract_json_files_from_directory(directory_path, start_with=start_with)
+    json_files = _extract_json_files_from_directory(directory_path,
+                                                    start_with=start_with)
     documents = []
     for json_file in json_files:
-        documents.extend(_extract_documents_from_json(json_file, text_key=text_key))
+        documents.extend(
+            _extract_documents_from_json(json_file, text_key=text_key))
 
     return documents
 
@@ -156,7 +178,8 @@ def get_documents_from_directory(directory_path: Union[str, os.PathLike],
 def save_vectorstore(chroma_vectorstore: vectorstores.Chroma) -> None:
     """Makes the vectorstore persistent in the local disk.
 
-    The vectorstore is saved in the persist directory indicated when the vectorstore was created.
+    The vectorstore is saved in the persist directory indicated when the
+    vectorstore was created.
 
     Args:
         chroma_vectorstore (VectorStore): The vectorstore.
