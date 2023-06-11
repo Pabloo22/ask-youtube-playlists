@@ -3,12 +3,16 @@ import os
 import pathlib
 import json
 
-from typing import List, Union
+from typing import List, Union, Dict, Callable
 
 from langchain.embeddings import base
 from langchain import embeddings
 from langchain.schema import Document
 from langchain import vectorstores
+
+
+DocumentDict = Dict[str, Union[str, float]]
+PathLike = Union[str, os.PathLike]
 
 
 def get_embedding_model(model_type: str = "sentence-transformers",
@@ -66,18 +70,18 @@ def get_vectorstore(embedding_model: base.Embeddings,
             " vector store, set the `vector_store_type` argument to "
             "`in-memory`.")
 
-    object_mapper = {
-        "chroma-db": vectorstores.Chroma,
-        "in-memory": vectorstores.DocArrayInMemorySearch,
+    object_mapper: Dict[str, Callable] = {
+        "chroma-db": vectorstores.Chroma.from_documents,
+        "in-memory": vectorstores.DocArrayInMemorySearch.from_documents,
     }
 
-    vectorstore = object_mapper[vector_store_type].from_documents(
+    vectorstore = object_mapper[vector_store_type](
         documents, embedding_model, **kwargs
     )
     return vectorstore
 
 
-def _read_json(json_path: Union[str, os.PathLike]) -> Union[List[dict], dict]:
+def _read_json(json_path: PathLike) -> List[DocumentDict]:
     """Reads a json file and returns the data."""
     with open(json_path, "r", encoding="utf-8") as file:
         json_data = json.load(file)
@@ -102,9 +106,9 @@ def _extract_documents_from_list_of_dicts(json_data: List[dict],
     return documents
 
 
-def _extract_documents_from_json(json_path: Union[str, os.PathLike],
+def _extract_documents_from_json(json_path: PathLike,
                                  text_key: str = "text") -> List[Document]:
-    """Reads a json file with the youtube video transcripts format and creates
+    """Reads a json file with the YouTube video transcripts format and creates
     a list of documents.
 
     The json file should have the following format:
@@ -137,9 +141,9 @@ def _extract_documents_from_json(json_path: Union[str, os.PathLike],
     return documents
 
 
-def _extract_json_files_from_directory(directory_path: Union[str, os.PathLike],
-                                       start_with: str = "") -> List[
-    pathlib.Path]:
+def _extract_json_files_from_directory(directory_path: PathLike,
+                                       start_with: str = ""
+                                       ) -> List[pathlib.Path]:
     """Extracts the json files path from a directory.
 
     Args:
