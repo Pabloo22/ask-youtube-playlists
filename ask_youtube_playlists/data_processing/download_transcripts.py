@@ -1,19 +1,21 @@
 """Code to download the transcripts from YouTube."""
 import pathlib
-import pytube
 import json
 import logging
-import youtube_transcript_api
+from typing import Dict, List, Union, Optional
 
-from typing import Dict, List, Union
+import pytube  # type: ignore
+from youtube_transcript_api import YouTubeTranscriptApi  # type: ignore
 
 
 def get_playlist_info(url: str) -> Dict[str, str]:
     """Gets the video IDs and titles from a YouTube playlist.
+
     Args:
         url (str): The URL of the YouTube playlist.
     Returns:
-        Dict[str, str]: A dictionary with the video titles as keys and the video IDs as values.
+        Dict[str, str]: A dictionary with the video titles as keys and the
+            video IDs as values.
         """
     playlist = pytube.Playlist(url)
 
@@ -29,40 +31,43 @@ def get_playlist_info(url: str) -> Dict[str, str]:
 def download_transcript(video_title: str,
                         video_id: str,
                         output_path: pathlib.Path,
-                        logger: logging.Logger = None) -> None:
-    """Download the transcript of a YouTube video.
+                        logger: Optional[logging.Logger] = None) -> None:
+    """Downloads the transcript of a YouTube video.
+
     Args:
         video_title (str): The title of the YouTube video.
         video_id (str): The ID of the YouTube video.
         output_path (pathlib.Path): The path to the output file.
         logger (logging.Logger): The logger.
+
     Raises:
         Exception: If the transcript cannot be downloaded.
     """
     try:
         # Download transcript with youtube_transcript_api
-        transcript = youtube_transcript_api.YouTubeTranscriptApi.get_transcript(video_id, languages=['en', 'en-US'])
+        transcript = YouTubeTranscriptApi.get_transcript(
+            video_id, languages=['en', 'en-US'])
 
         # Save transcript to a JSON file
         with open(output_path, 'w', encoding='utf-8') as file:
-            # Put the title and the video ID at the top of the JSON file and then dump the transcript
+            # Put the title and the video ID at the top of the JSON file and
+            # then dump the transcript
             json.dump({
                 'title': video_title,
                 'video_id': video_id,
                 'transcript': transcript}, file, ensure_ascii=False, indent=4)
 
-        # print(f'Transcript has been saved to {output_file}')
         if logger is not None:
             logger.info(f'Transcript has been saved to {output_path}')
 
-    except Exception as e:
-        # print('An error occurred:', str(e))
+    except Exception as error_msg:
         if logger is not None:
-            logger.error(f'An error occurred: {str(e)}')
+            logger.error(f'An error occurred: {str(error_msg)}')
 
 
 def download_playlist(url: str, data_path: pathlib.Path) -> None:
-    """Download the transcripts of a YouTube playlist.
+    """Downloads the transcripts of a YouTube playlist.
+
     Args:
         url (str): The URL of the YouTube playlist.
         data_path (pathlib.Path): The path to the data directory.
@@ -75,7 +80,8 @@ def download_playlist(url: str, data_path: pathlib.Path) -> None:
 
 
 def _replace_newlines(json_file: dict) -> None:
-    """Replace \n with a space
+    """Replaces \n with a space
+
     Args:
         json_file (dict): The JSON file.
         """
@@ -83,24 +89,29 @@ def _replace_newlines(json_file: dict) -> None:
         segment['text'] = segment['text'].replace('\n', ' ')
 
 
-def create_chunked_data(file: str,
+def create_chunked_data(file_path: str,
                         max_chunk_size: int,
-                        min_overlap_size: int) -> List[Dict[str, Union[str, List[str]]]]:
-    """Create chunked data from a JSON file.
+                        min_overlap_size: int
+                        ) -> List[Dict[str, Union[str, List[str]]]]:
+    """Creates chunked data from a JSON file.
+
     Args:
-        file (str): The path to the JSON file.
+        file_path (str): The path to the JSON file.
         max_chunk_size (int): The maximum size of a chunk.
-        min_overlap_size (int): The minimum size of the overlap between two chunks.
+        min_overlap_size (int): The minimum size of the overlap between two
+            chunks.
     Returns:
-        List[Dict[str, Union[str, List[str]]]]: A dictionary with the chunked data.
+        List[Dict[str, Union[str, List[str]]]]: A dictionary with the chunked
+            data.
         """
-    with open(file, 'r') as f:
-        json_file = json.load(f)
+    with open(file_path, 'r') as file:
+        json_file = json.load(file)
 
     # Replace \n with a space
     _replace_newlines(json_file)
 
-    segment_lengths = [len(json_file['transcript'][segment]['text']) for segment in range(len(json_file['transcript']))]
+    segment_lengths = [len(json_file['transcript'][segment]['text']) for
+                       segment in range(len(json_file['transcript']))]
 
     # Split the transcript into chunks
     chunks_indices = []
@@ -126,10 +137,12 @@ def create_chunked_data(file: str,
     # Now that we have the chunk indices, we can create the chunks
     chunks = [{
         'text': ' '.join(
-            [segment['text'] for segment in json_file['transcript'][chunk_index[0]:chunk_index[1] + 1]]),
+            [segment['text'] for segment in
+             json_file['transcript'][chunk_index[0]:chunk_index[1] + 1]]),
         'start': json_file['transcript'][chunk_index[0]]['start'],
         'duration': sum(
-            [segment['duration'] for segment in json_file['transcript'][chunk_index[0]:chunk_index[1] + 1]]),
+             segment['duration'] for segment in
+             json_file['transcript'][chunk_index[0]:chunk_index[1] + 1]),
         'url': json_file['url'],
         'title': json_file['title']}
         for chunk_index in chunks_indices]
