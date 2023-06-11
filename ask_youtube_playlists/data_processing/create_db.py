@@ -31,16 +31,17 @@ def get_embedding_model(model_type: str = "sentence-transformers", **kwargs) -> 
     return embedding_model
 
 
-def create_vectorstore(embedding_model: base.Embeddings,
-                       documents: List[Document],
-                       vector_store_type: str = "chroma",
-                       **kwargs) -> vectorstores.VectorStore:
+def get_vectorstore(embedding_model: base.Embeddings,
+                    documents: List[Document],
+                    vector_store_type: str = "chroma",
+                    **kwargs) -> vectorstores.VectorStore:
     """Returns a vector store that contains the vectors of the documents.
 
     Note:
         In order to be able to make the vector store persistent, the `vector_store_type` should be `chroma-db`
         and the `kwargs` should contain the `persist_directory` argument with the path to the directory where
-        the vector store will be saved.
+        the vector store will be saved or loaded from. The `persist_directory` is where Chroma will store its database
+        files on disk, and load them on start.
 
     Args:
         embedding_model (Embeddings): Embedding function.
@@ -66,7 +67,7 @@ def create_vectorstore(embedding_model: base.Embeddings,
     return vectorstore
 
 
-def read_json(json_path: Union[str, os.PathLike]) -> Union[List[dict], dict]:
+def _read_json(json_path: Union[str, os.PathLike]) -> Union[List[dict], dict]:
     """Reads a json file and returns the data."""
     with open(json_path, "r", encoding="utf-8") as file:
         json_data = json.load(file)
@@ -88,7 +89,7 @@ def _extract_documents_from_list_of_dicts(json_data: List[dict], text_key: str =
     return documents
 
 
-def extract_documents_from_json(json_path: Union[str, os.PathLike], text_key: str = "text") -> List[Document]:
+def _extract_documents_from_json(json_path: Union[str, os.PathLike], text_key: str = "text") -> List[Document]:
     """Reads a json file with the youtube video transcripts format and creates a list of documents.
 
     The json file should have the following format:
@@ -114,13 +115,13 @@ def extract_documents_from_json(json_path: Union[str, os.PathLike], text_key: st
         List[Document]: List of documents.
     """
 
-    json_data = read_json(json_path)
+    json_data = _read_json(json_path)
     documents = _extract_documents_from_list_of_dicts(json_data, text_key=text_key)
     return documents
 
 
-def extract_json_files_from_directory(directory_path: Union[str, os.PathLike],
-                                      start_with: str = "") -> List[pathlib.Path]:
+def _extract_json_files_from_directory(directory_path: Union[str, os.PathLike],
+                                       start_with: str = "") -> List[pathlib.Path]:
     """Extracts the json files path from a directory.
 
     Args:
@@ -133,6 +134,25 @@ def extract_json_files_from_directory(directory_path: Union[str, os.PathLike],
     return json_files
 
 
+def get_documents_from_directory(directory_path: Union[str, os.PathLike],
+                                 start_with: str = "",
+                                 text_key: str = "text") -> List[Document]:
+    """Extracts the documents from a directory with json files.
+
+    Args:
+        directory_path (Union[str, os.PathLike]): Path to the directory with the json files. Usually
+            .../data/playlist_name/processed.
+        start_with (str): The json files must start with this string. Defaults to "".
+        text_key (str): The key of the text field. Defaults to "text".
+    """
+    json_files = _extract_json_files_from_directory(directory_path, start_with=start_with)
+    documents = []
+    for json_file in json_files:
+        documents.extend(_extract_documents_from_json(json_file, text_key=text_key))
+
+    return documents
+
+
 def save_vectorstore(chroma_vectorstore: vectorstores.Chroma) -> None:
     """Makes the vectorstore persistent in the local disk.
 
@@ -142,7 +162,3 @@ def save_vectorstore(chroma_vectorstore: vectorstores.Chroma) -> None:
         chroma_vectorstore (VectorStore): The vectorstore.
     """
     chroma_vectorstore.persist()
-
-
-
-

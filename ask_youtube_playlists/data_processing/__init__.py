@@ -5,4 +5,4 @@ The installation process consists of the following steps:
 2. Preprocess the data.
 3. Convert the data to vectors.
 """
-from .create_db import get_embedding_model, create_vectorstore
+from .create_db import get_embedding_model, get_vectorstore, get_documents_from_directory, save_vectorstore
