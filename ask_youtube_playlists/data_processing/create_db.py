@@ -1,4 +1,4 @@
-"""Creates the Vector database."""
+"""Functions to create the Vector database."""
 from langchain.embeddings import base
 from langchain import embeddings
 from langchain.schema import Document
@@ -6,7 +6,7 @@ from langchain import vectorstores
 import os
 import pathlib
 import json
-from typing import List, Union, Optional
+from typing import List, Union
 
 
 def get_embedding_model(model_type: str = "sentence-transformers", **kwargs) -> base.Embeddings:
@@ -34,15 +34,28 @@ def get_embedding_model(model_type: str = "sentence-transformers", **kwargs) -> 
 def create_vectorstore(embedding_model: base.Embeddings,
                        documents: List[Document],
                        vector_store_type: str = "chroma",
-                       **kwargs) -> None:
-    """Creates the local database.
+                       **kwargs) -> vectorstores.VectorStore:
+    """Returns a vector store that contains the vectors of the documents.
+
+    Note:
+        In order to be able to make the vector store persistent, the `vector_store_type` should be `chroma-db`
+        and the `kwargs` should contain the `persist_directory` argument with the path to the directory where
+        the vector store will be saved.
 
     Args:
         embedding_model (Embeddings): Embedding function.
         documents (List[Document]): List of documents.
         vector_store_type (str): The vector store type.
         **kwargs: Additional arguments passed to the `from_documents` method.
+
+    Raises:
+        ValueError: If the `persist_directory` argument is not provided when the vector store type is `chroma-db`.
     """
+
+    if vector_store_type == "chroma-db" and "persist_directory" not in kwargs:
+        raise ValueError("The `persist_directory` argument should be provided when the vector store "
+                         "type is `chroma-db`. If you want to use an in-memory vector store, "
+                         "set the `vector_store_type` argument to `in-memory`.")
 
     object_mapper = {
         "chroma-db": vectorstores.Chroma,
@@ -118,6 +131,17 @@ def extract_json_files_from_directory(directory_path: Union[str, os.PathLike],
     directory_path = pathlib.Path(directory_path)
     json_files = list(directory_path.glob(f"{start_with}*.json"))
     return json_files
+
+
+def save_vectorstore(chroma_vectorstore: vectorstores.Chroma) -> None:
+    """Makes the vectorstore persistent in the local disk.
+
+    The vectorstore is saved in the persist directory indicated when the vectorstore was created.
+
+    Args:
+        chroma_vectorstore (VectorStore): The vectorstore.
+    """
+    chroma_vectorstore.persist()
 
 
 
