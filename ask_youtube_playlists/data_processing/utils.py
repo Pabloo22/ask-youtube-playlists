@@ -1,6 +1,9 @@
-import dotenv
+"""Utility functions for data processing."""
 import os
 import pathlib
+import dotenv
+
+from typing import Optional
 
 
 def get_directory(directory: str = "data") -> pathlib.Path:
@@ -21,13 +24,13 @@ def get_directory(directory: str = "data") -> pathlib.Path:
         "data": "DATA_DIR",
         "models": "MODELS_DIR",
     }
-    if directory in mapper:
-        directory = mapper[directory]
+    directory = mapper.get(directory, directory)
 
     dotenv.load_dotenv()
-    directory = os.getenv(directory)
+    directory = os.getenv(directory)  # type: ignore
 
     if directory is None:
-        raise ValueError(f"Variable '{directory}' does not exist in .env file.")
+        raise ValueError(f"Variable '{directory}' does not exist in "
+                         f".env file.")
 
     return pathlib.Path(directory)

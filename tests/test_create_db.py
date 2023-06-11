@@ -6,7 +6,8 @@ from ask_youtube_playlists.data_processing import get_embedding_model
 
 def test_get_embedding_model_sentence_transformers():
     # Test case for sentence-transformers
-    model = get_embedding_model("sentence-transformers", model_name="all-MiniLM-L6-v2")
+    model = get_embedding_model("sentence-transformers",
+                                model_name="all-MiniLM-L6-v2")
     assert isinstance(model, embeddings.SentenceTransformerEmbeddings)
 
 
@@ -19,8 +20,9 @@ def test_get_embedding_model_sentence_transformers():
 def test_get_embedding_model_unsupported_type():
     # Test case for unsupported model type
     with pytest.raises(ValueError) as e_info:
-        model = get_embedding_model("unsupported_model_type")
-    assert str(e_info.value) == "Model type unsupported_model_type is not supported."
+        _ = get_embedding_model("unsupported_model_type")
+    assert str(e_info.value) == "Model type unsupported_model_type is not " \
+                                "supported."
 
 
 if __name__ == "__main__":

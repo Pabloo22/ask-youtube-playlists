@@ -4,8 +4,8 @@ import json
 import logging
 from typing import Dict, List, Union, Optional
 
-import pytube  # type: ignore
-from youtube_transcript_api import YouTubeTranscriptApi  # type: ignore
+import pytube
+from youtube_transcript_api import YouTubeTranscriptApi
 
 
 def get_playlist_info(url: str) -> Dict[str, str]:
@@ -135,16 +135,32 @@ def create_chunked_data(file_path: str,
         current_chunk_size += 1
 
     # Now that we have the chunk indices, we can create the chunks
-    chunks = [{
-        'text': ' '.join(
-            [segment['text'] for segment in
-             json_file['transcript'][chunk_index[0]:chunk_index[1] + 1]]),
-        'start': json_file['transcript'][chunk_index[0]]['start'],
-        'duration': sum(
-             segment['duration'] for segment in
-             json_file['transcript'][chunk_index[0]:chunk_index[1] + 1]),
-        'url': json_file['url'],
-        'title': json_file['title']}
-        for chunk_index in chunks_indices]
+    # chunks = [{
+    #     'text': ' '.join(
+    #         [segment['text'] for segment in
+    #          json_file['transcript'][chunk_index[0]:chunk_index[1] + 1]]),
+    #     'start': json_file['transcript'][chunk_index[0]]['start'],
+    #     'duration': sum(
+    #         segment['duration'] for segment in
+    #         json_file['transcript'][chunk_index[0]:chunk_index[1] + 1]),
+    #     'url': json_file['url'],
+    #     'title': json_file['title']}
+    #     for chunk_index in chunks_indices]
+
+    chunks = []
+    for chunk_index in chunks_indices:
+        text_list = []
+        duration_sum = 0
+        for segment in json_file['transcript'][
+                       chunk_index[0]:chunk_index[1] + 1]:
+            text_list.append(segment['text'])
+            duration_sum += segment['duration']
+        chunks.append({
+            'text': ' '.join(text_list),
+            'start': json_file['transcript'][chunk_index[0]]['start'],
+            'duration': duration_sum,
+            'url': json_file['url'],
+            'title': json_file['title']
+        })
 
     return chunks
