@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ubuntu-latest, windows-latest]
-        python-version: [3.9]
+        python-version: ["3.9", "3.11"]
 
     steps:
     - name: Checkout code
@@ -27,12 +27,11 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install tox
         pip install poetry
         poetry install
 
     - name: Run tests
-      run: tox
+      run: poetry run pytest -v
 
   lint:
 
