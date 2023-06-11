@@ -1,7 +1,7 @@
 import pytest
 from langchain import embeddings
 
-from ask_youtube_playlists.setup import get_embedding_model
+from ask_youtube_playlists.data_processing import get_embedding_model
 
 
 def test_get_embedding_model_sentence_transformers():
