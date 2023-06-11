@@ -2,13 +2,8 @@
 import pathlib
 
 
-class AskYoutubePlaylist:
+class QuestionAnswerer:
 
     def __init__(self,
                  data_path: pathlib.Path):
-        """Initializes the AskYoutubePlaylist class.
-
-        Args:
-            data_path (pathlib.Path): Path to the data.
-        """
         self.data_path = data_path
