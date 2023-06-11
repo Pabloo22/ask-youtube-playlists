@@ -1,4 +1,6 @@
 # Ask Your Favorite YouTube Playlist
+[![Tests](https://github.com/Pabloo22/ask-youtube-playlists/actions/workflows/tests.yaml/badge.svg)](https://github.com/Pabloo22/ask-youtube-playlists/actions/workflows/tests.yaml)
+
 This web application allows users to ask questions about any YouTube playlist. The app is still in development.
 
 
