@@ -28,6 +28,7 @@ def retrieve(question: str,
     the playlist they belong to.
 
     This function retrieves documents in two steps:
+
     1. Extracts the most relevant documents from each vectorstore in
     `vectorstores_dict`.
     2. Ranks the retrieved documents from all vectorstores and returns the
