@@ -31,6 +31,7 @@ def retrieve(question: str,
 
     1. Extracts the most relevant documents from each vectorstore in
     `vectorstores_dict`.
+
     2. Ranks the retrieved documents from all vectorstores and returns the
     most relevant ones, in addition to their relevance score and the playlist
     they belong to.
