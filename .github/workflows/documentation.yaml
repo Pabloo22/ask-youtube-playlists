@@ -17,7 +17,8 @@ jobs:
           poetry install
       - name: Sphinx build
         run: |
-          sphinx-build -b html docs/source/ docs/build/html
+          poetry run sphinx-apidoc -f -o docs/source .    
+          poetry run sphinx-build -b html docs/source/ docs/build/html
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
