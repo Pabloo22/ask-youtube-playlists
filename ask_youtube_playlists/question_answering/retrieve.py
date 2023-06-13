@@ -24,16 +24,15 @@ class DocumentInfo(NamedTuple):
 def retrieve(question: str,
              vectorstores_dict: Dict[str, vectorstores.VectorStore],
              n_documents: int) -> List[DocumentInfo]:
-    """Retrieves the most relevant documents for a given question using
-    multiple playlists.
+    """Retrieves the most relevant documents with their relevance score and
+    the playlist they belong to.
 
     This function retrieves documents in two steps:
     1. Extracts the most relevant documents from each vectorstore in
     `vectorstores_dict`.
     2. Ranks the retrieved documents from all vectorstores and returns the
-    most relevant ones.
-
-    The returned metadata includes the playlist to which each document belongs.
+    most relevant ones, in addition to their relevance score and the playlist
+    they belong to.
 
     Args:
         question (str): The question posed by the user.
@@ -42,9 +41,9 @@ def retrieve(question: str,
         n_documents (int): The number of documents to retrieve.
 
     Returns:
-        list: A list of tuples, each containing the document, its relevance
-        score and the playlist it belongs to. The list is sorted in descending
-        order by relevance score.
+        list: A list of named tuples, each containing the document, its
+        relevance score and the playlist it belongs to. The list is sorted in
+        descending order by relevance score.
     """
     retrieved_documents = []
     for playlist_name, vectorstore in vectorstores_dict.items():
