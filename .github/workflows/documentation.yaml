@@ -8,9 +8,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
+        with:
+          python-version: 3.10
       - name: Install dependencies
         run: |
-          pip install sphinx sphinx_rtd_theme sphinx-hoverxref sphinx-last-updated-by-git
+          pip install --upgrade pip
+          pip install poetry
+          poetry install
       - name: Sphinx build
         run: |
           sphinx-build -b html docs/source/ docs/build/html
