@@ -3,8 +3,6 @@ import os
 import pathlib
 import dotenv
 
-from typing import Optional
-
 
 def get_directory(directory: str = "data") -> pathlib.Path:
     """Returns the project directory containing the .env file.
