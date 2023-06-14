@@ -1,6 +1,8 @@
 import streamlit as st
 import re  # regex library
 import time
+import pathlib
+from ask_youtube_playlists.data_processing.download_transcripts import download_playlist
 
 # youtube playlist link to test:
 # https://www.youtube.com/playlist?list=PLPNW_gerXa4Pc8S2qoUQc5e8Ir97RLuVW
@@ -81,11 +83,19 @@ def main():
         # the user can only insert a question if the link is valid
         if is_youtube_playlist(youtube_link):
             st.success("Valid YouTube playlist link!")
+
+            parent_path = pathlib.Path(__file__).parent
+            while parent_path.name!="ask-youtube-playlists":
+                parent_path = parent_path.parent
+            
+            playlist_path = parent_path / 'data' / playlist_name
+
+            if not playlist_path.exists():
+                playlist_path.mkdir()
+
+            download_playlist(youtube_link, playlist_path, use_st_progress_bar="true")
             
             # TODO call the function that downloads the playlist
-            # download progress bar
-            download_file()
-
             # TODO get the names of the playlist
             # TODO Add the playlist details to the list (change youtube_link to the name of the playlist)
             playlist_list.append({"playlist_name": playlist_name})
