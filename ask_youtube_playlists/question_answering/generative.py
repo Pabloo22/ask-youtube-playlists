@@ -1,5 +1,5 @@
-"""Contains the functionality to answer a question given a list of
-documents."""
+"""Contains the functionality to answer a question using generative
+models."""
 from dataclasses import dataclass
 from typing import List
 
@@ -13,19 +13,19 @@ class LLMSpec:
     """Class to store the information of a language model.
 
     Attributes:
-        name (str): The name of the language model.
+        model_name (str): The name of the language model.
         model_type (str): The class or method used to load the language model.
     """
-    name: str
+    model_name: str
     model_type: str
     max_tokens: int
 
 
 GENERATIVE_MODELS = [
-    # LLMSpec("bloom-1b7", "huggingface_pipeline"),
-    LLMSpec("gpt-3.5-turbo", "openai", max_tokens=4096),
-    LLMSpec("gpt-3.5-turbo-16k", "openai", max_tokens=16384),
-    LLMSpec("gpt-4", "openai", max_tokens=32768),
+    LLMSpec("gpt-2", "huggingface-pipeline", max_tokens=1024),
+    LLMSpec("gpt-3.5-turbo", "openai-chat", max_tokens=4096),
+    LLMSpec("gpt-3.5-turbo-16k", "openai-chat", max_tokens=16384),
+    LLMSpec("gpt-4", "openai-chat", max_tokens=8192),
 ]
 
 
@@ -42,7 +42,7 @@ def get_model_spec(model_name: str) -> LLMSpec:
         ValueError: If the language model is not available.
     """
     for model_spec in GENERATIVE_MODELS:
-        if model_spec.name == model_name:
+        if model_spec.model_name == model_name:
             return model_spec
 
     raise ValueError(f"Model '{model_name}' not available. Available "
@@ -51,7 +51,7 @@ def get_model_spec(model_name: str) -> LLMSpec:
 
 def load_model(model_spec: LLMSpec,
                temperature: float = 0.7,
-               max_length: int = 128,
+               max_length: int = 1024,
                ) -> llms.base.BaseLLM:
     """Loads the language model.
 
@@ -74,8 +74,24 @@ def load_model(model_spec: LLMSpec,
     #         model_kwargs={"temperature": temperature,
     #                       "max_length": max_length}
     #     )
-    if model_spec.model_type == "openai_api":
-        pass
+    if model_spec.model_type == "openai-chat":
+        llm = llms.OpenAIChat(  # type: ignore
+            model_name=model_spec.model_name,
+            model_kwargs={"temperature": temperature,
+                          "max_length": max_length}
+        )
+        return llm
+    if model_spec.model_type == "huggingface-pipeline":
+        llm = llms.HuggingFacePipeline.from_model_id(  # type: ignore
+            model_id=model_spec.model_name,
+            task="text-generation",
+            model_kwargs={"temperature": temperature,
+                          "max_length": max_length}
+        )
+        return llm
+    available_models = [model.model_name for model in GENERATIVE_MODELS]
+    raise ValueError(f"Model type '{model_spec.model_type}' not available. "
+                     f"Available models are: {available_models}")
 
 
 def _get_generative_prompt_template(retrieved_documents: List[Document],
@@ -112,3 +128,7 @@ def get_generative_answer(question: str,
     Returns:
         str: The answer to the question.
     """
+    template = _get_generative_prompt_template(relevant_documents)
+    prompt = template.format(question=question)
+    answer = model.generate(prompts=[prompt])
+    return answer.generations[0][0].text
