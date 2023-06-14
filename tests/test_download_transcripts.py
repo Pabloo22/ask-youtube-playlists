@@ -30,7 +30,7 @@ def test_get_playlist_info():
 def test_download_transcript():
     video_title = "Test video"
     video_id = "slUCmZJDXrk"
-    data_path = pathlib.Path("data")
+    data_path = pathlib.Path("tests/data")
     output_file = data_path / "raw" / "test.json"
     print(output_file)
     download_transcript(video_title, video_id, output_file)
@@ -48,7 +48,7 @@ def test_download_transcript():
 def test_download_playlist():
     base_url = "https://www.youtube.com/playlist?list="
     url = base_url + "PLeKd45zvjcDFUEv_ohr_HdUFe97RItdiB"
-    data_path = pathlib.Path("data")
+    data_path = pathlib.Path("tests/data")
     download_playlist(url, data_path)
 
     for i in range(23):
@@ -73,7 +73,7 @@ def test__replace_newlines():
 
 
 def test_create_chunked_data():
-    data_path = pathlib.Path("data")
+    data_path = pathlib.Path("tests/data")
     file_path = data_path / "raw" / "example_download.json"
     max_chunk_size = 200
     min_overlap_size = 50
