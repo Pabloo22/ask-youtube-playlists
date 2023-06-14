@@ -10,7 +10,7 @@ import pytube
 from youtube_transcript_api import YouTubeTranscriptApi
 
 
-def get_playlist_info(url: str) -> Dict[str, str]:
+def _get_playlist_info(url: str) -> Dict[str, str]:
     """Gets the video IDs and titles from a YouTube playlist.
 
     Args:
@@ -77,7 +77,7 @@ def download_playlist(url: str,
         data_path (pathlib.Path): The path to the data directory.
         use_st_progress_bar (bool): Whether to use a Streamlit progress bar.
     """
-    video_id_dict = get_playlist_info(url)
+    video_id_dict = _get_playlist_info(url)
 
     total_videos = len(video_id_dict)
     progress_bar = None
