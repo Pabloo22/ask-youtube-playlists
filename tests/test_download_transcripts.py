@@ -4,7 +4,7 @@ import json
 import pytest
 
 from ask_youtube_playlists.data_processing.download_transcripts import (
-    get_playlist_info,
+    _get_playlist_info,
     download_transcript,
     download_playlist,
     _replace_newlines,
@@ -16,13 +16,13 @@ def test_get_playlist_info():
     # Test case for a valid playlist
     base_url = "https://www.youtube.com/playlist?list="
     url = base_url + "PLeKd45zvjcDFUEv_ohr_HdUFe97RItdiB"
-    video_id_dict = get_playlist_info(url)
+    video_id_dict = _get_playlist_info(url)
     assert isinstance(video_id_dict, dict)
     assert len(video_id_dict) == 23
 
     # Test case for an invalid playlist
     url = base_url + "PLeKd45zvjcDFUEv_ohr_HdUFe97RItdiB_invalid"
-    video_id_dict = get_playlist_info(url)
+    video_id_dict = _get_playlist_info(url)
     assert isinstance(video_id_dict, dict)
     assert len(video_id_dict) == 0
 
