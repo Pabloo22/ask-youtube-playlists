@@ -38,10 +38,10 @@ def get_embedding_model(model_type: str = "sentence-transformers",
     return embedding_model
 
 
-def get_vectorstore(embedding_model: base.Embeddings,
-                    documents: List[Document],
-                    vector_store_type: str = "chroma",
-                    **kwargs) -> vectorstores.VectorStore:
+def create_vectorstore(embedding_model: base.Embeddings,
+                       documents: List[Document],
+                       vector_store_type: str = "chroma",
+                       **kwargs) -> vectorstores.VectorStore:
     """Returns a vector store that contains the vectors of the documents.
 
     Note:
@@ -55,7 +55,8 @@ def get_vectorstore(embedding_model: base.Embeddings,
     Args:
         embedding_model (Embeddings): Embedding function.
         documents (List[Document]): List of documents.
-        vector_store_type (str): The vector store type.
+        vector_store_type (str): The vector store type. Can be `chroma-db` or
+            `in-memory`.
         **kwargs: Additional arguments passed to the `from_documents` method.
 
     Raises:
@@ -203,6 +204,6 @@ def load_vectorstore(persist_directory: Union[str, os.PathLike]
         VectorStore: The Chroma vectorstore.
     """
     chroma_vectorstore = vectorstores.Chroma(
-        persist_directory=persist_directory
+        persist_directory=str(persist_directory)
     )
     return chroma_vectorstore
