@@ -2,8 +2,12 @@ import streamlit as st
 import re  # regex library
 import time
 import pathlib
-from ask_youtube_playlists.data_processing.download_transcripts import \
-    download_playlist
+
+from ask_youtube_playlists.data_processing import (download_playlist,
+                                                   EMBEDDING_MODELS_NAMES
+                                                   )
+
+from utils import get_data_directory
 
 # youtube playlist link to test:
 # https://www.youtube.com/playlist?list=PLPNW_gerXa4Pc8S2qoUQc5e8Ir97RLuVW
@@ -33,8 +37,7 @@ with st.sidebar:
     st.header("Set parameters")
 
     # Embedding model selection
-    selected_model = st.selectbox("Embedding Model",
-                                  ["Bag of Words", "Word2Vec", "GloVe"])
+    embedding_model_name = st.selectbox("Embedding Model", EMBEDDING_MODELS_NAMES)
 
     # Update the sidebar with the new playlist name
     st.subheader("Available Playlists")
