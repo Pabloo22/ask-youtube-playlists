@@ -21,7 +21,7 @@ sentence-transformers = "^2.2.2"
 pytube = "^15.0.0"
 youtube-transcript-api = "^0.6.0"
 langchain = "^0.0.197"
-chromadb = "^0.3.26"
+chromadb = "^0.3.25, <0.3.26"
 streamlit = "^1.23.1"
 openai = "^0.27.8"
 
