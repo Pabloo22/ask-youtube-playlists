@@ -104,7 +104,7 @@ def get_embedding_spec(model_name: str) -> EmbeddingModelSpec:
                      f"supported model names are {supported_model_names}.")
 
 
-def create_vectorstore(embedding_model_name: base.Embeddings,
+def create_vectorstore(embedding_model_name: str,
                        documents: List[Document],
                        vector_store_type: str = "chroma",
                        **kwargs) -> vectorstores.VectorStore:
@@ -119,7 +119,7 @@ def create_vectorstore(embedding_model_name: base.Embeddings,
         disk, and load them on start.
 
     Args:
-        embedding_model_name (Embeddings): Embedding function.
+        embedding_model (str): The name of the embedding model.
         documents (List[Document]): List of documents.
         vector_store_type (str): The vector store type. Can be `chroma-db` or
             `in-memory`.
@@ -141,9 +141,11 @@ def create_vectorstore(embedding_model_name: base.Embeddings,
         "chroma-db": vectorstores.Chroma.from_documents,
         "in-memory": vectorstores.DocArrayInMemorySearch.from_documents,
     }
+    embedding_model_spec = get_embedding_spec(embedding_model_name)
+    embedding_model = get_embedding_model(embedding_model_spec)
 
     vectorstore = object_mapper[vector_store_type](
-        documents, embedding_model_name, **kwargs
+        documents, embedding_model, **kwargs
     )
     return vectorstore
 
