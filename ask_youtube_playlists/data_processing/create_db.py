@@ -2,6 +2,7 @@
 import os
 import pathlib
 import json
+from dataclasses import dataclass
 
 from typing import List, Union, Dict, Callable
 
@@ -10,38 +11,106 @@ from langchain import embeddings
 from langchain.schema import Document
 from langchain import vectorstores
 
+from .utils import get_device
 
 DocumentDict = Dict[str, Union[str, float]]
 PathLike = Union[str, os.PathLike]
 
+MODEL_TYPES = {
+    "sentence-transformers": embeddings.SentenceTransformerEmbeddings,
+    "openai": embeddings.OpenAIEmbeddings,
+}
 
-def get_embedding_model(model_type: str = "sentence-transformers",
-                        **kwargs) -> base.Embeddings:
+
+@dataclass
+class EmbeddingModelSpec:
+    """Class to store the specification of an embedding model.
+
+    Attributes:
+        model_name: The name of the embedding model.
+        model_type: The type of the embedding model. Can be
+            `sentence-transformers` or `openai`.
+        max_seq_length: The maximum number of tokens the model can handle.
+    """
+    model_name: str
+    model_type: str
+    max_seq_length: int
+
+    def __post_init__(self):
+        if self.model_type not in MODEL_TYPES:
+            raise ValueError(f"Model type {self.model_type} is not supported."
+                             f" The supported model types are "
+                             f"{list(MODEL_TYPES.keys())}.")
+
+
+EMBEDDING_MODELS = [
+    EmbeddingModelSpec(model_name="msmarco-MiniLM-L-6-v3",
+                       model_type="sentence-transformers",
+                       max_seq_length=512),
+    EmbeddingModelSpec(model_name="msmarco-distilbert-base-v4",
+                       model_type="sentence-transformers",
+                       max_seq_length=512),
+    EmbeddingModelSpec(model_name="msmarco-distilbert-base-tas-b",
+                       model_type="sentence-transformers",
+                       max_seq_length=512),
+    EmbeddingModelSpec(model_name="text-embedding-ada-002",
+                       model_type="openai",
+                       max_seq_length=8191),
+]
+
+
+def get_embedding_model(embedding_model_spec: EmbeddingModelSpec,
+                        ) -> base.Embeddings:
     """Returns the embedding model.
 
     Args:
-        model_type (str): The langchain model type.
+        embedding_model_spec (EmbeddingModelSpec): The langchain model type.
 
     Raises:
         ValueError: If the model type is not supported.
     """
 
-    object_mapper = {
-        "sentence-transformers": embeddings.SentenceTransformerEmbeddings,
-        # "openai": embeddings.OpenAIEmbeddings,
-    }
+    if embedding_model_spec.model_type == "sentence-transformers":
+        model_name = f"sentence-transformers/{embedding_model_spec.model_name}"
+        device = get_device()
+        model = embeddings.SentenceTransformerEmbeddings(
+            model_name=model_name,
+            model_kwargs={"device": device},
+        )
+    elif embedding_model_spec.model_type == "openai":
+        model = embeddings.OpenAIEmbeddings(  # type: ignore
+            model=embedding_model_spec.model_name,
+        )
+    else:
+        raise ValueError(f"Model type {embedding_model_spec.model_type} is not"
+                         f" supported. The supported model types are "
+                         f"{list(MODEL_TYPES.keys())}.")
+    return model
 
-    if model_type not in object_mapper:
-        raise ValueError(f"Model type {model_type} is not supported.")
 
-    embedding_model = object_mapper[model_type](**kwargs)
-    return embedding_model
+def get_embedding_spec(model_name: str) -> EmbeddingModelSpec:
+    """Returns the embedding model specification.
+
+    Args:
+        model_name (str): The name of the embedding model.
+
+    Raises:
+        ValueError: If the model name is not supported.
+    """
+    for embedding_model_spec in EMBEDDING_MODELS:
+        if embedding_model_spec.model_name == model_name:
+            return embedding_model_spec
+
+    supported_model_names = [embedding_model_spec.model_name
+                             for embedding_model_spec in EMBEDDING_MODELS]
+    raise ValueError(f"Model name {model_name} is not supported. The "
+                     f"supported model names are {supported_model_names}.")
 
 
-def get_vectorstore(embedding_model: base.Embeddings,
-                    documents: List[Document],
-                    vector_store_type: str = "chroma",
-                    **kwargs) -> vectorstores.VectorStore:
+def create_vectorstore(embedding_model_name: str,
+                       documents: List[Document],
+                       vector_store_type: str = "chroma-db",
+                       **kwargs) -> vectorstores.VectorStore:
     """Returns a vector store that contains the vectors of the documents.
 
     Note:
@@ -53,9 +122,10 @@ def get_vectorstore(embedding_model: base.Embeddings,
         disk, and load them on start.
 
     Args:
-        embedding_model (Embeddings): Embedding function.
+        embedding_model_name (str): The name of the embedding model.
         documents (List[Document]): List of documents.
-        vector_store_type (str): The vector store type.
+        vector_store_type (str): The vector store type. Can be `chroma-db` or
+            `in-memory`.
         **kwargs: Additional arguments passed to the `from_documents` method.
 
     Raises:
@@ -74,6 +144,8 @@ def get_vectorstore(embedding_model: base.Embeddings,
         "chroma-db": vectorstores.Chroma.from_documents,
         "in-memory": vectorstores.DocArrayInMemorySearch.from_documents,
     }
+    embedding_model_spec = get_embedding_spec(embedding_model_name)
+    embedding_model = get_embedding_model(embedding_model_spec)
 
     vectorstore = object_mapper[vector_store_type](
         documents, embedding_model, **kwargs
@@ -89,9 +161,9 @@ def _read_json(json_path: PathLike) -> List[DocumentDict]:
     return json_data
 
 
-def _extract_documents_from_list_of_dicts(json_data: List[dict],
-                                          text_key: str = "text") -> \
-        List[Document]:
+def extract_documents_from_list_of_dicts(json_data: List[dict],
+                                         text_key: str = "text"
+                                         ) -> List[Document]:
     """Extracts documents from a list of dictionaries."""
     documents = []
     for item in json_data:
@@ -136,8 +208,8 @@ def _extract_documents_from_json(json_path: PathLike,
     """
 
     json_data = _read_json(json_path)
-    documents = _extract_documents_from_list_of_dicts(json_data,
-                                                      text_key=text_key)
+    documents = extract_documents_from_list_of_dicts(json_data,
+                                                     text_key=text_key)
     return documents
 
 
@@ -161,6 +233,8 @@ def get_documents_from_directory(directory_path: Union[str, os.PathLike],
                                  start_with: str = "",
                                  text_key: str = "text") -> List[Document]:
     """Extracts the documents from a directory with json files.
+
+    Deprecated. We should use the `extract_documents_from_list_of_dicts`.
 
     Args:
         directory_path (Union[str, os.PathLike]): Path to the directory with
@@ -189,3 +263,20 @@ def save_vectorstore(chroma_vectorstore: vectorstores.Chroma) -> None:
         chroma_vectorstore (VectorStore): The vectorstore.
     """
     chroma_vectorstore.persist()
+
+
+def load_vectorstore(persist_directory: Union[str, os.PathLike]
+                     ) -> vectorstores.Chroma:
+    """Loads a vectorstore from the local disk.
+
+    Args:
+        persist_directory (Union[str, os.PathLike]): The directory where the
+            vectorstore is saved.
+
+    Returns:
+        VectorStore: The Chroma vectorstore.
+    """
+    chroma_vectorstore = vectorstores.Chroma(
+        persist_directory=str(persist_directory)
+    )
+    return chroma_vectorstore

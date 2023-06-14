@@ -2,6 +2,7 @@
 import os
 import pathlib
 import dotenv
+import torch
 
 
 def get_directory(directory: str = "data") -> pathlib.Path:
@@ -32,3 +33,8 @@ def get_directory(directory: str = "data") -> pathlib.Path:
                          f".env file.")
 
     return pathlib.Path(directory)
+
+
+def get_device() -> str:
+    """Returns 'gpu' if a GPU is available, otherwise 'cpu'."""
+    return "gpu" if torch.cuda.is_available() else "cpu"

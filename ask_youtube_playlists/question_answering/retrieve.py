@@ -58,5 +58,5 @@ def retrieve(question: str,
                                                     playlist_name))
 
     # Sort the documents by relevance score
-    retrieved_documents.sort(key=lambda x: x.relevance_score, reverse=True)
+    retrieved_documents.sort(key=lambda x: x.relevance_score)
     return retrieved_documents[:n_documents]

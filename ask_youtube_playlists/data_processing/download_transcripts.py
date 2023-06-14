@@ -88,7 +88,7 @@ def _replace_newlines(json_file: dict) -> None:
         segment['text'] = segment['text'].replace('\n', ' ')
 
 
-def create_chunked_data(file_path: str,
+def create_chunked_data(file_path: pathlib.Path,
                         max_chunk_size: int,
                         min_overlap_size: int
                         ) -> List[Dict[str, Union[str, List[str]]]]:
@@ -128,7 +128,7 @@ def create_chunked_data(file_path: str,
         current_chunk_size += segment_length
         current_ending_index = current_index
 
-        while current_chunk_size > max_chunk_size - min_overlap_size:
+        while current_chunk_size > max_chunk_size - min_overlap_size + 1:
             current_chunk_size -= segment_lengths[current_beginning_index] + 1
             current_beginning_index += 1
         current_chunk_size += 1
@@ -146,6 +146,9 @@ def create_chunked_data(file_path: str,
     #     'title': json_file['title']}
     #     for chunk_index in chunks_indices]
 
+    base_url = 'https://www.youtube.com/watch?v='
+    video = pytube.YouTube(base_url + json_file['video_id'])
+    thumbnail_url = video.thumbnail_url
     chunks = []
     for chunk_index in chunks_indices:
         text_list = []
@@ -154,12 +157,14 @@ def create_chunked_data(file_path: str,
         for segment in json_file['transcript'][start:end + 1]:
             text_list.append(segment['text'])
             duration_sum += segment['duration']
+        timestamp = str(int(json_file['transcript'][chunk_index[0]]['start']))
         chunks.append({
             'text': ' '.join(text_list),
             'start': json_file['transcript'][chunk_index[0]]['start'],
             'duration': duration_sum,
-            'url': json_file['url'],
-            'title': json_file['title']
+            'url': base_url + json_file['video_id'] + f'&t={timestamp}s',
+            'title': json_file['title'],
+            'thumbnail': thumbnail_url
         })
 
     return chunks
