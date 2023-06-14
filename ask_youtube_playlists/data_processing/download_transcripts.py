@@ -89,7 +89,7 @@ def _replace_newlines(json_file: dict) -> None:
         segment['text'] = segment['text'].replace('\n', ' ')
 
 
-def create_chunked_data(file_path: str,
+def create_chunked_data(file_path: pathlib.Path,
                         max_chunk_size: int,
                         min_overlap_size: int
                         ) -> List[Dict[str, Union[str, List[str]]]]:
