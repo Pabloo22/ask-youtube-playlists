@@ -2,6 +2,8 @@
 import pathlib
 import re
 
+from typing import List
+
 
 def is_youtube_playlist(link) -> bool:
     """Checks if a string is a YouTube playlist link."""
@@ -27,3 +29,4 @@ def get_available_playlist(data_directory: pathlib.Path) -> List[str]:
     """
     available_playlists = [playlist.name
                            for playlist in data_directory.iterdir()]
+    return available_playlists
