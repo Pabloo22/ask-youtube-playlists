@@ -2,6 +2,7 @@
 import pathlib
 import json
 import logging
+import streamlit as st
 from typing import Dict, List, Union, Optional
 
 import pytube
@@ -64,16 +65,27 @@ def download_transcript(video_title: str,
         if logger is not None:
             logger.error(f'An error occurred: {str(error_msg)}')
 
-def download_playlist(url: str, data_path: pathlib.Path) -> None:
+def download_playlist(url: str,
+                      data_path: pathlib.Path,
+                      use_st_progress_bar: Optional[bool] = False) -> None:
     """Downloads the transcripts of a YouTube playlist.
 
     Args:
         url (str): The URL of the YouTube playlist.
         data_path (pathlib.Path): The path to the data directory.
+        use_st_progress_bar (bool): Whether to use a Streamlit progress bar.
     """
     video_id_dict = get_playlist_info(url)
 
+    total_videos = len(video_id_dict)
+    progress_bar = None
+
+    if use_st_progress_bar:
+        progress_bar = st.progress(0)
+
     for i, (video_title, video_id) in enumerate(video_id_dict.items()):
+        if use_st_progress_bar:
+            progress_bar.progress(i / total_videos)
         output_file = data_path / 'raw' / f'Episode_{str(i + 1)}.json'
         download_transcript(video_title, video_id, output_file)
 
