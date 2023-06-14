@@ -90,9 +90,9 @@ def _read_json(json_path: PathLike) -> List[DocumentDict]:
     return json_data
 
 
-def _extract_documents_from_list_of_dicts(json_data: List[dict],
-                                          text_key: str = "text") -> \
-        List[Document]:
+def extract_documents_from_list_of_dicts(json_data: List[dict],
+                                         text_key: str = "text"
+                                         ) -> List[Document]:
     """Extracts documents from a list of dictionaries."""
     documents = []
     for item in json_data:
@@ -137,8 +137,8 @@ def _extract_documents_from_json(json_path: PathLike,
     """
 
     json_data = _read_json(json_path)
-    documents = _extract_documents_from_list_of_dicts(json_data,
-                                                      text_key=text_key)
+    documents = extract_documents_from_list_of_dicts(json_data,
+                                                     text_key=text_key)
     return documents
 
 
