@@ -6,6 +6,7 @@ The installation process consists of the following steps:
 3. Convert the data to vectors.
 """
 from .create_db import (get_embedding_model,
-                        get_vectorstore,
+                        create_vectorstore,
                         get_documents_from_directory,
-                        save_vectorstore)
+                        save_vectorstore,
+                        load_vectorstore)
