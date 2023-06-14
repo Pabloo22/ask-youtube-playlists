@@ -99,8 +99,5 @@ def test_create_chunked_data():
                                     chunk["text"]) >= min_overlap_size
 
 
-
-
-
 if __name__ == "__main__":
     pytest.main(['-vv', 'test_download_transcripts.py'])
