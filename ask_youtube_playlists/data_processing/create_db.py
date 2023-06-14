@@ -109,7 +109,7 @@ def get_embedding_spec(model_name: str) -> EmbeddingModelSpec:
 
 def create_vectorstore(embedding_model_name: str,
                        documents: List[Document],
-                       vector_store_type: str = "chroma",
+                       vector_store_type: str = "chroma-db",
                        **kwargs) -> vectorstores.VectorStore:
     """Returns a vector store that contains the vectors of the documents.
 
