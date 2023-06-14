@@ -147,6 +147,8 @@ def create_chunked_data(file_path: str,
     #     'title': json_file['title']}
     #     for chunk_index in chunks_indices]
 
+    video = pytube.YouTube(json_file['url'])
+    thumbnail_url = video.thumbnail_url
     chunks = []
     for chunk_index in chunks_indices:
         text_list = []
@@ -155,12 +157,14 @@ def create_chunked_data(file_path: str,
         for segment in json_file['transcript'][start:end + 1]:
             text_list.append(segment['text'])
             duration_sum += segment['duration']
+        timestamp = str(int(json_file['transcript'][chunk_index[0]]['start']))
         chunks.append({
             'text': ' '.join(text_list),
             'start': json_file['transcript'][chunk_index[0]]['start'],
             'duration': duration_sum,
-            'url': json_file['url'],
-            'title': json_file['title']
+            'url': json_file['url'] + f'&t={timestamp}s',
+            'title': json_file['title'],
+            'thumbnail': thumbnail_url
         })
 
     return chunks
