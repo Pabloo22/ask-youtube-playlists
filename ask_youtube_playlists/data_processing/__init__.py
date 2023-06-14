@@ -18,4 +18,5 @@ from .download_transcripts import (download_playlist,
 
 from .utils import (is_youtube_playlist,
                     get_device,
+                    get_available_playlist,
                     )
