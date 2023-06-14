@@ -2,14 +2,15 @@
 import pathlib
 import json
 import logging
-import streamlit as st
 from typing import Dict, List, Union, Optional
+
+import streamlit as st
 
 import pytube
 from youtube_transcript_api import YouTubeTranscriptApi
 
 
-def get_playlist_info(url: str) -> Dict[str, str]:
+def _get_playlist_info(url: str) -> Dict[str, str]:
     """Gets the video IDs and titles from a YouTube playlist.
 
     Args:
@@ -65,6 +66,7 @@ def download_transcript(video_title: str,
         if logger is not None:
             logger.error(f'An error occurred: {str(error_msg)}')
 
+
 def download_playlist(url: str,
                       data_path: pathlib.Path,
                       use_st_progress_bar: Optional[bool] = False) -> None:
@@ -75,7 +77,7 @@ def download_playlist(url: str,
         data_path (pathlib.Path): The path to the data directory.
         use_st_progress_bar (bool): Whether to use a Streamlit progress bar.
     """
-    video_id_dict = get_playlist_info(url)
+    video_id_dict = _get_playlist_info(url)
 
     total_videos = len(video_id_dict)
     progress_bar = None
@@ -85,7 +87,7 @@ def download_playlist(url: str,
 
     for i, (video_title, video_id) in enumerate(video_id_dict.items()):
         if use_st_progress_bar:
-            progress_bar.progress((i + 1) / total_videos)
+            progress_bar.progress((i + 1) / total_videos)  # type: ignore
         output_file = data_path / f'Video_{str(i + 1)}.json'
         download_transcript(video_title, video_id, output_file)
 
