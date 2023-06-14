@@ -119,7 +119,7 @@ def create_vectorstore(embedding_model_name: str,
         disk, and load them on start.
 
     Args:
-        embedding_model (str): The name of the embedding model.
+        embedding_model_name (str): The name of the embedding model.
         documents (List[Document]): List of documents.
         vector_store_type (str): The vector store type. Can be `chroma-db` or
             `in-memory`.
