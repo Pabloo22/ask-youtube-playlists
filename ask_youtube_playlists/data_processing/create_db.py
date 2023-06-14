@@ -58,6 +58,9 @@ EMBEDDING_MODELS = [
                        max_seq_length=8191),
 ]
 
+EMBEDDING_MODELS_NAMES = [embedding_model.model_name
+                          for embedding_model in EMBEDDING_MODELS]
+
 
 def get_embedding_model(embedding_model_spec: EmbeddingModelSpec,
                         ) -> base.Embeddings:
