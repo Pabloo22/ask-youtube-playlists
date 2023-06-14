@@ -1,14 +1,8 @@
 import streamlit as st
-import re  # regex library
-import time
-import pathlib
 
 from ask_youtube_playlists.data_processing import (download_playlist,
-                                                   EMBEDDING_MODELS_NAMES,
                                                    is_youtube_playlist,
-                                                   create_vectorstore,
-                                                   create_chunked_data,
-                                                   get_embedding_spec,
+                                                   get_available_playlist
                                                    )
 
 from utils import get_data_directory
@@ -31,12 +25,11 @@ if "loaded_playlist_names" not in st.session_state:
     st.session_state["loaded_playlist_names"] = []
 
 
-def clear_text():
-    st.session_state["text"] = ""
-
-
 def main():
     loaded_playlist_names = st.session_state.get("loaded_playlist_names", [])
+    available_playlists = get_available_playlist(get_data_directory())
+    available_playlists = [playlist for playlist in available_playlists
+                           if playlist not in loaded_playlist_names]
     # ---------------------------------------------------------------------
     with st.sidebar:
         st.markdown("""
@@ -54,11 +47,12 @@ def main():
             st.write(name)
     # -------------------------------------------------------------------------
 
-    playlist_name = st.text_input("Enter your playlist's name")
+    playlist_name = st.text_input("Enter your playlist's folder name",
+                                  available_playlists)
     data_directory = get_data_directory()
     playlist_path = data_directory / playlist_name
 
-    if playlist_name == "":
+    if playlist_name is None:
         pass
     elif playlist_name not in loaded_playlist_names:
         if playlist_path.exists():
