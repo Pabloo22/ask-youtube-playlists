@@ -10,7 +10,9 @@ from .create_db import (get_embedding_model,
                         get_documents_from_directory,
                         save_vectorstore,
                         load_vectorstore,
-                        EMBEDDING_MODELS_NAMES)
+                        EMBEDDING_MODELS_NAMES,
+                        get_embedding_spec
+                        )
 
 from .download_transcripts import (download_playlist,
                                    create_chunked_data,

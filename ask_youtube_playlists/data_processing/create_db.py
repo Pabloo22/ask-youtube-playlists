@@ -112,9 +112,12 @@ def get_embedding_spec(model_name: str) -> EmbeddingModelSpec:
 
 def create_vectorstore(embedding_model_name: str,
                        documents: List[Document],
-                       vector_store_type: str = "chroma-db",
+                       vector_store_type: str = "in-memory",
                        **kwargs) -> vectorstores.VectorStore:
     """Returns a vector store that contains the vectors of the documents.
+
+    Currently, it only supports "in-memory" mode. In the future, it may
+    support "chroma-db" mode as well.
 
     Note:
         In order to be able to make the vector store persistent, the
@@ -144,7 +147,7 @@ def create_vectorstore(embedding_model_name: str,
             "`in-memory`.")
 
     object_mapper: Dict[str, Callable] = {
-        "chroma-db": vectorstores.Chroma.from_documents,
+        # "chroma-db": vectorstores.Chroma.from_documents,
         "in-memory": vectorstores.DocArrayInMemorySearch.from_documents,
     }
     embedding_model_spec = get_embedding_spec(embedding_model_name)

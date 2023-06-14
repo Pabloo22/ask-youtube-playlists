@@ -30,3 +30,8 @@ def get_available_playlist(data_directory: pathlib.Path) -> List[str]:
     available_playlists = [playlist.name
                            for playlist in data_directory.iterdir()]
     return available_playlists
+
+
+def load_playlist_vectorstore(playlist_directory: pathlib.Path,
+                              embedding_model_name: str) -> None:
+    """Loads the playlist vectorstore."""
