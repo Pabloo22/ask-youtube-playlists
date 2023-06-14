@@ -1,11 +1,9 @@
+import pathlib
+import os
 import pytest
-from langchain.embeddings import base
-from langchain import embeddings
 from langchain.schema import Document
 from langchain import vectorstores
 
-import pathlib
-import os
 
 from ask_youtube_playlists.data_processing import (create_vectorstore,
                                                    save_vectorstore,
@@ -28,7 +26,7 @@ def test_create_vectorstore():
                  metadata={'title': 'third'}),
     ]
     test_persist_directory = str(pathlib.Path("tests") / "test_db")
-    vector_store: vectorstores.Chroma = create_vectorstore(
+    vector_store: vectorstores.Chroma = create_vectorstore(  # type: ignore
         "msmarco-MiniLM-L-6-v3",
         documents,
         vector_store_type="chroma-db",
