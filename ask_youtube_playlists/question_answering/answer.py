@@ -1,38 +1,5 @@
 """Contains the functionality to answer a question given a list of
-documents.
-
-This module contains the functionality to answer a question given a list of
-documents. In this module we should create two public functions:
-`get_extractive_answer()`
-- [ ] `get_generative_answer()`
-
-Both functions receive the following parameters:
-- `question` `(str`): The question asked by the user.
-- `relevant_documents` (`List[Documents]`): List of the most relevant
-documents.
-
-
-They return of these functions differ however. In case we are not able to
-return how confident is the model about the answer (besides the similarity
-score between the query and the retrieved document present in the metadata of
-the documents), these functions return:
-- `get_extractive_answer()` returns a list of tuples (start_index, end_index).
-The answer can be extracted using a code similar to:
-
-```python
-answers = get_extractive_answer(question, retrieved_documents)
-for (start_idx, end_idx), document in zip(answers, retrieved_documents):
-    answer = document["text"][start_idx:end_idx]
-```
-
-- `generative_answer()` returns a string with the generated answer.
-
-We do not need to return the confidence in the answer or the source, since
-this is already present in the metadata of the retrieved documents.
-
-In case, we are able somehow to provide this new score, the answer should
-contain this score too.
-"""
+documents."""
 from dataclasses import dataclass
 from typing import List
 
