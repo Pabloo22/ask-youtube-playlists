@@ -189,3 +189,20 @@ def save_vectorstore(chroma_vectorstore: vectorstores.Chroma) -> None:
         chroma_vectorstore (VectorStore): The vectorstore.
     """
     chroma_vectorstore.persist()
+
+
+def load_vectorstore(persist_directory: Union[str, os.PathLike]
+                     ) -> vectorstores.Chroma:
+    """Loads a vectorstore from the local disk.
+
+    Args:
+        persist_directory (Union[str, os.PathLike]): The directory where the
+            vectorstore is saved.
+
+    Returns:
+        VectorStore: The Chroma vectorstore.
+    """
+    chroma_vectorstore = vectorstores.Chroma(
+        persist_directory=persist_directory
+    )
+    return chroma_vectorstore
