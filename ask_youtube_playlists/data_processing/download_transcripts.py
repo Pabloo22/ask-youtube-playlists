@@ -64,7 +64,6 @@ def download_transcript(video_title: str,
         if logger is not None:
             logger.error(f'An error occurred: {str(error_msg)}')
 
-
 def download_playlist(url: str, data_path: pathlib.Path) -> None:
     """Downloads the transcripts of a YouTube playlist.
 

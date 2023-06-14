@@ -20,6 +20,31 @@ st.caption("Extractive QA is a question-answering approach that focuses on "
            "question. Extractive QA is advantageous as it provides precise "
            "and verifiable answers based on existing information in the text.")
 
+st.subheader("Max_Length")
+st.caption("")
+
+st.subheader("Temperature")
+st.caption("In natural language processing (NLP), the temperature value is a "
+            "parameter used in language generation models, particularly in models "
+            "based on softmax probabilities. It is used to control the randomness and "
+            "diversity of thegenerated text. When generating text using NLP models "
+            "like GPT-3, GPT-2, or other language models, the models typically produce "
+            "a probability distribution over the next word or token. The temperature "
+            "parameter allows you to adjust the sensitivity of this distribution. "
+            "A higher temperature value, such as 1.0, increases the randomness "
+            "of the generated text. It makes the model more exploratory and "
+            "likely to generate diverse and unexpected responses. This can result "
+            "in more creative but potentially less coherent or relevant output. "
+            "On the other hand, a lower temperature value, such as 0.5, decreases "
+            "the randomness and makes the model more focused and deterministic. "
+            "It makes the generated text more conservative and tends to produce more "
+            "coherent and conservative responses. Choosing the appropriate temperature "
+            "value depends on the specific use case and desired output. Higher values "
+            "promote exploration and diversity, which can be useful in creative writing "
+            "or generating alternative ideas. Lower values promote convergence and "
+            "coherence, which can be beneficial for tasks like summarization or "
+            "providing precise answers.")
+
 st.header("Abstractive QA")
 st.caption("Abstractive QA is a question-answering approach that involves "
            "generating concise and informative answers based on a given text "
