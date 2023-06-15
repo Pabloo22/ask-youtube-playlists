@@ -1,7 +1,7 @@
 """Code to download the transcripts from YouTube."""
 import pathlib
 import json
-from typing import Dict, List, Union, Optional
+from typing import Dict, List, Union
 
 import streamlit as st
 
@@ -185,7 +185,8 @@ def create_chunked_data(file_path: pathlib.Path,
             'duration': duration_sum,
             'url': base_url + json_file['video_id'] + f'&t={timestamp}s',
             'title': json_file['title'],
-            'thumbnail': thumbnail_url
+            'thumbnail': thumbnail_url,
+            'index': json_file['index']
         })
 
     return chunks
