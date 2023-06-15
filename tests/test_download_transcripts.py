@@ -52,8 +52,8 @@ def test_download_playlist():
     download_playlist(url, data_path)
 
     for i in range(23):
-        assert (data_path / "raw" / f"Episode_{i + 1}.json").exists()
-        (data_path / "raw" / f"Episode_{i + 1}.json").unlink()
+        assert (data_path / f"Video_{i + 1}.json").exists()
+        (data_path / f"Video_{i + 1}.json").unlink()
 
 
 def test__replace_newlines():

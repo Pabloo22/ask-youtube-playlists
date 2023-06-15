@@ -1,15 +1,14 @@
 import streamlit as st
 import re  # regex library
-from Load import playlist_list
 
 st.set_page_config(
     page_title="Generative QA",
     page_icon="🧠",
 )
-
+playlist_list = st.session_state["loaded_playlist_names"]
 st.title("Generative Question Answering")
 
-# Sidebar ------------------------------------------------------------------------------- 
+# Sidebar ---------------------------------------------------------------------
 with st.sidebar:
     st.markdown("""
             <style>
@@ -18,21 +17,30 @@ with st.sidebar:
             }
             </style>
         """, unsafe_allow_html=True)
-    
+
     st.header("Set hyperparameters")
     # box to insert max_length value
-    max_length = st.number_input("Enter max_length value", min_value=0, max_value=100, value=50, step=1)
+    max_length = st.number_input("Enter max_length value",
+                                 min_value=0,
+                                 max_value=100,
+                                 value=50,
+                                 step=1)
     # slider to choose temperature
-    temperature = st.slider("Select Temperature", min_value=0.0, max_value=100.0, value=50.0, step=0.1)
+    temperature = st.slider("Select Temperature",
+                            min_value=0.0,
+                            max_value=100.0,
+                            value=50.0,
+                            step=0.1)
 
     # Set the playlist names on the sidebar
     st.subheader("Available Playlists")
     st.session_state["playlist_list"] = playlist_list
     # Allows to choose which playlists one wants to use
     for playlist in playlist_list:
-        playlist_name = playlist["playlist_name"]
-        checkbox_value = st.checkbox(playlist_name) 
-#---------------------------------------------------------------------------------------
+        checkbox_value = st.checkbox(playlist)
+
+
+# -----------------------------------------------------------------------------
 
 # Function to get the answer based on the selected model
 def get_answer(question, model):
@@ -47,21 +55,27 @@ def get_answer(question, model):
 
     return answer
 
+
 def clear_text():
     st.session_state["generative_text"] = ""
 
+
 # Define the available models for each mode
 # TODO add the correct models we are going to use
-generative_models = ['GPT-2', 'Llama', 'T5']
+generative_models = ['GPT-3.5', 'GPT-4']
+
 
 # Question - Answering
 def main():
     # the user can only insert a question if the link is valid
-    generative_model = st.radio("Select a Generative Model", generative_models,
-                    on_change=clear_text)
+    generative_model = st.selectbox("Select a Generative Model",
+                                    generative_models,
+                                    on_change=clear_text,
+                                    key="generative_model")
 
     # Receive question input
-    question_generative = st.text_input("Enter your question", key="generative_text")
+    question_generative = st.text_input("Enter your question",
+                                        key="generative_text")
 
     # the question must finish with an interrogation point
     if re.match(r".+\?$", question_generative):
