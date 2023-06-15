@@ -1,7 +1,7 @@
 import pytest
 import pathlib
 
-from ask_youtube_playlists.data_processing import get_available_playlist
+from ask_youtube_playlists.data_processing import get_available_directories
 
 
 def _get_data_directory() -> pathlib.Path:
@@ -16,7 +16,7 @@ def _get_data_directory() -> pathlib.Path:
 
 def test_get_available_playlist():
     data_dir = _get_data_directory()
-    available_playlists = get_available_playlist(data_dir)
+    available_playlists = get_available_directories(data_dir)
     assert available_playlists == ["playlist_name_1", "playlist_name_2"]
 
 
