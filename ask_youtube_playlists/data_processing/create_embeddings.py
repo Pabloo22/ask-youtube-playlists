@@ -303,3 +303,26 @@ def create_embeddings_pipeline(embedding_directory: PathLike,
         # Save the embeddings in the `embeddings` directory.
         embeddings_path = embedding_directory / f"{file_name}.npy"
         np.save(str(embeddings_path), new_video_embeddings)
+
+
+def load_embeddings(embedding_directory: PathLike) -> List[np.ndarray]:
+    """Loads the embeddings from the embedding_directory.
+
+    Args:
+        embedding_directory (PathLike): The directory where the embeddings are
+            saved.
+
+    Returns:
+        List[np.ndarray]: The embeddings. The order of the embeddings in
+            the list is the same as the order of the json files in the
+            `processed` directory.
+    """
+
+    numpy_files = list(pathlib.Path(embedding_directory).glob("*.npy"))
+
+    embeddings = []
+    for numpy_file in numpy_files:
+        embedding = np.load(str(numpy_file))
+        embeddings.append(embedding)
+
+    return embeddings
