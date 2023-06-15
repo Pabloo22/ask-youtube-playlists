@@ -28,5 +28,6 @@ def get_available_directories(data_directory: pathlib.Path) -> List[str]:
     The playlists are the names of the directories in the data directory.
     """
     available_playlists = [directory.name
-                           for directory in data_directory.iterdir()]
+                           for directory in data_directory.iterdir()
+                           if directory.is_dir()]
     return available_playlists
