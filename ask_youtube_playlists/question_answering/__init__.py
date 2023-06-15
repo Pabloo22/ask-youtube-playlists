@@ -13,3 +13,4 @@ extracted sentences.
 
 from .extractive import EXTRACTIVE_MODEL_NAMES, get_extractive_answer
 from .generative import GENERATIVE_MODEL_NAMES, get_generative_answer
+from .retriever import Retriever
