@@ -86,8 +86,10 @@ def download_playlist(url: str,
         progress_bar = st.progress(0)
 
     for i, (video_title, video_id) in enumerate(video_id_dict.items()):
-        if use_st_progress_bar:
-            progress_bar.progress((i + 1) / total_videos)  # type: ignore
+        if progress_bar is not None:
+            progress_bar.progress((i + 1) / total_videos,
+                                  f'Downloading video {i + 1} of '
+                                  f'{total_videos}')
         output_file = data_path / f'Video_{str(i + 1)}.json'
         download_transcript(video_title, video_id, output_file)
 

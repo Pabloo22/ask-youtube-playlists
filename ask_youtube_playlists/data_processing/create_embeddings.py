@@ -1,5 +1,6 @@
 """Functions to create the Vector database."""
 import os
+import pathlib
 from dataclasses import dataclass
 
 from typing import List, Union, Dict, Callable
@@ -9,7 +10,14 @@ from langchain import embeddings
 from langchain.schema import Document
 from langchain import vectorstores
 
+import numpy as np
+import yaml
+import json
+import streamlit as st
+
 from .utils import get_device
+from .download_transcripts import create_chunked_data
+from .create_documents import extract_documents_from_list_of_dicts
 
 DocumentDict = Dict[str, Union[str, float]]
 PathLike = Union[str, os.PathLike]
@@ -60,17 +68,17 @@ EMBEDDING_MODELS_NAMES = [embedding_model.model_name
                           for embedding_model in EMBEDDING_MODELS]
 
 
-def get_embedding_model(embedding_model_spec: EmbeddingModelSpec,
+def get_embedding_model(embedding_model_name: str,
                         ) -> base.Embeddings:
     """Returns the embedding model.
 
     Args:
-        embedding_model_spec (EmbeddingModelSpec): The langchain model type.
+        embedding_model_name (str): The name of the embedding model.
 
     Raises:
         ValueError: If the model type is not supported.
     """
-
+    embedding_model_spec = get_embedding_spec(embedding_model_name)
     if embedding_model_spec.model_type == "sentence-transformers":
         model_name = f"sentence-transformers/{embedding_model_spec.model_name}"
         device = get_device()
@@ -148,8 +156,7 @@ def create_vectorstore(embedding_model_name: str,
         # "chroma-db": vectorstores.Chroma.from_documents,
         "in-memory": vectorstores.DocArrayInMemorySearch.from_documents,
     }
-    embedding_model_spec = get_embedding_spec(embedding_model_name)
-    embedding_model = get_embedding_model(embedding_model_spec)
+    embedding_model = get_embedding_model(embedding_model_name)
 
     vectorstore = object_mapper[vector_store_type](
         documents, embedding_model, **kwargs
@@ -183,3 +190,114 @@ def load_vectorstore(persist_directory: PathLike) -> vectorstores.Chroma:
         persist_directory=str(persist_directory)
     )
     return chroma_vectorstore
+
+
+def _create_hyperparams_yaml(directory: PathLike,
+                             model_name: str,
+                             max_chunk_size: int,
+                             min_overlap_size: int):
+    """Creates the hyperparams.yaml file in the directory."""
+    hyperparams = {
+        "model_name": model_name,
+        "max_chunk_size": max_chunk_size,
+        "min_overlap_size": min_overlap_size,
+    }
+    # Create the directory if it does not exist.
+    pathlib.Path(directory).mkdir(parents=True, exist_ok=True)
+    hyperparams_path = pathlib.Path(directory) / "hyperparams.yaml"
+    with open(hyperparams_path, "w") as f:
+        yaml.dump(hyperparams, f)
+
+
+def load_hyperparams(directory: PathLike) -> Dict[str, Union[str, int]]:
+    """Loads the hyperparams.yaml file in the directory."""
+    hyperparams_path = pathlib.Path(directory) / "hyperparams.yaml"
+    with open(hyperparams_path, "r") as f:
+        hyperparams = yaml.load(f, Loader=yaml.FullLoader)
+    return hyperparams
+
+
+def save_json(chunked_data: List[dict], path: PathLike) -> None:
+    """Saves the data in a json file.
+
+    Args:
+        chunked_data (List[dict]): The data to be saved.
+        path (PathLike): The path to the json file.
+    """
+    with open(path, "w") as f:
+        json.dump(chunked_data, f)
+
+
+def create_embeddings_pipeline(embedding_directory: PathLike,
+                               embedding_model_name: str,
+                               max_chunk_size: int,
+                               min_overlap_size: int,
+                               use_st_progress_bar: bool = True) -> None:
+    """Sets up the embeddings for the given embedding model in the directory.
+
+    Steps:
+        1. Creates the embedding_directory if it does not exist.
+
+        2. Creates the hyperparams.yaml file.
+
+        3. Chunks the data.
+
+        4. Creates the embeddings and saves them in the embedding_directory.
+
+    Args:
+        embedding_directory (PathLike): The directory where the embeddings will
+            be saved. It should be inside a `data/playlist_name` directory.
+            This function assumes that the playlist directory contains a
+            `raw` directory with the json files of each video.
+        embedding_model_name (str): The name of the embedding model.
+        max_chunk_size (int): The maximum number of characters in a chunk.
+        min_overlap_size (int): The minimum number of characters in the overlap
+            between two consecutive chunks.
+        use_st_progress_bar (bool): Whether to use the Streamlit progress bar
+            or not.
+    """
+    embedding_directory = pathlib.Path(embedding_directory)
+    embedding_model = get_embedding_model(embedding_model_name)
+
+    # Create the hyperparams.yaml file.
+    _create_hyperparams_yaml(
+        embedding_directory,
+        embedding_model_name,
+        max_chunk_size,
+        min_overlap_size
+    )
+
+    playlist_directory = pathlib.Path(embedding_directory).parent
+    json_files_directory = playlist_directory / "raw"
+    chunked_data_directory = playlist_directory / "processed"
+    json_files = list(json_files_directory.glob("*.json"))
+
+    st_progress_bar = st.progress(0) if use_st_progress_bar else None
+    total = len(json_files)
+
+    # Create the `processed` directory if it does not exist.
+    pathlib.Path(embedding_directory).mkdir(parents=True, exist_ok=True)
+
+    for i, json_file_path in enumerate(json_files, start=1):
+        if st_progress_bar is not None:
+            st_progress_bar.progress(i / total, f"{i}/{total}")
+
+        chunked_data = create_chunked_data(
+            json_file_path,
+            max_chunk_size,
+            min_overlap_size
+        )
+
+        file_name = json_file_path.stem
+
+        # Save the chunked data in the `processed` directory.
+        chunked_data_path = chunked_data_directory / f"{file_name}.json"
+        save_json(chunked_data, chunked_data_path)
+
+        new_documents = extract_documents_from_list_of_dicts(chunked_data)
+        documents_text = [document.page_content for document in new_documents]
+        new_video_embeddings = embedding_model.embed_documents(documents_text)
+
+        # Save the embeddings in the `embeddings` directory.
+        embeddings_path = embedding_directory / f"{file_name}.npy"
+        np.save(str(embeddings_path), new_video_embeddings)
