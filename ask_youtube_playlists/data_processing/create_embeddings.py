@@ -320,9 +320,9 @@ def load_embeddings(embedding_directory: PathLike) -> List[np.ndarray]:
 
     numpy_files = list(pathlib.Path(embedding_directory).glob("*.npy"))
 
-    embeddings = []
+    video_embeddings = []
     for numpy_file in numpy_files:
         embedding = np.load(str(numpy_file))
-        embeddings.append(embedding)
+        video_embeddings.append(embedding)
 
-    return embeddings
+    return video_embeddings
