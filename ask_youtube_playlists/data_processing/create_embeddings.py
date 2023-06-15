@@ -232,9 +232,7 @@ def create_embeddings_pipeline(embedding_directory: PathLike,
                                embedding_model_name: str,
                                max_chunk_size: int,
                                min_overlap_size: int,
-                               use_st_progress_bar: bool = True
-                               ) -> Tuple[List[List[Document]],
-                                          List[np.ndarray]]:
+                               use_st_progress_bar: bool = True) -> None:
     """Sets up the embeddings for the given embedding model in the directory.
 
     Steps:
@@ -257,10 +255,6 @@ def create_embeddings_pipeline(embedding_directory: PathLike,
             between two consecutive chunks.
         use_st_progress_bar (bool): Whether to use the Streamlit progress bar
             or not.
-
-    Returns:
-        Tuple[List[List[Document]], List[np.ndarray]: The documents and
-        their respective embeddings.
     """
     embedding_directory = pathlib.Path(embedding_directory)
     embedding_model = get_embedding_model(embedding_model_name)
@@ -284,8 +278,6 @@ def create_embeddings_pipeline(embedding_directory: PathLike,
     # Create the `processed` directory if it does not exist.
     pathlib.Path(embedding_directory).mkdir(parents=True, exist_ok=True)
 
-    documents = []
-    video_embeddings = []
     for i, json_file_path in enumerate(json_files, start=1):
         if st_progress_bar is not None:
             st_progress_bar.progress(i / total, f"{i}/{total}")
@@ -303,15 +295,11 @@ def create_embeddings_pipeline(embedding_directory: PathLike,
         save_json(chunked_data, chunked_data_path)
 
         new_documents = extract_documents_from_list_of_dicts(chunked_data)
-        documents.append(new_documents)
-
         documents_text = [document.page_content for document in new_documents]
+
         new_video_embeddings = embedding_model.embed_documents(documents_text)
-        new_video_embeddings = np.array(new_video_embeddings)
-        video_embeddings.append(new_video_embeddings)
+        new_video_embeddings = np.array(new_video_embeddings)  # type: ignore
 
         # Save the embeddings in the `embeddings` directory.
         embeddings_path = embedding_directory / f"{file_name}.npy"
         np.save(str(embeddings_path), new_video_embeddings)
-
-    return documents, video_embeddings
