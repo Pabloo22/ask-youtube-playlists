@@ -6,14 +6,16 @@ These are the steps to follow:
 of the chunks and the overlap between them.
 3.- Create a vectorstore from the chunks of data.
 """
-from .create_db import (get_embedding_model,
-                        create_vectorstore,
-                        get_documents_from_directory,
-                        save_vectorstore,
-                        load_vectorstore,
-                        EMBEDDING_MODELS_NAMES,
-                        get_embedding_spec
-                        )
+from .create_embeddings import (get_embedding_model,
+                                create_vectorstore,
+                                save_vectorstore,
+                                load_vectorstore,
+                                EMBEDDING_MODELS_NAMES,
+                                get_embedding_spec
+                                )
+
+from .create_documents import (get_documents_from_directory,
+                               extract_documents_from_list_of_dicts)
 
 from .download_transcripts import (download_playlist,
                                    create_chunked_data,
