@@ -90,7 +90,8 @@ def _extract_json_files_from_directory(directory_path: PathLike,
 
 def get_documents_from_directory(directory_path: Union[str, os.PathLike],
                                  start_with: str = "",
-                                 text_key: str = "text") -> List[Document]:
+                                 text_key: str = "text"
+                                 ) -> List[List[Document]]:
     """Extracts the documents from a directory with json files.
 
     Deprecated. We should use the `extract_documents_from_list_of_dicts`.
@@ -106,7 +107,7 @@ def get_documents_from_directory(directory_path: Union[str, os.PathLike],
                                                     start_with=start_with)
     documents = []
     for json_file in json_files:
-        documents.extend(
+        documents.append(
             _extract_documents_from_json(json_file, text_key=text_key))
 
     return documents
