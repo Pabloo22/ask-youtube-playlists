@@ -153,8 +153,7 @@ class Retriever:
         for retriever in retrievers:
             document_infos.extend(retriever.retrieve_from_playlist(
                 question, n_documents
-                )
-            )
+            ))
 
         document_infos.sort(key=lambda x: x.score, reverse=True)
         return document_infos[:n_documents]
