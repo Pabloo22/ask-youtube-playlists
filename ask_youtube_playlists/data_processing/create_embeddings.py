@@ -248,7 +248,7 @@ def create_embeddings_pipeline(retriever_directory: PathLike,
 
         3. Chunks the data.
 
-        4. Creates the embeddings and saves them in the embedding_directory.
+        4. Creates the embeddings and saves them in the retriever_directory.
 
     Args:
         retriever_directory (PathLike): The directory where the embeddings will

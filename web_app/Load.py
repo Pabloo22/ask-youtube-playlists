@@ -6,6 +6,7 @@ from ask_youtube_playlists.data_processing import (download_playlist,
                                                    get_available_directories
                                                    )
 
+
 def get_data_directory() -> pathlib.Path:
     """Returns the path to the data directory."""
     parent_path = pathlib.Path(__file__).parent

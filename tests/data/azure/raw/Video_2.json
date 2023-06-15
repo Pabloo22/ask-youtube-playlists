@@ -1,0 +1,912 @@
+{
+    "title": "Introducing Hugging Face AzureML Endpoints",
+    "video_id": "zwC3FsVj3jw",
+    "transcript": [
+        {
+            "text": "hi everyone my name is Philip and I'm a",
+            "start": 3.419,
+            "duration": 4.801
+        },
+        {
+            "text": "technical lead at Target faith and today",
+            "start": 6.06,
+            "duration": 4.32
+        },
+        {
+            "text": "I'm going to show you how you can deploy",
+            "start": 8.22,
+            "duration": 5.039
+        },
+        {
+            "text": "hanging face Transformers to Azure using",
+            "start": 10.38,
+            "duration": 6.6
+        },
+        {
+            "text": "the hiding phase Azure ml endpoints we",
+            "start": 13.259,
+            "duration": 6.661
+        },
+        {
+            "text": "start at the Azure partner and the first",
+            "start": 16.98,
+            "duration": 5.28
+        },
+        {
+            "text": "thing we need to do is to search for our",
+            "start": 19.92,
+            "duration": 5.16
+        },
+        {
+            "text": "hiking face Azure ml endpoints we can do",
+            "start": 22.26,
+            "duration": 5.16
+        },
+        {
+            "text": "this by searching for hugging and then",
+            "start": 25.08,
+            "duration": 4.92
+        },
+        {
+            "text": "at the marketplace section we should see",
+            "start": 27.42,
+            "duration": 6.6
+        },
+        {
+            "text": "the higher face Azure ml endpoints",
+            "start": 30.0,
+            "duration": 7.14
+        },
+        {
+            "text": "and this will bring us to the the",
+            "start": 34.02,
+            "duration": 5.219
+        },
+        {
+            "text": "marketplace offering we can click on",
+            "start": 37.14,
+            "duration": 4.919
+        },
+        {
+            "text": "create which will then allow us to",
+            "start": 39.239,
+            "duration": 5.34
+        },
+        {
+            "text": "create our hiding phase managed",
+            "start": 42.059,
+            "duration": 6.121
+        },
+        {
+            "text": "application on azure as a resource Group",
+            "start": 44.579,
+            "duration": 6.181
+        },
+        {
+            "text": "I'm going to select the test Resource",
+            "start": 48.18,
+            "duration": 4.379
+        },
+        {
+            "text": "Group here you can select the resource",
+            "start": 50.76,
+            "duration": 3.72
+        },
+        {
+            "text": "Group where you want your managed app to",
+            "start": 52.559,
+            "duration": 4.32
+        },
+        {
+            "text": "be deployed region we are going to go",
+            "start": 54.48,
+            "duration": 5.099
+        },
+        {
+            "text": "with the East US region the name will be",
+            "start": 56.879,
+            "duration": 4.52
+        },
+        {
+            "text": "hiking face",
+            "start": 59.579,
+            "duration": 5.461
+        },
+        {
+            "text": "video and the application it's also",
+            "start": 61.399,
+            "duration": 6.161
+        },
+        {
+            "text": "going to be hiding face and the managed",
+            "start": 65.04,
+            "duration": 4.68
+        },
+        {
+            "text": "Resource Group is not important it's",
+            "start": 67.56,
+            "duration": 4.559
+        },
+        {
+            "text": "basically where later all of our Sr",
+            "start": 69.72,
+            "duration": 5.1
+        },
+        {
+            "text": "resources are stored you can change it",
+            "start": 72.119,
+            "duration": 4.68
+        },
+        {
+            "text": "if you want but you can also leave it as",
+            "start": 74.82,
+            "duration": 5.339
+        },
+        {
+            "text": "it is and the next step is text we don't",
+            "start": 76.799,
+            "duration": 6.061
+        },
+        {
+            "text": "need any text right now and then we can",
+            "start": 80.159,
+            "duration": 5.341
+        },
+        {
+            "text": "go to review and create",
+            "start": 82.86,
+            "duration": 6.72
+        },
+        {
+            "text": "which will validate our inputs and then",
+            "start": 85.5,
+            "duration": 7.86
+        },
+        {
+            "text": "we have to access the conditions this",
+            "start": 89.58,
+            "duration": 6.539
+        },
+        {
+            "text": "basically means that you as a user",
+            "start": 93.36,
+            "duration": 5.52
+        },
+        {
+            "text": "allowing us hiking phase two later",
+            "start": 96.119,
+            "duration": 7.5
+        },
+        {
+            "text": "deploy or create resources for you",
+            "start": 98.88,
+            "duration": 7.62
+        },
+        {
+            "text": "and now we can click create what's now",
+            "start": 103.619,
+            "duration": 5.281
+        },
+        {
+            "text": "going to happen is that our manage",
+            "start": 106.5,
+            "duration": 5.759
+        },
+        {
+            "text": "application with some base Azure",
+            "start": 108.9,
+            "duration": 5.219
+        },
+        {
+            "text": "resources are going to be created this",
+            "start": 112.259,
+            "duration": 4.68
+        },
+        {
+            "text": "takes around one minute after the",
+            "start": 114.119,
+            "duration": 7.701
+        },
+        {
+            "text": "deployment is done I'll be back",
+            "start": 116.939,
+            "duration": 4.881
+        },
+        {
+            "text": "the deployment of our managed",
+            "start": 122.88,
+            "duration": 4.08
+        },
+        {
+            "text": "application is now complete and we can",
+            "start": 124.92,
+            "duration": 4.979
+        },
+        {
+            "text": "now start creating our HTML endpoints",
+            "start": 126.96,
+            "duration": 4.859
+        },
+        {
+            "text": "therefore we go to the resource which",
+            "start": 129.899,
+            "duration": 4.321
+        },
+        {
+            "text": "will bring us to our high in phased",
+            "start": 131.819,
+            "duration": 4.741
+        },
+        {
+            "text": "manage application and then on the left",
+            "start": 134.22,
+            "duration": 4.8
+        },
+        {
+            "text": "side we can find under resources preview",
+            "start": 136.56,
+            "duration": 4.62
+        },
+        {
+            "text": "hiking phase endpoints which is our",
+            "start": 139.02,
+            "duration": 5.16
+        },
+        {
+            "text": "central place for all our hiking phase",
+            "start": 141.18,
+            "duration": 5.4
+        },
+        {
+            "text": "endpoints later meaning we will have an",
+            "start": 144.18,
+            "duration": 4.74
+        },
+        {
+            "text": "overview of all our created endpoints we",
+            "start": 146.58,
+            "duration": 4.86
+        },
+        {
+            "text": "can add more we can delete them or edit",
+            "start": 148.92,
+            "duration": 3.44
+        },
+        {
+            "text": "them",
+            "start": 151.44,
+            "duration": 3.42
+        },
+        {
+            "text": "obviously since we created our managed",
+            "start": 152.36,
+            "duration": 4.66
+        },
+        {
+            "text": "application we don't have any endpoints",
+            "start": 154.86,
+            "duration": 4.26
+        },
+        {
+            "text": "available yet therefore we will add one",
+            "start": 157.02,
+            "duration": 4.26
+        },
+        {
+            "text": "and to create a new hiking phase",
+            "start": 159.12,
+            "duration": 4.08
+        },
+        {
+            "text": "endpoint we only have to provide a",
+            "start": 161.28,
+            "duration": 4.56
+        },
+        {
+            "text": "hiking face model ID and need to select",
+            "start": 163.2,
+            "duration": 5.039
+        },
+        {
+            "text": "an instance time for our model we go to",
+            "start": 165.84,
+            "duration": 4.14
+        },
+        {
+            "text": "the hiking phase hub",
+            "start": 168.239,
+            "duration": 4.08
+        },
+        {
+            "text": "select the model in this case we will",
+            "start": 169.98,
+            "duration": 4.74
+        },
+        {
+            "text": "use the digital bird base uncased",
+            "start": 172.319,
+            "duration": 5.28
+        },
+        {
+            "text": "fine-tune on ssd2 which is a distribut",
+            "start": 174.72,
+            "duration": 4.86
+        },
+        {
+            "text": "model fine-tuned for text classification",
+            "start": 177.599,
+            "duration": 5.28
+        },
+        {
+            "text": "we go back to our Azure resource paste",
+            "start": 179.58,
+            "duration": 5.939
+        },
+        {
+            "text": "our high infest model ID and then we can",
+            "start": 182.879,
+            "duration": 4.86
+        },
+        {
+            "text": "select our compute instance time here",
+            "start": 185.519,
+            "duration": 3.901
+        },
+        {
+            "text": "you need to make sure that you have",
+            "start": 187.739,
+            "duration": 5.28
+        },
+        {
+            "text": "available srml compute for your instance",
+            "start": 189.42,
+            "duration": 6.959
+        },
+        {
+            "text": "so the drop down is showing all",
+            "start": 193.019,
+            "duration": 6.3
+        },
+        {
+            "text": "available Azure ml instances but it's",
+            "start": 196.379,
+            "duration": 5.22
+        },
+        {
+            "text": "not validating in the UI if you have",
+            "start": 199.319,
+            "duration": 4.861
+        },
+        {
+            "text": "capacity or not so in our case if we",
+            "start": 201.599,
+            "duration": 4.801
+        },
+        {
+            "text": "would like to deploy a T4 you have to",
+            "start": 204.18,
+            "duration": 3.479
+        },
+        {
+            "text": "make sure that you have available",
+            "start": 206.4,
+            "duration": 4.32
+        },
+        {
+            "text": "capacity if not the creation will fail",
+            "start": 207.659,
+            "duration": 6.601
+        },
+        {
+            "text": "but for our case we don't need a GPU we",
+            "start": 210.72,
+            "duration": 7.5
+        },
+        {
+            "text": "will go with the F2 series which is the",
+            "start": 214.26,
+            "duration": 7.74
+        },
+        {
+            "text": "CPU optimized instance for our model",
+            "start": 218.22,
+            "duration": 6.9
+        },
+        {
+            "text": "then we can hit review and submit make",
+            "start": 222.0,
+            "duration": 5.34
+        },
+        {
+            "text": "sure that we have the correct model ID",
+            "start": 225.12,
+            "duration": 4.679
+        },
+        {
+            "text": "yes and our instance type and then we",
+            "start": 227.34,
+            "duration": 5.64
+        },
+        {
+            "text": "can and click submit and now our",
+            "start": 229.799,
+            "duration": 5.22
+        },
+        {
+            "text": "resource is created on the top right",
+            "start": 232.98,
+            "duration": 4.14
+        },
+        {
+            "text": "side we can see it's creating resources",
+            "start": 235.019,
+            "duration": 6.0
+        },
+        {
+            "text": "meaning that our backend is now",
+            "start": 237.12,
+            "duration": 6.3
+        },
+        {
+            "text": "validating all of the the information we",
+            "start": 241.019,
+            "duration": 4.5
+        },
+        {
+            "text": "provided meaning that it checks if the",
+            "start": 243.42,
+            "duration": 4.679
+        },
+        {
+            "text": "model ID we provided is a valid model on",
+            "start": 245.519,
+            "duration": 4.981
+        },
+        {
+            "text": "the hiking face Hub it also makes sure",
+            "start": 248.099,
+            "duration": 4.14
+        },
+        {
+            "text": "that we have enough capacity available",
+            "start": 250.5,
+            "duration": 4.379
+        },
+        {
+            "text": "if for example we wouldn't have enough",
+            "start": 252.239,
+            "duration": 6.301
+        },
+        {
+            "text": "capacity for our F2 instance series we",
+            "start": 254.879,
+            "duration": 6.121
+        },
+        {
+            "text": "would see a failure here and then we can",
+            "start": 258.54,
+            "duration": 5.099
+        },
+        {
+            "text": "go to the details and check what is the",
+            "start": 261.0,
+            "duration": 4.44
+        },
+        {
+            "text": "arrow and then we should see out of",
+            "start": 263.639,
+            "duration": 2.881
+        },
+        {
+            "text": "capacity",
+            "start": 265.44,
+            "duration": 3.78
+        },
+        {
+            "text": "a few more seconds and then we should",
+            "start": 266.52,
+            "duration": 5.58
+        },
+        {
+            "text": "see our green checkbox and also should",
+            "start": 269.22,
+            "duration": 6.479
+        },
+        {
+            "text": "see our first endpoint with endpoint",
+            "start": 272.1,
+            "duration": 6.5
+        },
+        {
+            "text": "creation state",
+            "start": 275.699,
+            "duration": 2.901
+        },
+        {
+            "text": "also something pretty cool about the",
+            "start": 280.44,
+            "duration": 3.539
+        },
+        {
+            "text": "hiking face",
+            "start": 282.66,
+            "duration": 4.5
+        },
+        {
+            "text": "um srml endpoints is that we are",
+            "start": 283.979,
+            "duration": 5.521
+        },
+        {
+            "text": "automatically deriving the task for a",
+            "start": 287.16,
+            "duration": 4.56
+        },
+        {
+            "text": "model so you have seen that we only",
+            "start": 289.5,
+            "duration": 4.44
+        },
+        {
+            "text": "provided a model ID and didn't provide",
+            "start": 291.72,
+            "duration": 4.68
+        },
+        {
+            "text": "which task we want to use the task is",
+            "start": 293.94,
+            "duration": 4.8
+        },
+        {
+            "text": "automatically derived from the model",
+            "start": 296.4,
+            "duration": 4.56
+        },
+        {
+            "text": "information so we didn't need to specify",
+            "start": 298.74,
+            "duration": 4.62
+        },
+        {
+            "text": "that our model is a text classification",
+            "start": 300.96,
+            "duration": 4.44
+        },
+        {
+            "text": "model this this was done automatically",
+            "start": 303.36,
+            "duration": 4.98
+        },
+        {
+            "text": "and while I was talking our validation",
+            "start": 305.4,
+            "duration": 4.88
+        },
+        {
+            "text": "or custom resource",
+            "start": 308.34,
+            "duration": 5.52
+        },
+        {
+            "text": "was successfully created and the",
+            "start": 310.28,
+            "duration": 5.74
+        },
+        {
+            "text": "dashboard is currently loading so yes",
+            "start": 313.86,
+            "duration": 4.14
+        },
+        {
+            "text": "perfect here we see our new endpoint",
+            "start": 316.02,
+            "duration": 4.98
+        },
+        {
+            "text": "with our status which is currently in",
+            "start": 318.0,
+            "duration": 6.24
+        },
+        {
+            "text": "creating and within five to ten minutes",
+            "start": 321.0,
+            "duration": 7.139
+        },
+        {
+            "text": "our endpoint should be created and then",
+            "start": 324.24,
+            "duration": 6.48
+        },
+        {
+            "text": "our deployment was also created once",
+            "start": 328.139,
+            "duration": 6.361
+        },
+        {
+            "text": "this is done I'll come back",
+            "start": 330.72,
+            "duration": 4.8
+        },
+        {
+            "text": "foreign",
+            "start": 334.5,
+            "duration": 4.199
+        },
+        {
+            "text": "the deployment of our endpoint succeeded",
+            "start": 335.52,
+            "duration": 5.76
+        },
+        {
+            "text": "and we can now see that the managed",
+            "start": 338.699,
+            "duration": 4.22
+        },
+        {
+            "text": "application",
+            "start": 341.28,
+            "duration": 5.58
+        },
+        {
+            "text": "derived the task we can also see our",
+            "start": 342.919,
+            "duration": 6.101
+        },
+        {
+            "text": "endpoint URI which we they could",
+            "start": 346.86,
+            "duration": 3.899
+        },
+        {
+            "text": "directly copy and paste into our",
+            "start": 349.02,
+            "duration": 4.38
+        },
+        {
+            "text": "application we can see our instance type",
+            "start": 350.759,
+            "duration": 6.181
+        },
+        {
+            "text": "as well as the Azure resource link which",
+            "start": 353.4,
+            "duration": 7.019
+        },
+        {
+            "text": "we are going to use to test our endpoint",
+            "start": 356.94,
+            "duration": 5.34
+        },
+        {
+            "text": "we can copy the Azure resource link",
+            "start": 360.419,
+            "duration": 3.861
+        },
+        {
+            "text": "paste it into our",
+            "start": 362.28,
+            "duration": 5.479
+        },
+        {
+            "text": "browser which will now like jump into",
+            "start": 364.28,
+            "duration": 6.94
+        },
+        {
+            "text": "Azure machine Learning Studio to our",
+            "start": 367.759,
+            "duration": 6.28
+        },
+        {
+            "text": "endpoint which has been created in here",
+            "start": 371.22,
+            "duration": 5.4
+        },
+        {
+            "text": "we can go to test",
+            "start": 374.039,
+            "duration": 6.0
+        },
+        {
+            "text": "and can test our endpoint the endpoint",
+            "start": 376.62,
+            "duration": 6.6
+        },
+        {
+            "text": "is using the same API schema as the",
+            "start": 380.039,
+            "duration": 5.821
+        },
+        {
+            "text": "hiding phase inference API meaning that",
+            "start": 383.22,
+            "duration": 5.039
+        },
+        {
+            "text": "we need to provide a Json with the",
+            "start": 385.86,
+            "duration": 5.7
+        },
+        {
+            "text": "inputs key and then a sentence",
+            "start": 388.259,
+            "duration": 8.94
+        },
+        {
+            "text": "this model runs on Azure I am",
+            "start": 391.56,
+            "duration": 6.78
+        },
+        {
+            "text": "happy",
+            "start": 397.199,
+            "duration": 4.081
+        },
+        {
+            "text": "and now I can hit test and we'll get",
+            "start": 398.34,
+            "duration": 6.419
+        },
+        {
+            "text": "back our positive from our model",
+            "start": 401.28,
+            "duration": 6.24
+        },
+        {
+            "text": "also if you want to integrate it into",
+            "start": 404.759,
+            "duration": 5.88
+        },
+        {
+            "text": "your application HTML provides code",
+            "start": 407.52,
+            "duration": 6.959
+        },
+        {
+            "text": "Snippets for python C sharp and R which",
+            "start": 410.639,
+            "duration": 6.12
+        },
+        {
+            "text": "you can directly copy and paste into",
+            "start": 414.479,
+            "duration": 5.481
+        },
+        {
+            "text": "your application as well as you can",
+            "start": 416.759,
+            "duration": 7.261
+        },
+        {
+            "text": "regenerate your keys in case of any",
+            "start": 419.96,
+            "duration": 7.239
+        },
+        {
+            "text": "security guidelines",
+            "start": 424.02,
+            "duration": 8.6
+        },
+        {
+            "text": "okay and then we can go back to our",
+            "start": 427.199,
+            "duration": 5.421
+        },
+        {
+            "text": "overview of our managed application",
+            "start": 432.8,
+            "duration": 8.399
+        },
+        {
+            "text": "and",
+            "start": 438.36,
+            "duration": 2.839
+        },
+        {
+            "text": "could either create more endpoints into",
+            "start": 442.199,
+            "duration": 6.181
+        },
+        {
+            "text": "our hiking phase application or we can",
+            "start": 444.96,
+            "duration": 7.4
+        },
+        {
+            "text": "again delete our endpoint",
+            "start": 448.38,
+            "duration": 3.98
+        },
+        {
+            "text": "um",
+            "start": 452.52,
+            "duration": 3.239
+        },
+        {
+            "text": "yeah if you have any questions about",
+            "start": 453.66,
+            "duration": 5.099
+        },
+        {
+            "text": "hiking face srml endpoints feel free to",
+            "start": 455.759,
+            "duration": 5.641
+        },
+        {
+            "text": "reach out to us via email and when you",
+            "start": 458.759,
+            "duration": 4.321
+        },
+        {
+            "text": "deploy your manage application there",
+            "start": 461.4,
+            "duration": 3.18
+        },
+        {
+            "text": "should be a support email you can",
+            "start": 463.08,
+            "duration": 4.019
+        },
+        {
+            "text": "contact or we also have a dedicated",
+            "start": 464.58,
+            "duration": 5.519
+        },
+        {
+            "text": "section in our hugging phase Forum since",
+            "start": 467.099,
+            "duration": 5.701
+        },
+        {
+            "text": "the purpose of this video was to demo",
+            "start": 470.099,
+            "duration": 4.801
+        },
+        {
+            "text": "you how you can create it we also make",
+            "start": 472.8,
+            "duration": 4.56
+        },
+        {
+            "text": "sure that we delete our endpoint to Safe",
+            "start": 474.9,
+            "duration": 5.16
+        },
+        {
+            "text": "resources which will now deleting our",
+            "start": 477.36,
+            "duration": 4.26
+        },
+        {
+            "text": "custom resource",
+            "start": 480.06,
+            "duration": 4.02
+        },
+        {
+            "text": "should reload in a second and then we'll",
+            "start": 481.62,
+            "duration": 4.76
+        },
+        {
+            "text": "clean up all of the",
+            "start": 484.08,
+            "duration": 5.1
+        },
+        {
+            "text": "infrastructure behind the scenes",
+            "start": 486.38,
+            "duration": 4.12
+        },
+        {
+            "text": "thank you",
+            "start": 489.18,
+            "duration": 4.16
+        },
+        {
+            "text": "and bye",
+            "start": 490.5,
+            "duration": 2.84
+        }
+    ],
+    "index": 1
+}

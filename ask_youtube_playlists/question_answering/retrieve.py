@@ -35,9 +35,9 @@ class Retriever:
     """Class to retrieve the most relevant documents for a given question."""
 
     def __init__(self,
-                 embedding_directory: pathlib.Path,
+                 retriever_directory: pathlib.Path,
                  config_filename: str = "hyperparams.yaml"):
-        self.embedding_directory = embedding_directory
+        self.embedding_directory = retriever_directory
 
         self.embedding_model_name = ""
         self.max_chunk_size = None
@@ -46,7 +46,7 @@ class Retriever:
 
         self.embedding_model = get_embedding_model(self.embedding_model_name)
 
-        chunked_data_directory = embedding_directory / "chunked_data"
+        chunked_data_directory = retriever_directory / "chunked_data"
         self.documents = get_documents_from_directory(chunked_data_directory)
 
         self.video_embeddings = load_embeddings(self.embedding_directory)

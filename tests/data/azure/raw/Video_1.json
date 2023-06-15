@@ -1,0 +1,502 @@
+{
+    "title": "Introducing Hugging Face Endpoints on Azure",
+    "video_id": "MlWyhdrgBwg",
+    "transcript": [
+        {
+            "text": "hello my name is philip schmidt and i am",
+            "start": 6.16,
+            "duration": 4.559
+        },
+        {
+            "text": "technical lead at hugging face i'm",
+            "start": 8.32,
+            "duration": 5.04
+        },
+        {
+            "text": "excited to be able to show you and mou",
+            "start": 10.719,
+            "duration": 5.921
+        },
+        {
+            "text": "the new azure hacking phase and points",
+            "start": 13.36,
+            "duration": 6.96
+        },
+        {
+            "text": "okay let's get started",
+            "start": 16.64,
+            "duration": 3.68
+        },
+        {
+            "text": "in the demo we are going to create a new",
+            "start": 25.199,
+            "duration": 4.721
+        },
+        {
+            "text": "azure hacking phase endpoint for text",
+            "start": 27.76,
+            "duration": 4.56
+        },
+        {
+            "text": "classification hacking phase endpoints",
+            "start": 29.92,
+            "duration": 5.2
+        },
+        {
+            "text": "are managed azure application powered by",
+            "start": 32.32,
+            "duration": 4.8
+        },
+        {
+            "text": "machine learning we are currently in the",
+            "start": 35.12,
+            "duration": 4.48
+        },
+        {
+            "text": "ui where we can create our endpoint",
+            "start": 37.12,
+            "duration": 5.279
+        },
+        {
+            "text": "first we need to select our subscription",
+            "start": 39.6,
+            "duration": 5.439
+        },
+        {
+            "text": "then our resource group",
+            "start": 42.399,
+            "duration": 4.881
+        },
+        {
+            "text": "next we are going to select our region",
+            "start": 45.039,
+            "duration": 4.961
+        },
+        {
+            "text": "in this case we are going to use east us",
+            "start": 47.28,
+            "duration": 5.04
+        },
+        {
+            "text": "and define an endpoint name let's go",
+            "start": 50.0,
+            "duration": 4.48
+        },
+        {
+            "text": "with distal",
+            "start": 52.32,
+            "duration": 4.399
+        },
+        {
+            "text": "distal bird",
+            "start": 54.48,
+            "duration": 4.399
+        },
+        {
+            "text": "as next we are going to select our model",
+            "start": 56.719,
+            "duration": 4.16
+        },
+        {
+            "text": "from the heightened phase hub for this",
+            "start": 58.879,
+            "duration": 4.16
+        },
+        {
+            "text": "we can go to filter",
+            "start": 60.879,
+            "duration": 4.081
+        },
+        {
+            "text": "text classification",
+            "start": 63.039,
+            "duration": 3.76
+        },
+        {
+            "text": "and then select one of the available",
+            "start": 64.96,
+            "duration": 3.68
+        },
+        {
+            "text": "models we are going to use the distal",
+            "start": 66.799,
+            "duration": 4.32
+        },
+        {
+            "text": "bird model which also fits our endpoint",
+            "start": 68.64,
+            "duration": 5.76
+        },
+        {
+            "text": "name copy the model id and paste it into",
+            "start": 71.119,
+            "duration": 5.68
+        },
+        {
+            "text": "our model id input field then we are",
+            "start": 74.4,
+            "duration": 4.8
+        },
+        {
+            "text": "going to select our text classification",
+            "start": 76.799,
+            "duration": 4.481
+        },
+        {
+            "text": "to cast",
+            "start": 79.2,
+            "duration": 4.559
+        },
+        {
+            "text": "okay as next we are going to define an",
+            "start": 81.28,
+            "duration": 4.0
+        },
+        {
+            "text": "application name",
+            "start": 83.759,
+            "duration": 4.4
+        },
+        {
+            "text": "let's go with text distil",
+            "start": 85.28,
+            "duration": 4.64
+        },
+        {
+            "text": "and then we need to provide a managed",
+            "start": 88.159,
+            "duration": 3.92
+        },
+        {
+            "text": "resource group name you can go with",
+            "start": 89.92,
+            "duration": 3.839
+        },
+        {
+            "text": "hugging face",
+            "start": 92.079,
+            "duration": 3.121
+        },
+        {
+            "text": "this",
+            "start": 93.759,
+            "duration": 3.36
+        },
+        {
+            "text": "our application managed resource group",
+            "start": 95.2,
+            "duration": 4.64
+        },
+        {
+            "text": "holds all resources that are required to",
+            "start": 97.119,
+            "duration": 5.201
+        },
+        {
+            "text": "create our hugging phase endpoint",
+            "start": 99.84,
+            "duration": 4.639
+        },
+        {
+            "text": "after we have done that we can select",
+            "start": 102.32,
+            "duration": 4.64
+        },
+        {
+            "text": "our compute in this case we are going to",
+            "start": 104.479,
+            "duration": 5.28
+        },
+        {
+            "text": "use a cpu instance but you can also go",
+            "start": 106.96,
+            "duration": 5.68
+        },
+        {
+            "text": "with a gpu instance the nice part about",
+            "start": 109.759,
+            "duration": 4.961
+        },
+        {
+            "text": "hugging phase endpoints is that they are",
+            "start": 112.64,
+            "duration": 3.839
+        },
+        {
+            "text": "going to deliver auto scaling out of the",
+            "start": 114.72,
+            "duration": 4.16
+        },
+        {
+            "text": "box meaning we can select our min",
+            "start": 116.479,
+            "duration": 4.96
+        },
+        {
+            "text": "instance card and our max instance card",
+            "start": 118.88,
+            "duration": 5.44
+        },
+        {
+            "text": "we are going to do this for max with two",
+            "start": 121.439,
+            "duration": 4.96
+        },
+        {
+            "text": "so we are going to be able to scale from",
+            "start": 124.32,
+            "duration": 4.32
+        },
+        {
+            "text": "one to two instances and then we need to",
+            "start": 126.399,
+            "duration": 4.64
+        },
+        {
+            "text": "provide our threshold we are going to",
+            "start": 128.64,
+            "duration": 5.2
+        },
+        {
+            "text": "use requests per minute as our threshold",
+            "start": 131.039,
+            "duration": 5.441
+        },
+        {
+            "text": "target and we are going to select 1000",
+            "start": 133.84,
+            "duration": 4.88
+        },
+        {
+            "text": "this means that our endpoint will",
+            "start": 136.48,
+            "duration": 4.16
+        },
+        {
+            "text": "receive requests and if we have an",
+            "start": 138.72,
+            "duration": 4.96
+        },
+        {
+            "text": "average over 1000 requests over a period",
+            "start": 140.64,
+            "duration": 4.88
+        },
+        {
+            "text": "for 5 minutes the endpoint will",
+            "start": 143.68,
+            "duration": 4.48
+        },
+        {
+            "text": "automatically scale out and if the load",
+            "start": 145.52,
+            "duration": 4.48
+        },
+        {
+            "text": "decreases the endpoint will also",
+            "start": 148.16,
+            "duration": 5.04
+        },
+        {
+            "text": "automatically scale in again okay now",
+            "start": 150.0,
+            "duration": 7.4
+        },
+        {
+            "text": "let's review and create",
+            "start": 153.2,
+            "duration": 4.2
+        },
+        {
+            "text": "all our validation has passed we can",
+            "start": 165.76,
+            "duration": 4.8
+        },
+        {
+            "text": "scroll down and then see again our",
+            "start": 168.319,
+            "duration": 4.401
+        },
+        {
+            "text": "provided values we have our model id",
+            "start": 170.56,
+            "duration": 4.48
+        },
+        {
+            "text": "with digital bird our task text",
+            "start": 172.72,
+            "duration": 4.56
+        },
+        {
+            "text": "classification and the resource name we",
+            "start": 175.04,
+            "duration": 4.0
+        },
+        {
+            "text": "have provided we can also see our",
+            "start": 177.28,
+            "duration": 4.08
+        },
+        {
+            "text": "instance type and the auto scaling",
+            "start": 179.04,
+            "duration": 6.8
+        },
+        {
+            "text": "configuration okay let's create",
+            "start": 181.36,
+            "duration": 4.48
+        },
+        {
+            "text": "our endpoint will now be created this",
+            "start": 191.599,
+            "duration": 4.481
+        },
+        {
+            "text": "will take a few minutes i will be back",
+            "start": 194.0,
+            "duration": 4.0
+        },
+        {
+            "text": "when the endpoint or the deployment is",
+            "start": 196.08,
+            "duration": 4.4
+        },
+        {
+            "text": "complete",
+            "start": 198.0,
+            "duration": 2.48
+        },
+        {
+            "text": "our deployment is complete and we can",
+            "start": 201.68,
+            "duration": 4.479
+        },
+        {
+            "text": "test our endpoint therefore we go to the",
+            "start": 203.84,
+            "duration": 4.16
+        },
+        {
+            "text": "resource",
+            "start": 206.159,
+            "duration": 5.041
+        },
+        {
+            "text": "to output where we can see our inference",
+            "start": 208.0,
+            "duration": 6.48
+        },
+        {
+            "text": "uri our api authentication token and the",
+            "start": 211.2,
+            "duration": 5.84
+        },
+        {
+            "text": "playground url we can use to test our",
+            "start": 214.48,
+            "duration": 4.16
+        },
+        {
+            "text": "endpoint",
+            "start": 217.04,
+            "duration": 3.279
+        },
+        {
+            "text": "here we have a widget where we can",
+            "start": 218.64,
+            "duration": 3.519
+        },
+        {
+            "text": "immediately use",
+            "start": 220.319,
+            "duration": 4.56
+        },
+        {
+            "text": "to run inference and code snippet",
+            "start": 222.159,
+            "duration": 4.8
+        },
+        {
+            "text": "let's test it",
+            "start": 224.879,
+            "duration": 3.121
+        },
+        {
+            "text": "the new",
+            "start": 226.959,
+            "duration": 2.241
+        },
+        {
+            "text": "hugging",
+            "start": 228.0,
+            "duration": 3.599
+        },
+        {
+            "text": "phase and points",
+            "start": 229.2,
+            "duration": 4.0
+        },
+        {
+            "text": "are easy",
+            "start": 231.599,
+            "duration": 3.761
+        },
+        {
+            "text": "to use",
+            "start": 233.2,
+            "duration": 4.64
+        },
+        {
+            "text": "and we can see our model predicted the",
+            "start": 235.36,
+            "duration": 4.959
+        },
+        {
+            "text": "correct sentiment for it we can also",
+            "start": 237.84,
+            "duration": 5.28
+        },
+        {
+            "text": "copy the python snippet and execute it",
+            "start": 240.319,
+            "duration": 5.2
+        },
+        {
+            "text": "for example in a jupyter notebook",
+            "start": 243.12,
+            "duration": 3.44
+        },
+        {
+            "text": "here",
+            "start": 245.519,
+            "duration": 3.041
+        },
+        {
+            "text": "you can also see that our model has",
+            "start": 246.56,
+            "duration": 6.44
+        },
+        {
+            "text": "predicted our label correctly",
+            "start": 248.56,
+            "duration": 4.44
+        },
+        {
+            "text": "i am philip and this was a quick look at",
+            "start": 258.32,
+            "duration": 5.04
+        },
+        {
+            "text": "the new azure hugging phase endpoints",
+            "start": 260.479,
+            "duration": 6.121
+        },
+        {
+            "text": "thank you",
+            "start": 263.36,
+            "duration": 3.24
+        }
+    ],
+    "index": 0
+}

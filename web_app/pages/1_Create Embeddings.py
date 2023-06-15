@@ -68,14 +68,12 @@ def main():
             embedding_dir_name = f"{embedding_model_name}_" \
                                  f"{chunk_size}_{overlap}"
             playlist_dir = get_data_directory() / playlist_name
-            embedding_dir = playlist_dir / embedding_dir_name
-            create_embeddings_pipeline(embedding_dir,
+            retriever_dir = playlist_dir / embedding_dir_name
+            create_embeddings_pipeline(retriever_dir,
                                        embedding_model_name,
                                        max_chunk_size=chunk_size,
                                        min_overlap_size=overlap,
                                        use_st_progress_bar=True)
-
-
     else:
         st.error("No playlists loaded. Please load a playlist first.")
 
