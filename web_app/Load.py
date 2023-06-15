@@ -22,14 +22,17 @@ st.caption("Welcome to Ask YouTube Playlist! Get started by entering a valid "
            "your favorite YouTube playlists in a whole new way!")
 
 if "loaded_playlist_names" not in st.session_state:
-    st.session_state["loaded_playlist_names"] = []
+    available_playlists = get_available_directories(get_data_directory())
+    st.session_state["loaded_playlist_names"] = available_playlists
 
 
 def main():
+    if "loaded_playlist_names" not in st.session_state:
+        available_playlists = get_available_directories(get_data_directory())
+        st.session_state["loaded_playlist_names"] = available_playlists
+
     loaded_playlist_names = st.session_state.get("loaded_playlist_names", [])
-    available_playlists = get_available_directories(get_data_directory())
-    available_playlists = [playlist for playlist in available_playlists
-                           if playlist not in loaded_playlist_names]
+
     # ---------------------------------------------------------------------
     with st.sidebar:
         st.markdown("""
@@ -39,20 +42,19 @@ def main():
                 }
                 </style>
             """, unsafe_allow_html=True)
-        st.header("Set parameters")
-
         # Update the sidebar with the new playlist name
-        st.subheader("Loaded Playlists")
+        st.header("Loaded Playlists")
         for name in loaded_playlist_names:
             st.write(name)
     # -------------------------------------------------------------------------
 
+    placeholder = "e.g. 'huberman-podcast'"
     playlist_name = st.text_input("Enter your playlist's folder name",
-                                  available_playlists)
+                                  placeholder=placeholder)
     data_directory = get_data_directory()
     playlist_path = data_directory / playlist_name
 
-    if playlist_name is None:
+    if playlist_name is None or playlist_name == "":
         pass
     elif playlist_name not in loaded_playlist_names:
         if playlist_path.exists():
@@ -64,8 +66,12 @@ def main():
             if is_youtube_playlist(youtube_link):
                 st.success("Valid YouTube playlist link!")
                 playlist_path.mkdir()
+                # Create 'raw' folder inside the playlist folder
+                raw_path = playlist_path / "raw"
+                raw_path.mkdir()
+
                 download_playlist(youtube_link,
-                                  playlist_path,
+                                  raw_path,
                                   use_st_progress_bar=True,
                                   )
                 st.session_state["loaded_playlist_names"].append(playlist_name)

@@ -3,7 +3,7 @@ import os
 import pathlib
 from dataclasses import dataclass
 
-from typing import List, Union, Dict, Callable, Tuple
+from typing import List, Union, Dict, Callable
 
 from langchain.embeddings import base
 from langchain import embeddings
@@ -203,32 +203,38 @@ def _create_hyperparams_yaml(directory: PathLike,
         "min_overlap_size": min_overlap_size,
     }
     # Create the directory if it does not exist.
-    pathlib.Path(directory).mkdir(parents=True, exist_ok=True)
+    pathlib.Path(directory).mkdir(parents=False, exist_ok=True)
     hyperparams_path = pathlib.Path(directory) / "hyperparams.yaml"
-    with open(hyperparams_path, "w") as f:
-        yaml.dump(hyperparams, f)
+    with open(hyperparams_path, "w") as file:
+        yaml.dump(hyperparams, file)
 
 
 def load_hyperparams(directory: PathLike) -> Dict[str, Union[str, int]]:
     """Loads the hyperparams.yaml file in the directory."""
     hyperparams_path = pathlib.Path(directory) / "hyperparams.yaml"
-    with open(hyperparams_path, "r") as f:
-        hyperparams = yaml.load(f, Loader=yaml.FullLoader)
+    with open(hyperparams_path, "r") as file:
+        hyperparams = yaml.load(file, Loader=yaml.FullLoader)
     return hyperparams
 
 
-def save_json(chunked_data: List[dict], path: PathLike) -> None:
+def save_json(chunked_data: List[dict],
+              path: pathlib.Path,
+              file_name: str) -> None:
     """Saves the data in a json file.
 
     Args:
         chunked_data (List[dict]): The data to be saved.
         path (PathLike): The path to the json file.
+        file_name (str): The name of the json file.
     """
-    with open(path, "w") as f:
-        json.dump(chunked_data, f)
+    # Create the directory if it does not exist.
+    path.mkdir(parents=True, exist_ok=True)
+    file_path = path / file_name
+    with open(file_path, "w") as file:
+        json.dump(chunked_data, file)
 
 
-def create_embeddings_pipeline(embedding_directory: PathLike,
+def create_embeddings_pipeline(retriever_directory: PathLike,
                                embedding_model_name: str,
                                max_chunk_size: int,
                                min_overlap_size: int,
@@ -236,7 +242,7 @@ def create_embeddings_pipeline(embedding_directory: PathLike,
     """Sets up the embeddings for the given embedding model in the directory.
 
     Steps:
-        1. Creates the embedding_directory if it does not exist.
+        1. Creates the retriever_directory if it does not exist.
 
         2. Creates the hyperparams.yaml file.
 
@@ -245,7 +251,7 @@ def create_embeddings_pipeline(embedding_directory: PathLike,
         4. Creates the embeddings and saves them in the embedding_directory.
 
     Args:
-        embedding_directory (PathLike): The directory where the embeddings will
+        retriever_directory (PathLike): The directory where the embeddings will
             be saved. It should be inside a `data/playlist_name` directory.
             This function assumes that the playlist directory contains a
             `raw` directory with the json files of each video.
@@ -256,27 +262,27 @@ def create_embeddings_pipeline(embedding_directory: PathLike,
         use_st_progress_bar (bool): Whether to use the Streamlit progress bar
             or not.
     """
-    embedding_directory = pathlib.Path(embedding_directory)
+    retriever_directory = pathlib.Path(retriever_directory)
     embedding_model = get_embedding_model(embedding_model_name)
 
     # Create the hyperparams.yaml file.
     _create_hyperparams_yaml(
-        embedding_directory,
+        retriever_directory,
         embedding_model_name,
         max_chunk_size,
         min_overlap_size
     )
 
-    playlist_directory = pathlib.Path(embedding_directory).parent
+    playlist_directory = pathlib.Path(retriever_directory).parent
     json_files_directory = playlist_directory / "raw"
-    chunked_data_directory = playlist_directory / "processed"
+    chunked_data_directory = retriever_directory / "chunked_data"
     json_files = list(json_files_directory.glob("*.json"))
 
     st_progress_bar = st.progress(0) if use_st_progress_bar else None
     total = len(json_files)
 
     # Create the `processed` directory if it does not exist.
-    pathlib.Path(embedding_directory).mkdir(parents=True, exist_ok=True)
+    pathlib.Path(retriever_directory).mkdir(parents=True, exist_ok=True)
 
     for i, json_file_path in enumerate(json_files, start=1):
         if st_progress_bar is not None:
@@ -291,8 +297,7 @@ def create_embeddings_pipeline(embedding_directory: PathLike,
         file_name = json_file_path.stem
 
         # Save the chunked data in the `processed` directory.
-        chunked_data_path = chunked_data_directory / f"{file_name}.json"
-        save_json(chunked_data, chunked_data_path)
+        save_json(chunked_data, chunked_data_directory, f"{file_name}.json")
 
         new_documents = extract_documents_from_list_of_dicts(chunked_data)
         documents_text = [document.page_content for document in new_documents]
@@ -301,12 +306,15 @@ def create_embeddings_pipeline(embedding_directory: PathLike,
         new_video_embeddings = np.array(new_video_embeddings)  # type: ignore
 
         # Save the embeddings in the `embeddings` directory.
-        embeddings_path = embedding_directory / f"{file_name}.npy"
+        embeddings_directory = retriever_directory / "embeddings"
+        # Create the directory if it does not exist.
+        pathlib.Path(embeddings_directory).mkdir(exist_ok=True)
+        embeddings_path = embeddings_directory / f"{file_name}.npy"
         np.save(str(embeddings_path), new_video_embeddings)
 
 
 def load_embeddings(embedding_directory: PathLike) -> List[np.ndarray]:
-    """Loads the embeddings from the embedding_directory.
+    """Loads the embeddings from the retriever_directory.
 
     Args:
         embedding_directory (PathLike): The directory where the embeddings are

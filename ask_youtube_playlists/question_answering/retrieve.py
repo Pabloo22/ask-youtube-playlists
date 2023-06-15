@@ -46,8 +46,7 @@ class Retriever:
 
         self.embedding_model = get_embedding_model(self.embedding_model_name)
 
-        playlist_directory = self.embedding_directory.parent
-        chunked_data_directory = playlist_directory / "processed"
+        chunked_data_directory = embedding_directory / "chunked_data"
         self.documents = get_documents_from_directory(chunked_data_directory)
 
         self.video_embeddings = load_embeddings(self.embedding_directory)
