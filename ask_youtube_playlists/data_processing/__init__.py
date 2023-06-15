@@ -11,7 +11,9 @@ from .create_embeddings import (get_embedding_model,
                                 save_vectorstore,
                                 load_vectorstore,
                                 EMBEDDING_MODELS_NAMES,
-                                get_embedding_spec
+                                get_embedding_spec,
+                                create_embeddings_pipeline,
+                                load_embeddings
                                 )
 
 from .create_documents import (get_documents_from_directory,
