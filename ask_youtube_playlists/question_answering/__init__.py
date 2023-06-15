@@ -1,5 +1,4 @@
-"""
-In this package, we will implement the question answering system.
+"""Implements the question answering system.
 
 It consists of three components:
 1.- Retrieval: This component retrieves the most relevant documents for a given
