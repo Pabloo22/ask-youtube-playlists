@@ -5,8 +5,8 @@ import pathlib
 from ask_youtube_playlists.data_processing import EMBEDDING_MODELS_NAMES
 
 st.set_page_config(
-    page_title="Generative QA",
-    page_icon="🧠",
+    page_title="Question Answering",
+    page_icon="❓",
 )
 
 
