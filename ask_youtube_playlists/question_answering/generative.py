@@ -1,5 +1,6 @@
 """Contains the functionality to answer a question using generative
 models."""
+import streamlit as st
 from dataclasses import dataclass
 from typing import List
 
@@ -52,14 +53,14 @@ def get_model_spec(model_name: str) -> LLMSpec:
                      f"models are: {GENERATIVE_MODELS}")
 
 
-def load_model(model_spec: LLMSpec,
+def load_model(model_name: str,
                temperature: float = 0.7,
                max_length: int = 1024,
                ) -> llms.base.BaseLLM:
     """Loads the language model.
 
     Args:
-        model_spec (LLMSpec): The language model specification.
+        model_name (str): The language model name.
         temperature (float, optional): The temperature used to generate the
             answer. The higher the temperature, the more "creative" the answer
             will be. Defaults to 0.7.
@@ -70,13 +71,8 @@ def load_model(model_spec: LLMSpec,
         llms.base.BaseLLM: The language model.
     """
 
-    # if model_spec.model_type == "huggingface_pipeline":
-    #     return llms.HuggingFacePipeline.from_model_id(
-    #         model_spec.name,
-    #         task="text-generation",
-    #         model_kwargs={"temperature": temperature,
-    #                       "max_length": max_length}
-    #     )
+    model_spec = get_model_spec(model_name)
+
     if model_spec.model_type == "openai-chat":
         llm = llms.OpenAIChat(  # type: ignore
             model_name=model_spec.model_name,
@@ -117,6 +113,7 @@ def _get_generative_prompt_template(retrieved_documents: List[Document],
     return template
 
 
+@st.cache_data
 def get_generative_answer(question: str,
                           relevant_documents: List[Document],
                           model: llms.base.BaseLLM) -> str:

@@ -1,4 +1,6 @@
 """Contains the functionality to perform extractive question answering."""
+import streamlit as st
+
 import functools
 from typing import Any, Tuple
 
@@ -29,6 +31,7 @@ def _load_extractive_model(model_name: str = "deepset/roberta-base-squad2"
     return model, tokenizer
 
 
+@st.cache_data
 def get_extractive_answer(question: str,
                           context: str,
                           model_name: str = "deepset/roberta-base-squad2",
