@@ -5,7 +5,6 @@ from ask_youtube_playlists.data_processing import get_available_directories
 
 from utils import get_data_directory
 
-
 st.set_page_config(
     page_title="Extractive QA",
     page_icon="🔍",
@@ -25,7 +24,8 @@ with st.sidebar:
 
     data_dir = get_data_directory()
     if "loaded_playlist_names" not in st.session_state:
-        st.session_state["loaded_playlist_names"] = get_available_directories(data_dir)
+        st.session_state["loaded_playlist_names"] = \
+            get_available_directories(data_dir)
     loaded_playlist_names = st.session_state["loaded_playlist_names"]
     st.header("Select Playlist")
     playlist_name = st.selectbox("Select Playlist",
@@ -34,9 +34,8 @@ with st.sidebar:
 
     st.header("Select Embeddings")
 
-
     embedding_model = st.selectbox("Select Embedding Model",
-                                   EMBEDDING_MODELS_NAMES,
+                                   ['BERT', 'DistillBERT', 'RoBERTa'],
                                    key="embedding_model")
 
     st.header("Set hyperparameters")
