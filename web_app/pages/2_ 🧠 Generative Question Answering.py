@@ -22,18 +22,18 @@ with st.sidebar:
         """, unsafe_allow_html=True)
 
     st.header("Set hyperparameters")
-    # box to insert max_length value
-    max_length = st.number_input("Enter max_length value",
-                                 min_value=0,
-                                 max_value=100,
-                                 value=50,
-                                 step=1)
     # slider to choose temperature
     temperature = st.slider("Select Temperature",
                             min_value=0.0,
                             max_value=100.0,
                             value=50.0,
                             step=0.1)
+
+    max_length = st.slider("Enter max_length value",
+                           min_value=10,
+                           max_value=8000,
+                           value=50,
+                           step=1)
 
     # Set the playlist names on the sidebar
     st.subheader("Available Playlists")
