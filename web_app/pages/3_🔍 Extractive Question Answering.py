@@ -1,7 +1,9 @@
 import streamlit as st
 import re  # regex library
 
-from ask_youtube_playlists.data_processing import EMBEDDING_MODELS_NAMES
+from ask_youtube_playlists.data_processing import get_available_directories
+
+from utils import get_data_directory
 
 
 st.set_page_config(
@@ -21,24 +23,23 @@ with st.sidebar:
             </style>
         """, unsafe_allow_html=True)
 
-    st.header("Select Embedding Model")
+    data_dir = get_data_directory()
+    if "loaded_playlist_names" not in st.session_state:
+        st.session_state["loaded_playlist_names"] = get_available_directories(data_dir)
+    loaded_playlist_names = st.session_state["loaded_playlist_names"]
+    st.header("Select Playlist")
+    playlist_name = st.selectbox("Select Playlist",
+                                 loaded_playlist_names,
+                                 key="playlist_name")
+
+    st.header("Select Embeddings")
+
+
     embedding_model = st.selectbox("Select Embedding Model",
                                    EMBEDDING_MODELS_NAMES,
                                    key="embedding_model")
 
     st.header("Set hyperparameters")
-
-    chunk_size = st.slider("Select Chunk Size",
-                           min_value=128,
-                           max_value=512,
-                           value=320,
-                           step=1)
-
-    overlap = st.slider("Select Overlap",
-                        min_value=0,
-                        max_value=128,
-                        value=64,
-                        step=1)
 
     num_docs = st.slider("Select Number of Documents to Retrieve",
                          min_value=1,
