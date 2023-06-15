@@ -3,9 +3,7 @@ import streamlit as st
 
 
 from ask_youtube_playlists.data_processing import (EMBEDDING_MODELS_NAMES,
-                                                   get_embedding_model,
                                                    )
-
 
 
 def get_data_directory() -> pathlib.Path:
