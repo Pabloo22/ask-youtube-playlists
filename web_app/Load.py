@@ -1,11 +1,20 @@
 import streamlit as st
+import pathlib
 
 from ask_youtube_playlists.data_processing import (download_playlist,
                                                    is_youtube_playlist,
                                                    get_available_directories
                                                    )
 
-from utils import get_data_directory
+def get_data_directory() -> pathlib.Path:
+    """Returns the path to the data directory."""
+    parent_path = pathlib.Path(__file__).parent
+    while parent_path.name != "ask-youtube-playlists":
+        parent_path = parent_path.parent
+
+    data_directory = parent_path / "data"
+    return data_directory
+
 
 # youtube playlist link to test:
 # https://www.youtube.com/playlist?list=PLPNW_gerXa4Pc8S2qoUQc5e8Ir97RLuVW
