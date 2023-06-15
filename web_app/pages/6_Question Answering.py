@@ -1,13 +1,25 @@
-import streamlit as st
-import re
 import pathlib
+import streamlit as st
 
-from ask_youtube_playlists.data_processing import EMBEDDING_MODELS_NAMES
+import dotenv
+
+from ask_youtube_playlists.data_processing import get_available_directories
+from ask_youtube_playlists.question_answering import (
+    get_extractive_answer,
+    get_generative_answer,
+    EXTRACTIVE_MODEL_NAMES,
+    GENERATIVE_MODEL_NAMES,
+    Retriever,
+    load_model,
+)
 
 st.set_page_config(
     page_title="Generative QA",
     page_icon="🧠",
 )
+
+# Load OPENAI_API_KEY from .env file
+dotenv.load_dotenv()
 
 
 def get_data_directory() -> pathlib.Path:
@@ -20,20 +32,19 @@ def get_data_directory() -> pathlib.Path:
     return data_directory
 
 
+data_dir = get_data_directory()
+if "playlist_list" not in st.session_state:
+    st.session_state["playlist_list"] = get_available_directories(data_dir)
+
+
 if "selected_playlists" not in st.session_state:
     st.session_state["selected_playlists"] = []
 
 selected_playlists = st.session_state["selected_playlists"]
-if "text" not in st.session_state:
-    st.session_state["text"] = ""
 
 
-def clear_text():
-    st.session_state["text"] = ""
-
-
-generative_models = ['GPT-3.5', 'GPT-4']
-extractive_models = ['BERT', 'DistillBERT', 'RoBERTa']
+generative_models = GENERATIVE_MODEL_NAMES
+extractive_models = EXTRACTIVE_MODEL_NAMES
 
 playlist_list = st.session_state["loaded_playlist_names"]
 if 'mode' not in st.session_state:
@@ -64,98 +75,114 @@ with st.sidebar:
     if mode == 'generative':
         generative_model = st.selectbox("Select a Generative Model",
                                         generative_models,
-                                        on_change=clear_text,
                                         key="generative_model")
     elif mode == 'extractive':
         extractive_model = st.selectbox("Select an Extractive Model",
                                         extractive_models,
-                                        on_change=clear_text,
                                         key="extractive_model")
     st.header("Set hyperparameters")
     if mode == 'generative':
         # slider to choose temperature
         temperature = st.slider("Select Temperature",
                                 min_value=0.0,
-                                max_value=100.0,
-                                value=50.0,
-                                step=0.1)
+                                max_value=1.0,
+                                value=0.7,
+                                step=0.05)
 
         max_length = st.slider("Enter max_length value",
                                min_value=10,
                                max_value=8000,
                                value=50,
-                               step=1)
-    elif mode == 'extractive':
-        n_returned_docs = st.slider("Select number of returned documents",
-                                    min_value=1,
-                                    max_value=100,
-                                    value=5,
-                                    step=1)
+                               step=10)
 
-    # Set the playlist names on the sidebar
-    st.subheader("Available Playlists")
-    st.session_state["playlist_list"] = playlist_list
-    # Allows to choose which playlists one wants to use
-    for playlist in playlist_list:
-        checkbox_value = st.checkbox(playlist)
-
+    max_retrieved_docs = 100 if mode == "generative" else 10
+    n_retrieved_docs = st.slider("Select number of returned documents",
+                                 min_value=1,
+                                 max_value=max_retrieved_docs,
+                                 value=10,
+                                 step=1)
 
 # -----------------------------------------------------------------------------
 
-# Function to get the answer based on the selected model
-def get_answer(question, model):
-    # [TODO] Implement the logic to retrieve the answer based on the
-    #  selected model and mode
-    if model == 'GPT-2':
-        answer = 'Answer from GPT-2 extractive model'
-    elif model == 'Llama':
-        answer = 'Answer from Llama extractive model'
-    elif model == 'T5':
-        answer = 'Answer from T5 extractive model'
-
-    return answer
+# Initialize 'answer', 'retrievers', 'question' and 'relevant_documents'
+# in session state
+if 'answer' not in st.session_state:
+    st.session_state['answer'] = None
+if 'retrievers' not in st.session_state:
+    st.session_state['retrievers'] = []
+if 'question' not in st.session_state:
+    st.session_state['question'] = ""
+if 'relevant_documents' not in st.session_state:
+    st.session_state['relevant_documents'] = []
 
 
-def clear_text():
-    st.session_state["generative_text"] = ""
+# Playlist selection, multiple playlists can be selected
+# From st.session_state["playlist_list"] create checkboxes
+# for each playlist
+retrievers = []
+for playlist_name in st.session_state["playlist_list"]:
+    checkbox_value = st.checkbox(playlist_name, key=playlist_name)
 
+    if checkbox_value:
+        # Select the embeddings model
+        data_dir = get_data_directory()
+        playlist_directory = data_dir / playlist_name
+        embeddings = get_available_directories(playlist_directory)
+        embeddings = [embedding for embedding in embeddings
+                      if embedding != "raw"]
+        selected_retriever = st.radio("Select an Embeddings Model",
+                                      embeddings)
 
-# Question - Answering
-def main():
-    # Playlist selection, multiple playlists can be selected
-    # From st.session_state["playlist_list"] create checkboxes
-    # for each playlist
-    for playlist in st.session_state["playlist_list"]:
-        checkbox_value = st.checkbox(playlist, key=playlist)
-        if st.session_state[playlist]:
-            # Select the embeddings model
-            embeddings = []
-            # Iterate over the folders in the folder of the selected playlist
-            for folder in get_data_directory() / playlist:
-                # Check if the folder is a folder
-                if folder.is_dir() and folder.name != "raw":
-                    embeddings.append(folder.name)
-            embeddings = st.radio("Select an Embeddings Model",
-                                  embeddings,
-                                  key="embeddings_model_" + playlist)
+        retriever_path = playlist_directory / selected_retriever
+        retriever = Retriever(retriever_path)
+        retrievers.append(retriever)
 
+if retrievers:
+    st.subheader("Ask Question")
     # Receive question input
-    question = st.text_input("Enter your question",
-                             key="question")
+    question = st.text_input("Enter your question", key="question")
 
-    # the question must finish with an interrogation point
-    if re.match(r".+\?$", question):
-        # Answer display
-        # TODO send question to the model
-        # TODO display the answer from the model
-        answer_generative = get_answer(question, model)
-        st.write("Answer:", answer_generative)
+    if question != "":
+        question = st.session_state['question']
 
-        # Button to make another question
-        st.button("I want to make another question", on_click=clear_text)
-    else:
-        st.error("Please Insert a question")
+        # Retrieve relevant documents
+        relevant_documents = Retriever.retrieve(retrievers,
+                                                question,
+                                                n_retrieved_docs)
+        st.session_state['relevant_documents'] = relevant_documents
 
+        if mode == 'extractive':
+            st.subheader("Extractive Answer")
+            for i, document_info in enumerate(relevant_documents, start=1):
 
-if __name__ == "__main__":
-    main()
+                answer = get_extractive_answer(
+                    question,
+                    document_info.document.page_content,
+                    extractive_model,  # type: ignore
+                )
+                playlist_name = document_info.playlist_name
+                # Expand the answer
+                with st.expander(f"Answer {i} from {playlist_name}"):
+                    st.write(answer)
+
+        if mode == 'generative':
+            st.subheader("Generative Answer")
+            docs = [document_info.document
+                    for document_info in relevant_documents]
+            answer = get_generative_answer(
+                question,
+                relevant_documents=docs,
+                model_name=generative_model,  # type: ignore
+                temperature=temperature,
+                max_length=max_length
+            )
+            st.write(answer)
+            # st.write(relevant_documents)
+            # st.write(retrievers)
+
+            # st.subheader("Sources")
+            # for i, document_info in enumerate(relevant_documents, start=1):
+            #     playlist_name = document_info.playlist_name
+            #     # Expand the answer
+            #     with st.expander(f"Document {i} from {playlist_name}"):
+            #         st.write(answer)
