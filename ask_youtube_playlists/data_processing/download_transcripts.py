@@ -1,7 +1,6 @@
 """Code to download the transcripts from YouTube."""
 import pathlib
 import json
-import logging
 from typing import Dict, List, Union, Optional
 
 import streamlit as st
@@ -33,14 +32,16 @@ def _get_playlist_info(url: str) -> Dict[str, str]:
 def download_transcript(video_title: str,
                         video_id: str,
                         output_path: pathlib.Path,
-                        logger: Optional[logging.Logger] = None) -> None:
+                        video_index: int,
+                        verbose: bool = True) -> None:
     """Downloads the transcript of a YouTube video.
 
     Args:
         video_title (str): The title of the YouTube video.
         video_id (str): The ID of the YouTube video.
         output_path (pathlib.Path): The path to the output file.
-        logger (logging.Logger): The logger.
+        video_index (int): The index of the video in the playlist.
+        verbose (bool): Whether to print the progress of the download.
 
     Raises:
         Exception: If the transcript cannot be downloaded.
@@ -57,19 +58,19 @@ def download_transcript(video_title: str,
             json.dump({
                 'title': video_title,
                 'video_id': video_id,
-                'transcript': transcript}, file, ensure_ascii=False, indent=4)
-
-        if logger is not None:
-            logger.info(f'Transcript has been saved to {output_path}')
+                'transcript': transcript,
+                'index': video_index
+            }, file, ensure_ascii=False, indent=4)
 
     except Exception as error_msg:
-        if logger is not None:
-            logger.error(f'An error occurred: {str(error_msg)}')
+        if verbose:
+            st.warning(f'Could not download transcript for video '
+                       f'{video_title}.\nError message:\n{error_msg}')
 
 
 def download_playlist(url: str,
                       data_path: pathlib.Path,
-                      use_st_progress_bar: Optional[bool] = False) -> None:
+                      use_st_progress_bar: bool = False) -> None:
     """Downloads the transcripts of a YouTube playlist.
 
     Args:
@@ -91,7 +92,11 @@ def download_playlist(url: str,
                                   f'Downloading video {i + 1} of '
                                   f'{total_videos}')
         output_file = data_path / f'Video_{str(i + 1)}.json'
-        download_transcript(video_title, video_id, output_file)
+        download_transcript(video_title,
+                            video_id,
+                            output_file,
+                            video_index=i,
+                            verbose=use_st_progress_bar)
 
 
 def _replace_newlines(json_file: dict) -> None:
