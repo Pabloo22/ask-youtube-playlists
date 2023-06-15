@@ -22,16 +22,11 @@ def get_device() -> str:
     return "cpu"
 
 
-def get_available_playlist(data_directory: pathlib.Path) -> List[str]:
+def get_available_directories(data_directory: pathlib.Path) -> List[str]:
     """Returns a list of the available playlists.
 
     The playlists are the names of the directories in the data directory.
     """
-    available_playlists = [playlist.name
-                           for playlist in data_directory.iterdir()]
+    available_playlists = [directory.name
+                           for directory in data_directory.iterdir()]
     return available_playlists
-
-
-def load_playlist_vectorstore(playlist_directory: pathlib.Path,
-                              embedding_model_name: str) -> None:
-    """Loads the playlist vectorstore."""

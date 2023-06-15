@@ -1,6 +1,9 @@
 import streamlit as st
 import re  # regex library
 
+from ask_youtube_playlists.data_processing import EMBEDDING_MODELS_NAMES
+
+
 st.set_page_config(
     page_title="Extractive QA",
     page_icon="🔍",
@@ -18,30 +21,25 @@ with st.sidebar:
             </style>
         """, unsafe_allow_html=True)
 
-    # Select embedding model
     st.header("Select Embedding Model")
-    embedding_models = ["msmarco-MiniLM-L-6-v3",
-                        "msmarco-distilbert-base-v4",
-                        "msmarco-distilbert-base-tas-b",
-                        "text-embedding-ada-002"]
     embedding_model = st.selectbox("Select Embedding Model",
-                                   embedding_models,
+                                   EMBEDDING_MODELS_NAMES,
                                    key="embedding_model")
 
     st.header("Set hyperparameters")
-    # slider to choose temperature
+
     chunk_size = st.slider("Select Chunk Size",
                            min_value=128,
                            max_value=512,
                            value=320,
                            step=1)
-    # slider to choose overlap
+
     overlap = st.slider("Select Overlap",
                         min_value=0,
                         max_value=128,
                         value=64,
                         step=1)
-    # Slider to choose the number of documents to retrieve
+
     num_docs = st.slider("Select Number of Documents to Retrieve",
                          min_value=1,
                          max_value=10,

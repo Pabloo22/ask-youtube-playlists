@@ -1,6 +1,9 @@
 import streamlit as st
 import re  # regex library
 
+from ask_youtube_playlists.data_processing import EMBEDDING_MODELS_NAMES
+
+
 st.set_page_config(
     page_title="Generative QA",
     page_icon="🧠",

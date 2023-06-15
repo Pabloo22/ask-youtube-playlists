@@ -2,7 +2,7 @@ import streamlit as st
 
 from ask_youtube_playlists.data_processing import (download_playlist,
                                                    is_youtube_playlist,
-                                                   get_available_playlist
+                                                   get_available_directories
                                                    )
 
 from utils import get_data_directory
@@ -27,7 +27,7 @@ if "loaded_playlist_names" not in st.session_state:
 
 def main():
     loaded_playlist_names = st.session_state.get("loaded_playlist_names", [])
-    available_playlists = get_available_playlist(get_data_directory())
+    available_playlists = get_available_directories(get_data_directory())
     available_playlists = [playlist for playlist in available_playlists
                            if playlist not in loaded_playlist_names]
     # ---------------------------------------------------------------------
