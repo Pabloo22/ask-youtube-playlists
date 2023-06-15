@@ -2,7 +2,7 @@
 models."""
 import streamlit as st
 from dataclasses import dataclass
-from typing import List
+from typing import List, Dict, Union
 
 import langchain
 from langchain import llms
@@ -23,7 +23,7 @@ class LLMSpec:
 
 
 GENERATIVE_MODELS = [
-    LLMSpec("gpt-2", "huggingface-pipeline", max_tokens=1024),
+    LLMSpec("gpt2", "huggingface-pipeline", max_tokens=1024),
     LLMSpec("gpt-3.5-turbo", "openai-chat", max_tokens=4096),
     LLMSpec("gpt-3.5-turbo-16k", "openai-chat", max_tokens=16384),
     LLMSpec("gpt-4", "openai-chat", max_tokens=8192),
@@ -116,18 +116,24 @@ def _get_generative_prompt_template(retrieved_documents: List[Document],
 @st.cache_data
 def get_generative_answer(question: str,
                           relevant_documents: List[Document],
-                          model: llms.base.BaseLLM) -> str:
+                          model_name: str,
+                          temperature: int,
+                          max_length: int) -> str:
     """Returns the answer to the question as a string.
 
     Args:
         question (str): The question asked by the user.
         relevant_documents (List[Document]): The list of relevant documents.
-        model (llms.base.BaseLLM): The language model used to generate the
-            answer.
+        model_name (str): The name of the language model.
+        temperature (float): The temperature used to generate the answer.
+        max_length (int): The maximum length of the generated answer.
 
     Returns:
         str: The answer to the question.
     """
+    model = load_model(model_name=model_name,
+                       temperature=temperature,
+                       max_length=max_length)
     template = _get_generative_prompt_template(relevant_documents)
     prompt = template.format(question=question)
     answer = model.generate(prompts=[prompt])

@@ -67,10 +67,14 @@ def main():
         if st.button("Create Embeddings"):
             embedding_dir_name = f"{embedding_model_name}_" \
                                  f"{chunk_size}_{overlap}"
-            playlist_dir = get_data_directory() / playlist_name
+
+            data_directory_parent = get_data_directory().parent
+            data_directory = data_directory_parent / "data3"
+
+            playlist_dir = data_directory / playlist_name  # type: ignore
             retriever_dir = playlist_dir / embedding_dir_name
             create_embeddings_pipeline(retriever_dir,
-                                       embedding_model_name,
+                                       embedding_model_name,  # type: ignore
                                        max_chunk_size=chunk_size,
                                        min_overlap_size=overlap,
                                        use_st_progress_bar=True)
