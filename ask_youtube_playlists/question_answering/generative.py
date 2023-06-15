@@ -28,6 +28,9 @@ GENERATIVE_MODELS = [
     LLMSpec("gpt-4", "openai-chat", max_tokens=8192),
 ]
 
+GENERATIVE_MODEL_NAMES = [model_spec.model_name
+                          for model_spec in GENERATIVE_MODELS]
+
 
 def get_model_spec(model_name: str) -> LLMSpec:
     """Returns the language model specification.

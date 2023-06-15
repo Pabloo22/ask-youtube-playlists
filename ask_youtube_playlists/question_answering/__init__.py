@@ -10,3 +10,6 @@ retrieved documents.
 3.- Generative: This component generates an answer to the question from the
 extracted sentences.
 """
+
+from .extractive import EXTRACTIVE_MODEL_NAMES, get_extractive_answer
+from .generative import GENERATIVE_MODEL_NAMES, get_generative_answer

@@ -7,9 +7,14 @@ from transformers import (AutoModelForQuestionAnswering,
                           pipeline)
 
 
+EXTRACTIVE_MODEL_NAMES = [
+    "deepset/roberta-base-squad2",
+]
+
+
 @functools.lru_cache(maxsize=1)
-def load_extractive_model(model_name: str = "deepset/roberta-base-squad2"
-                          ) -> Tuple[Any, Any]:
+def _load_extractive_model(model_name: str = "deepset/roberta-base-squad2"
+                           ) -> Tuple[Any, Any]:
     """Loads the extractive question answering model.
 
     Args:
@@ -40,7 +45,7 @@ def get_extractive_answer(question: str,
         A dictionary with the 'answer' as a string, the 'score' as a float and
         the 'start' and 'end' as integers.
     """
-    model, tokenizer = load_extractive_model(model_name)
+    model, tokenizer = _load_extractive_model(model_name)
     qa_input = {
         'question': question,
         'context': context
