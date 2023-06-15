@@ -14,8 +14,8 @@ from ask_youtube_playlists.question_answering import (
 )
 
 st.set_page_config(
-    page_title="Generative QA",
-    page_icon="🧠",
+    page_title="Question Answering",
+    page_icon="❓",
 )
 
 # Load OPENAI_API_KEY from .env file

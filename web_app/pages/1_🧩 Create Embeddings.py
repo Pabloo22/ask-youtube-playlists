@@ -5,6 +5,11 @@ from ask_youtube_playlists.data_processing import (EMBEDDING_MODELS_NAMES,
                                                    create_embeddings_pipeline,
                                                    )
 
+st.set_page_config(
+    page_title="Create Embeddings",
+    page_icon="🧩",
+)
+
 
 def get_data_directory() -> pathlib.Path:
     """Returns the path to the data directory."""
@@ -15,11 +20,6 @@ def get_data_directory() -> pathlib.Path:
     data_directory = parent_path / "data"
     return data_directory
 
-
-st.set_page_config(
-    page_title="Extractive QA",
-    page_icon="🔍",
-)
 
 st.title("Extractive Question Answering")
 
@@ -50,6 +50,7 @@ with st.sidebar:
                         max_value=128,
                         value=64,
                         step=1)
+
 
 # --------------------------------------------------------------------
 
