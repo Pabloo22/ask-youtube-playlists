@@ -27,6 +27,7 @@ openai = "^0.27.8"
 tiktoken = "^0.4.0"
 pyyaml = "^6.0"
 types-pyyaml = "^6.0.12.10"
+validators = "^0.20.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
