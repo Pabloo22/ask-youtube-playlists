@@ -66,7 +66,7 @@ class Retriever:
         with open(path_to_config, "r") as file:
             config = yaml.safe_load(file)
 
-        self.embedding_model_name = config["embedding_model_name"]
+        self.embedding_model_name = config["model_name"]
         self.max_chunk_size = config["max_chunk_size"]
         self.min_overlap_size = config["min_overlap_size"]
 
