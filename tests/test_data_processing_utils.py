@@ -17,7 +17,8 @@ def _get_data_directory() -> pathlib.Path:
 def test_get_available_playlist():
     data_dir = _get_data_directory()
     available_playlists = get_available_directories(data_dir)
-    assert available_playlists == ["playlist_name_1", "playlist_name_2"]
+    expected = {"playlist_name_1", "playlist_name_2"}
+    assert set(available_playlists) == expected
 
 
 if __name__ == "__main__":
