@@ -33,7 +33,7 @@ def test_download_transcript():
     data_path = pathlib.Path("tests/data3")
     output_file = data_path / "raw" / "test.json"
     print(output_file)
-    download_transcript(video_title, video_id, output_file, video_index=0,
+    download_transcript(video_title, video_id, output_file,
                         verbose=False)
     assert output_file.exists()
 
