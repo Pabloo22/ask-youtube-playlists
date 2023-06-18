@@ -92,7 +92,6 @@ def download_playlist(url: str,
         download_transcript(video_title,
                             video_id,
                             output_file,
-                            video_index=i,
                             verbose=use_st_progress_bar)
 
 
@@ -138,18 +137,23 @@ def create_chunked_data(file_path: pathlib.Path,
     current_chunk_size = 0
 
     for current_index, segment_length in enumerate(segment_lengths):
-        if current_chunk_size + segment_length + 1 < max_chunk_size:
-            current_chunk_size += segment_length + 1
+        if current_chunk_size + segment_length + 1 >= max_chunk_size:
+            chunks_indices.append(
+                (current_beginning_index, current_ending_index))
+            current_chunk_size += segment_length
             current_ending_index = current_index
-            continue
-        chunks_indices.append((current_beginning_index, current_ending_index))
-        current_chunk_size += segment_length
-        current_ending_index = current_index
 
-        while current_chunk_size > max_chunk_size - min_overlap_size + 1:
-            current_chunk_size -= segment_lengths[current_beginning_index] + 1
-            current_beginning_index += 1
-        current_chunk_size += 1
+            overlap_size = 0
+            while overlap_size <= min_overlap_size:
+                segment_len = segment_lengths[current_beginning_index] + 1
+                current_chunk_size -= segment_len
+                overlap_size += segment_len
+                current_beginning_index += 1
+            current_chunk_size += 1
+            continue
+
+        current_chunk_size += segment_length + 1
+        current_ending_index = current_index
 
     # Now that we have the chunk indices, we can create the chunks
     # chunks = [{
