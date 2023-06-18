@@ -37,7 +37,7 @@ class Retriever:
     def __init__(self,
                  retriever_directory: pathlib.Path,
                  config_filename: str = "hyperparams.yaml"):
-        self.embedding_directory = retriever_directory
+        self.retriever_directory = retriever_directory
 
         self.embedding_model_name = ""
         self.max_chunk_size = None
@@ -49,7 +49,8 @@ class Retriever:
         chunked_data_directory = retriever_directory / "chunked_data"
         self.documents = get_documents_from_directory(chunked_data_directory)
 
-        self.video_embeddings = load_embeddings(self.embedding_directory)
+        embedding_directory = retriever_directory / "embeddings"
+        self.video_embeddings = load_embeddings(embedding_directory)
 
     @property
     def total_number_of_documents(self) -> int:
@@ -62,7 +63,7 @@ class Retriever:
         Args:
             filename (str): The name of the YAML file.
         """
-        path_to_config = self.embedding_directory / filename
+        path_to_config = self.retriever_directory / filename
         with open(path_to_config, "r") as file:
             config = yaml.safe_load(file)
 
@@ -98,7 +99,7 @@ class Retriever:
         """
         n_documents = min(n_documents, self.total_number_of_documents)
 
-        playlist_name = self.embedding_directory.parent.name
+        playlist_name = self.retriever_directory.parent.name
 
         question_embedding = self.embedding_model.embed_query(question)
         question_embedding = np.array(question_embedding)  # type: ignore
