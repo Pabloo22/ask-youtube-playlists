@@ -14,6 +14,7 @@ st.set_page_config(
 
 dotenv.load_dotenv()
 
+
 def get_data_directory() -> pathlib.Path:
     """Returns the path to the data directory."""
     parent_path = pathlib.Path(__file__).parent
