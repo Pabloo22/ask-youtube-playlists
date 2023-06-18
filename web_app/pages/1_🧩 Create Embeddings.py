@@ -1,5 +1,6 @@
-import streamlit as st
 import pathlib
+import streamlit as st
+import dotenv
 
 from ask_youtube_playlists.data_processing import (EMBEDDING_MODELS_NAMES,
                                                    create_embeddings_pipeline,
@@ -10,6 +11,8 @@ st.set_page_config(
     page_icon="🧩",
 )
 
+
+dotenv.load_dotenv()
 
 def get_data_directory() -> pathlib.Path:
     """Returns the path to the data directory."""
