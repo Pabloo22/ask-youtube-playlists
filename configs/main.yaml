@@ -1,2 +1,0 @@
-embedding_model: msmarco-distilbert-base-dot-v3
-extractive_model: gpt-2

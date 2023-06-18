@@ -1,7 +1,0 @@
-msmarco-distilbert-base-dot-v5:
-  name: sentence-transformers/msmarco-distilbert-base-dot-v5
-  chunk_size: 512
-
-msmarco-distilbert-base-dot-v3:
-  name: sentence-transformers/msmarco-distilbert-base-dot-v5
-  chunk_size: 512
