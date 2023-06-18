@@ -70,7 +70,7 @@ def main():
                                  f"{chunk_size}_{overlap}"
 
             data_directory_parent = get_data_directory().parent
-            data_directory = data_directory_parent / "data3"
+            data_directory = data_directory_parent / "data"
 
             playlist_dir = data_directory / playlist_name  # type: ignore
             retriever_dir = playlist_dir / embedding_dir_name
