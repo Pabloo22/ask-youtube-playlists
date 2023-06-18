@@ -32,7 +32,6 @@ def _get_playlist_info(url: str) -> Dict[str, str]:
 def download_transcript(video_title: str,
                         video_id: str,
                         output_path: pathlib.Path,
-                        video_index: int,
                         verbose: bool = True) -> None:
     """Downloads the transcript of a YouTube video.
 
@@ -40,7 +39,6 @@ def download_transcript(video_title: str,
         video_title (str): The title of the YouTube video.
         video_id (str): The ID of the YouTube video.
         output_path (pathlib.Path): The path to the output file.
-        video_index (int): The index of the video in the playlist.
         verbose (bool): Whether to print the progress of the download.
 
     Raises:
@@ -59,7 +57,6 @@ def download_transcript(video_title: str,
                 'title': video_title,
                 'video_id': video_id,
                 'transcript': transcript,
-                'index': video_index
             }, file, ensure_ascii=False, indent=4)
 
     except Exception as error_msg:
@@ -171,7 +168,7 @@ def create_chunked_data(file_path: pathlib.Path,
     video = pytube.YouTube(base_url + json_file['video_id'])
     thumbnail_url = video.thumbnail_url
     chunks = []
-    for chunk_index in chunks_indices:
+    for i, chunk_index in enumerate(chunks_indices):
         text_list = []
         duration_sum = 0
         start, end = chunk_index
@@ -186,7 +183,7 @@ def create_chunked_data(file_path: pathlib.Path,
             'url': base_url + json_file['video_id'] + f'&t={timestamp}s',
             'title': json_file['title'],
             'thumbnail': thumbnail_url,
-            'index': json_file['index']
+            'index': i
         })
 
     return chunks

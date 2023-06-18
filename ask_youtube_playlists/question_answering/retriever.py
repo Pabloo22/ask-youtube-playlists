@@ -111,7 +111,9 @@ class Retriever:
             for i, (document, document_embedding) in enumerate(iterator):
                 if document.metadata["index"] != i:
                     raise ValueError("The index of the document does not match"
-                                     " its position in the list.")
+                                     " its position in the list."
+                                     f" Index: {document.metadata['index']},"
+                                     f" Position: {i}")
 
                 score = 1 - self.cosine_distance(
                     question_embedding, document_embedding  # type: ignore
