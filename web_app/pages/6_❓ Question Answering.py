@@ -10,7 +10,6 @@ from ask_youtube_playlists.question_answering import (
     EXTRACTIVE_MODEL_NAMES,
     GENERATIVE_MODEL_NAMES,
     Retriever,
-    load_model,
 )
 
 st.set_page_config(
@@ -104,8 +103,6 @@ with st.sidebar:
 
 # -----------------------------------------------------------------------------
 
-# Initialize 'answer', 'retrievers', 'question' and 'relevant_documents'
-# in session state
 if 'answer' not in st.session_state:
     st.session_state['answer'] = None
 if 'retrievers' not in st.session_state:
@@ -131,7 +128,8 @@ for playlist_name in st.session_state["playlist_list"]:
         embeddings = [embedding for embedding in embeddings
                       if embedding != "raw"]
         selected_retriever = st.radio("Select an Embeddings Model",
-                                      embeddings)
+                                      embeddings,
+                                      key=playlist_name + "_retriever")
 
         retriever_path = playlist_directory / selected_retriever
         retriever = Retriever(retriever_path)
