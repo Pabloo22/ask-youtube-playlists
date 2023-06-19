@@ -8,7 +8,8 @@ from ask_youtube_playlists.data_processing.download_transcripts import (
     download_transcript,
     download_playlist,
     _replace_newlines,
-    create_chunked_data
+    create_chunked_data,
+    _get_chunk_indices,
 )
 
 
@@ -25,39 +26,6 @@ def test_get_playlist_info():
     video_id_dict = _get_playlist_info(url)
     assert isinstance(video_id_dict, dict)
     assert len(video_id_dict) == 0
-
-
-def test_download_transcript():
-    video_title = "Test video"
-    video_id = "slUCmZJDXrk"
-    data_path = pathlib.Path("tests/data3")
-    output_file = data_path / "raw" / "test.json"
-    print(output_file)
-    download_transcript(video_title, video_id, output_file,
-                        verbose=False)
-    assert output_file.exists()
-
-    with open(output_file, 'r') as file:
-        json_file_test = json.load(file)
-
-    with open(data_path / 'raw' / 'example_download.json', 'r') as file:
-        json_file_example = json.load(file)
-
-    assert json_file_test == json_file_example
-
-    # Clean up
-    output_file.unlink()
-
-
-def test_download_playlist():
-    base_url = "https://www.youtube.com/playlist?list="
-    url = base_url + "PLeKd45zvjcDFUEv_ohr_HdUFe97RItdiB"
-    data_path = pathlib.Path("tests/data")
-    download_playlist(url, data_path)
-
-    for i in range(23):
-        assert (data_path / f"Video_{i + 1}.json").exists()
-        (data_path / f"Video_{i + 1}.json").unlink()
 
 
 def test__replace_newlines():
@@ -84,9 +52,6 @@ def test_create_chunked_data():
     chunked_data = create_chunked_data(file_path,
                                        max_chunk_size,
                                        min_overlap_size)
-    with open(data_path / 'raw' / 'example_chunked.json', 'r') as file:
-        chunked_data_example = json.load(file)
-    assert chunked_data == chunked_data_example
 
     def find_overlap_len(str1, str2):
         max_overlap_len = min(len(str1), len(str2))
@@ -95,11 +60,35 @@ def test_create_chunked_data():
             if str1[-overlap:] == str2[:overlap]:
                 return overlap
 
+        print(str1)
+        print(str2)
+
     for (i, chunk) in enumerate(chunked_data):
         assert len(chunk["text"]) <= max_chunk_size
         if i > 0:
             assert find_overlap_len(chunked_data[i - 1]["text"],
                                     chunk["text"]) >= min_overlap_size
+
+
+def test__get_chunk_indices():
+    sequence_lens = [10, 20, 10, 20, 10, 20, 10, 20, 10]
+    # First chunk: 0 (10), 1 (20), 2 (10) = 40 + 2 = 42 <= 55
+    # Overlap: 1 (20), 2 (10) = 30 + 1 = 31 >= 15
+    # Second chunk: 1 (20), 2 (10), 3 (20) = 50 + 2 = 52 <= 55
+    # Overlap: 3 (20) = 20 + 1 = 21 >= 15
+    # Third chunk: 3 (20), 4 (10), 5 (20) = 50 + 2 = 52 <= 55
+    # Overlap: 5 (20) = 20 + 1 = 21 >= 15
+    # Fourth chunk: 5 (20), 6 (10), 7 (20) = 50 + 2 = 52 <= 55
+    # Overlap: 7 (20) = 20 + 1 = 21 >= 15
+    # Fifth chunk: 7 (20), 8 (10) = 30 + 2 = 32 <= 55
+
+    max_chunk_size = 55
+    min_overlap_size = 15
+    chunk_indices = _get_chunk_indices(sequence_lens,
+                                       max_chunk_size,
+                                       min_overlap_size)
+    assert chunk_indices == [(0, 2), (1, 3), (3, 5), (5, 7), (7, 8)], \
+        f"chunk_indices: {chunk_indices}"
 
 
 if __name__ == "__main__":

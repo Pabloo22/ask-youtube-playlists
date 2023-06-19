@@ -32,8 +32,9 @@ def get_data_directory() -> pathlib.Path:
 
 
 data_dir = get_data_directory()
-if "playlist_list" not in st.session_state:
-    st.session_state["playlist_list"] = get_available_directories(data_dir)
+if "loaded_playlist_names" not in st.session_state:
+    loaded_playlist_names = get_available_directories(data_dir)
+    st.session_state["loaded_playlist_names"] = loaded_playlist_names
 
 
 if "selected_playlists" not in st.session_state:
@@ -45,9 +46,10 @@ selected_playlists = st.session_state["selected_playlists"]
 generative_models = GENERATIVE_MODEL_NAMES
 extractive_models = EXTRACTIVE_MODEL_NAMES
 
-playlist_list = st.session_state["loaded_playlist_names"]
-if 'mode' not in st.session_state:
-    st.session_state['mode'] = 'extractive'
+loaded_playlist_names = st.session_state["loaded_playlist_names"]
+
+if "mode" not in st.session_state:
+    st.session_state["mode"] = "extractive"
 
 mode = st.session_state['mode']
 
@@ -64,18 +66,19 @@ with st.sidebar:
         """, unsafe_allow_html=True)
     st.header("Set mode")
     mode_radio = st.radio("Select a mode",
-                          ['extractive', 'generative'],
+                          ["extractive", "generative"],
                           key="mode_radio")
+
     if mode_radio != mode:
         st.session_state['mode'] = mode_radio
         st.experimental_rerun()
 
     st.header("Set model")
-    if mode == 'generative':
+    if mode == "generative":
         generative_model = st.selectbox("Select a Generative Model",
                                         generative_models,
                                         key="generative_model")
-    elif mode == 'extractive':
+    elif mode == "extractive":
         extractive_model = st.selectbox("Select an Extractive Model",
                                         extractive_models,
                                         key="extractive_model")
@@ -103,21 +106,21 @@ with st.sidebar:
 
 # -----------------------------------------------------------------------------
 
-if 'answer' not in st.session_state:
+if "answer" not in st.session_state:
     st.session_state['answer'] = None
-if 'retrievers' not in st.session_state:
+if "retrievers" not in st.session_state:
     st.session_state['retrievers'] = []
-if 'question' not in st.session_state:
-    st.session_state['question'] = ""
-if 'relevant_documents' not in st.session_state:
-    st.session_state['relevant_documents'] = []
+if "question" not in st.session_state:
+    st.session_state["question"] = ""
+if "relevant_documents" not in st.session_state:
+    st.session_state["relevant_documents"] = []
 
 
 # Playlist selection, multiple playlists can be selected
-# From st.session_state["playlist_list"] create checkboxes
+# From st.session_state["loaded_playlist_names"] create checkboxes
 # for each playlist
 retrievers = []
-for playlist_name in st.session_state["playlist_list"]:
+for playlist_name in st.session_state["loaded_playlist_names"]:
     checkbox_value = st.checkbox(playlist_name, key=playlist_name)
 
     if checkbox_value:
@@ -133,6 +136,7 @@ for playlist_name in st.session_state["playlist_list"]:
 
         retriever_path = playlist_directory / selected_retriever
         retriever = Retriever(retriever_path)
+        st.write(retriever.video_embeddings)
         retrievers.append(retriever)
 
 if retrievers:
@@ -140,16 +144,16 @@ if retrievers:
     # Receive question input
     question = st.text_input("Enter your question", key="question")
 
-    if question != "":
-        question = st.session_state['question']
+    if question:
 
         # Retrieve relevant documents
         relevant_documents = Retriever.retrieve(retrievers,
                                                 question,
                                                 n_retrieved_docs)
-        st.session_state['relevant_documents'] = relevant_documents
 
-        if mode == 'extractive':
+        st.write(relevant_documents)
+
+        if mode == "extractive":
             st.subheader("Extractive Answer")
             for i, document_info in enumerate(relevant_documents, start=1):
 
@@ -163,7 +167,7 @@ if retrievers:
                 with st.expander(f"Answer {i} from {playlist_name}"):
                     st.write(answer)
 
-        if mode == 'generative':
+        if mode == "generative":
             st.subheader("Generative Answer")
             docs = [document_info.document
                     for document_info in relevant_documents]
@@ -175,12 +179,12 @@ if retrievers:
                 max_length=max_length
             )
             st.write(answer)
-            # st.write(relevant_documents)
-            # st.write(retrievers)
+            st.write(relevant_documents)
+            st.write(retrievers)
 
-            # st.subheader("Sources")
-            # for i, document_info in enumerate(relevant_documents, start=1):
-            #     playlist_name = document_info.playlist_name
-            #     # Expand the answer
-            #     with st.expander(f"Document {i} from {playlist_name}"):
-            #         st.write(answer)
+            st.subheader("Sources")
+            for i, document_info in enumerate(relevant_documents, start=1):
+                playlist_name = document_info.playlist_name
+                # Expand the answer
+                with st.expander(f"Document {i} from {playlist_name}"):
+                    st.write(answer)

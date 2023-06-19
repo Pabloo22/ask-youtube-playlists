@@ -1,7 +1,7 @@
 """Code to download the transcripts from YouTube."""
 import pathlib
 import json
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Tuple
 
 import streamlit as st
 
@@ -105,6 +105,53 @@ def _replace_newlines(json_file: dict) -> None:
         segment['text'] = segment['text'].replace('\n', ' ')
 
 
+def _get_chunk_indices(segment_lengths: List[int],
+                       max_chunk_size: int,
+                       min_overlap_size: int) -> List[Tuple[int, int]]:
+    """Gets the indices of the chunks.
+
+    Args:
+        segment_lengths (List[int]): The lengths of the segments.
+        max_chunk_size (int): The maximum size of a chunk.
+        min_overlap_size (int): The minimum size of the overlap between two
+            chunks.
+    Returns:
+        List[Tuple[int, int]]: A list of tuples with the beginning and ending
+            indices of the chunks.
+    """
+    # Split the transcript into chunks
+    chunks_indices = []
+
+    current_beginning_index = 0
+    current_ending_index = 0
+    current_chunk_size = 0
+
+    for current_index, segment_length in enumerate(segment_lengths):
+        if current_chunk_size + segment_length + 1 < max_chunk_size:
+            current_chunk_size += segment_length + 1
+            current_ending_index = current_index
+            continue
+
+        chunks_indices.append(
+            (current_beginning_index, current_ending_index))
+        # Calculate the overlap
+        # current_chunk_size += segment_lengths[current_beginning_index] + 1
+        segment_len = segment_lengths[current_beginning_index] + 1
+        while current_chunk_size - segment_len > min_overlap_size:
+
+            current_chunk_size -= segment_len
+            current_beginning_index += 1
+            segment_len = segment_lengths[current_beginning_index] + 1
+
+        current_chunk_size += segment_length + 1
+        current_ending_index = current_index
+        # current_chunk_size += 1
+
+    chunks_indices.append((current_beginning_index, len(segment_lengths) - 1))
+
+    return chunks_indices
+
+
 def create_chunked_data(file_path: pathlib.Path,
                         max_chunk_size: int,
                         min_overlap_size: int
@@ -130,30 +177,9 @@ def create_chunked_data(file_path: pathlib.Path,
                        segment in range(len(json_file['transcript']))]
 
     # Split the transcript into chunks
-    chunks_indices = []
-
-    current_beginning_index = 0
-    current_ending_index = 0
-    current_chunk_size = 0
-
-    for current_index, segment_length in enumerate(segment_lengths):
-        if current_chunk_size + segment_length + 1 >= max_chunk_size:
-            chunks_indices.append(
-                (current_beginning_index, current_ending_index))
-            current_chunk_size += segment_length
-            current_ending_index = current_index
-
-            overlap_size = 0
-            while overlap_size <= min_overlap_size:
-                segment_len = segment_lengths[current_beginning_index] + 1
-                current_chunk_size -= segment_len
-                overlap_size += segment_len
-                current_beginning_index += 1
-            current_chunk_size += 1
-            continue
-
-        current_chunk_size += segment_length + 1
-        current_ending_index = current_index
+    chunks_indices = _get_chunk_indices(segment_lengths,
+                                        max_chunk_size,
+                                        min_overlap_size)
 
     # Now that we have the chunk indices, we can create the chunks
     # chunks = [{
