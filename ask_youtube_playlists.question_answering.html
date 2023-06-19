@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ask_youtube_playlists.question_answering package &mdash; Ask YouTube Playlists 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/tooltipster.custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/tooltipster.bundle.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/tooltipster-sideTip-shadow.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/tooltipster-sideTip-punk.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/tooltipster-sideTip-noir.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/tooltipster-sideTip-light.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/tooltipster-sideTip-borderless.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/micromodal.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/sphinx_rtd_theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/js/hoverxref.js"></script>
+        <script src="_static/js/tooltipster.bundle.min.js"></script>
+        <script src="_static/js/micromodal.min.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Ask YouTube Playlists
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">ask_youtube_playlists.question_answering package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ask_youtube_playlists.question_answering.extractive">ask_youtube_playlists.question_answering.extractive module</a><ul>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.extractive.get_extractive_answer"><code class="docutils literal notranslate"><span class="pre">get_extractive_answer()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ask_youtube_playlists.question_answering.generative">ask_youtube_playlists.question_answering.generative module</a><ul>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.generative.LLMSpec"><code class="docutils literal notranslate"><span class="pre">LLMSpec</span></code></a><ul>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.generative.LLMSpec.model_name"><code class="docutils literal notranslate"><span class="pre">LLMSpec.model_name</span></code></a></li>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.generative.LLMSpec.model_type"><code class="docutils literal notranslate"><span class="pre">LLMSpec.model_type</span></code></a></li>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.generative.LLMSpec.max_tokens"><code class="docutils literal notranslate"><span class="pre">LLMSpec.max_tokens</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">LLMSpec.model_name</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">LLMSpec.model_type</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.generative.get_generative_answer"><code class="docutils literal notranslate"><span class="pre">get_generative_answer()</span></code></a></li>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.generative.get_model_spec"><code class="docutils literal notranslate"><span class="pre">get_model_spec()</span></code></a></li>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.generative.load_model"><code class="docutils literal notranslate"><span class="pre">load_model()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ask_youtube_playlists.question_answering.retriever">ask_youtube_playlists.question_answering.retriever module</a><ul>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.DocumentInfo"><code class="docutils literal notranslate"><span class="pre">DocumentInfo</span></code></a><ul>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.DocumentInfo.document"><code class="docutils literal notranslate"><span class="pre">DocumentInfo.document</span></code></a></li>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.DocumentInfo.score"><code class="docutils literal notranslate"><span class="pre">DocumentInfo.score</span></code></a></li>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.DocumentInfo.playlist_name"><code class="docutils literal notranslate"><span class="pre">DocumentInfo.playlist_name</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">DocumentInfo.document</span></code></a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">DocumentInfo.playlist_name</span></code></a></li>
+<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">DocumentInfo.score</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.Retriever"><code class="docutils literal notranslate"><span class="pre">Retriever</span></code></a><ul>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.Retriever.cosine_distance"><code class="docutils literal notranslate"><span class="pre">Retriever.cosine_distance()</span></code></a></li>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.Retriever.retrieve"><code class="docutils literal notranslate"><span class="pre">Retriever.retrieve()</span></code></a></li>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.Retriever.retrieve_from_playlist"><code class="docutils literal notranslate"><span class="pre">Retriever.retrieve_from_playlist()</span></code></a></li>
+<li><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.Retriever.total_number_of_documents"><code class="docutils literal notranslate"><span class="pre">Retriever.total_number_of_documents</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-ask_youtube_playlists.question_answering">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ask YouTube Playlists</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ask_youtube_playlists.question_answering package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ask_youtube_playlists.question_answering.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ask-youtube-playlists-question-answering-package">
+<h1>ask_youtube_playlists.question_answering package<a class="headerlink" href="#ask-youtube-playlists-question-answering-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-ask_youtube_playlists.question_answering.extractive">
+<span id="ask-youtube-playlists-question-answering-extractive-module"></span><h2>ask_youtube_playlists.question_answering.extractive module<a class="headerlink" href="#module-ask_youtube_playlists.question_answering.extractive" title="Permalink to this heading"></a></h2>
+<p>Contains the functionality to perform extractive question answering.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.extractive.get_extractive_answer">
+<span class="sig-prename descclassname"><span class="pre">ask_youtube_playlists.question_answering.extractive.</span></span><span class="sig-name descname"><span class="pre">get_extractive_answer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'deepset/roberta-base-squad2'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/ask_youtube_playlists/question_answering/extractive.html#get_extractive_answer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ask_youtube_playlists.question_answering.extractive.get_extractive_answer" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the answer to a question using extractive question answering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>question</strong> (<em>str</em>) – The question.</p></li>
+<li><p><strong>context</strong> (<em>str</em>) – The context.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The model name. Defaults to
+“deepset/roberta-base-squad2”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with the ‘answer’ as a string, the ‘score’ as a float and
+the ‘start’ and ‘end’ as integers.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-ask_youtube_playlists.question_answering.generative">
+<span id="ask-youtube-playlists-question-answering-generative-module"></span><h2>ask_youtube_playlists.question_answering.generative module<a class="headerlink" href="#module-ask_youtube_playlists.question_answering.generative" title="Permalink to this heading"></a></h2>
+<p>Contains the functionality to answer a question using generative
+models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.generative.LLMSpec">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ask_youtube_playlists.question_answering.generative.</span></span><span class="sig-name descname"><span class="pre">LLMSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ask_youtube_playlists/question_answering/generative.html#LLMSpec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ask_youtube_playlists.question_answering.generative.LLMSpec" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to store the information of a language model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.generative.LLMSpec.model_name">
+<span class="sig-name descname"><span class="pre">model_name</span></span><a class="headerlink" href="#ask_youtube_playlists.question_answering.generative.LLMSpec.model_name" title="Permalink to this definition"></a></dt>
+<dd><p>The name of the language model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.generative.LLMSpec.model_type">
+<span class="sig-name descname"><span class="pre">model_type</span></span><a class="headerlink" href="#ask_youtube_playlists.question_answering.generative.LLMSpec.model_type" title="Permalink to this definition"></a></dt>
+<dd><p>The class or method used to load the language model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.generative.LLMSpec.max_tokens">
+<span class="sig-name descname"><span class="pre">max_tokens</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ask_youtube_playlists.question_answering.generative.LLMSpec.max_tokens" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">model_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">model_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.generative.get_generative_answer">
+<span class="sig-prename descclassname"><span class="pre">ask_youtube_playlists.question_answering.generative.</span></span><span class="sig-name descname"><span class="pre">get_generative_answer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relevant_documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Document</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/ask_youtube_playlists/question_answering/generative.html#get_generative_answer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ask_youtube_playlists.question_answering.generative.get_generative_answer" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the answer to the question as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>question</strong> (<em>str</em>) – The question asked by the user.</p></li>
+<li><p><strong>relevant_documents</strong> (<em>List</em><em>[</em><em>Document</em><em>]</em>) – The list of relevant documents.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – The name of the language model.</p></li>
+<li><p><strong>temperature</strong> (<em>float</em>) – The temperature used to generate the answer.</p></li>
+<li><p><strong>max_length</strong> (<em>int</em>) – The maximum length of the generated answer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The answer to the question.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.generative.get_model_spec">
+<span class="sig-prename descclassname"><span class="pre">ask_youtube_playlists.question_answering.generative.</span></span><span class="sig-name descname"><span class="pre">get_model_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ask_youtube_playlists.question_answering.generative.LLMSpec" title="ask_youtube_playlists.question_answering.generative.LLMSpec"><span class="pre">LLMSpec</span></a></span></span><a class="reference internal" href="_modules/ask_youtube_playlists/question_answering/generative.html#get_model_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ask_youtube_playlists.question_answering.generative.get_model_spec" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the language model specification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_name</strong> (<em>str</em>) – The name of the language model.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The language model specification.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#ask_youtube_playlists.question_answering.generative.LLMSpec" title="ask_youtube_playlists.question_answering.generative.LLMSpec">LLMSpec</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the language model is not available.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.generative.load_model">
+<span class="sig-prename descclassname"><span class="pre">ask_youtube_playlists.question_answering.generative.</span></span><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseLLM</span></span></span><a class="reference internal" href="_modules/ask_youtube_playlists/question_answering/generative.html#load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ask_youtube_playlists.question_answering.generative.load_model" title="Permalink to this definition"></a></dt>
+<dd><p>Loads the language model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_name</strong> (<em>str</em>) – The language model name.</p></li>
+<li><p><strong>temperature</strong> (<em>float</em><em>, </em><em>optional</em>) – The temperature used to generate the
+answer. The higher the temperature, the more “creative” the answer
+will be. Defaults to 0.7.</p></li>
+<li><p><strong>max_length</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum length of the generated answer.
+Defaults to 128.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The language model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>llms.base.BaseLLM</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-ask_youtube_playlists.question_answering.retriever">
+<span id="ask-youtube-playlists-question-answering-retriever-module"></span><h2>ask_youtube_playlists.question_answering.retriever module<a class="headerlink" href="#module-ask_youtube_playlists.question_answering.retriever" title="Permalink to this heading"></a></h2>
+<p>Contains the functionality used to retrieve the most relevant documents
+for a given question.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.retriever.DocumentInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ask_youtube_playlists.question_answering.retriever.</span></span><span class="sig-name descname"><span class="pre">DocumentInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Document</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ask_youtube_playlists/question_answering/retriever.html#DocumentInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ask_youtube_playlists.question_answering.retriever.DocumentInfo" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>Class to store information about a document.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.retriever.DocumentInfo.document">
+<span class="sig-name descname"><span class="pre">document</span></span><a class="headerlink" href="#ask_youtube_playlists.question_answering.retriever.DocumentInfo.document" title="Permalink to this definition"></a></dt>
+<dd><p>The document text or content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>langchain.schema.Document</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.retriever.DocumentInfo.score">
+<span class="sig-name descname"><span class="pre">score</span></span><a class="headerlink" href="#ask_youtube_playlists.question_answering.retriever.DocumentInfo.score" title="Permalink to this definition"></a></dt>
+<dd><p>The relevance score of the document. The higher the
+score, the more relevant the document is. It is in the range
+[0, 1].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.retriever.DocumentInfo.playlist_name">
+<span class="sig-name descname"><span class="pre">playlist_name</span></span><a class="headerlink" href="#ask_youtube_playlists.question_answering.retriever.DocumentInfo.playlist_name" title="Permalink to this definition"></a></dt>
+<dd><p>The name of the playlist to which the document belongs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">document</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Document</span></em><a class="headerlink" href="#id2" title="Permalink to this definition"></a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">playlist_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id3" title="Permalink to this definition"></a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">score</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#id4" title="Permalink to this definition"></a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.retriever.Retriever">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ask_youtube_playlists.question_answering.retriever.</span></span><span class="sig-name descname"><span class="pre">Retriever</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">retriever_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'hyperparams.yaml'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ask_youtube_playlists/question_answering/retriever.html#Retriever"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ask_youtube_playlists.question_answering.retriever.Retriever" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to retrieve the most relevant documents for a given question.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.retriever.Retriever.cosine_distance">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cosine_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question_embedding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document_embedding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/ask_youtube_playlists/question_answering/retriever.html#Retriever.cosine_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ask_youtube_playlists.question_answering.retriever.Retriever.cosine_distance" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates the cosine distance between two vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>question_embedding</strong> (<em>np.ndarray</em>) – The embedding of the question.</p></li>
+<li><p><strong>document_embedding</strong> (<em>np.ndarray</em>) – The embedding of the document.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The cosine distance between the two vectors.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.retriever.Retriever.retrieve">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">retrieve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">retrievers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.Retriever" title="ask_youtube_playlists.question_answering.retriever.Retriever"><span class="pre">Retriever</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.DocumentInfo" title="ask_youtube_playlists.question_answering.retriever.DocumentInfo"><span class="pre">DocumentInfo</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/ask_youtube_playlists/question_answering/retriever.html#Retriever.retrieve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ask_youtube_playlists.question_answering.retriever.Retriever.retrieve" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieves the most relevant documents with their score and
+the playlist they belong to.</p>
+<p>This function retrieves documents in two steps:</p>
+<ol class="arabic simple">
+<li><p>Extracts the most relevant documents from each retriever in</p></li>
+</ol>
+<p>2. Ranks the retrieved documents from all retrievers and returns the
+most relevant ones, in addition to their score and the playlist
+they belong to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>retrievers</strong> (<em>List</em><em>[</em><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.Retriever" title="ask_youtube_playlists.question_answering.retriever.Retriever"><em>Retriever</em></a><em>]</em>) – A list of retrievers.</p></li>
+<li><p><strong>question</strong> (<em>str</em>) – The question posed by the user.</p></li>
+<li><p><strong>n_documents</strong> (<em>int</em>) – The number of documents to retrieve.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of named tuples, each containing the document, its
+score and the playlist it belongs to. The list is sorted in
+descending order by relevance score.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.retriever.Retriever.retrieve_from_playlist">
+<span class="sig-name descname"><span class="pre">retrieve_from_playlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ask_youtube_playlists.question_answering.retriever.DocumentInfo" title="ask_youtube_playlists.question_answering.retriever.DocumentInfo"><span class="pre">DocumentInfo</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/ask_youtube_playlists/question_answering/retriever.html#Retriever.retrieve_from_playlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ask_youtube_playlists.question_answering.retriever.Retriever.retrieve_from_playlist" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieves the most relevant documents with their relevance score.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>question</strong> (<em>str</em>) – The question posed by the user.</p></li>
+<li><p><strong>n_documents</strong> (<em>int</em>) – The number of documents to retrieve.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ask_youtube_playlists.question_answering.retriever.Retriever.total_number_of_documents">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">total_number_of_documents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ask_youtube_playlists.question_answering.retriever.Retriever.total_number_of_documents" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the total number of documents.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ask_youtube_playlists.question_answering">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ask_youtube_playlists.question_answering" title="Permalink to this heading"></a></h2>
+<p>Implements the question answering system.</p>
+<p>It consists of three components:
+1.- Retrieval: This component retrieves the most relevant documents for a given
+question.</p>
+<p>2.- Extractive: This component extracts the most relevant sentences from the
+retrieved documents.</p>
+<p>3.- Generative: This component generates an answer to the question from the
+extracted sentences.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Pablo Ariño, Beatriz Correia, Álvaro Laguna.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

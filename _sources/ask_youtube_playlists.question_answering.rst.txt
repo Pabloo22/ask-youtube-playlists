@@ -1,0 +1,37 @@
+ask\_youtube\_playlists.question\_answering package
+===================================================
+
+Submodules
+----------
+
+ask\_youtube\_playlists.question\_answering.extractive module
+-------------------------------------------------------------
+
+.. automodule:: ask_youtube_playlists.question_answering.extractive
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ask\_youtube\_playlists.question\_answering.generative module
+-------------------------------------------------------------
+
+.. automodule:: ask_youtube_playlists.question_answering.generative
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ask\_youtube\_playlists.question\_answering.retriever module
+------------------------------------------------------------
+
+.. automodule:: ask_youtube_playlists.question_answering.retriever
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: ask_youtube_playlists.question_answering
+   :members:
+   :undoc-members:
+   :show-inheritance:

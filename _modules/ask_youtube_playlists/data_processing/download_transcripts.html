@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ask_youtube_playlists.data_processing.download_transcripts &mdash; Ask YouTube Playlists 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster.custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster.bundle.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster-sideTip-shadow.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster-sideTip-punk.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster-sideTip-noir.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster-sideTip-light.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster-sideTip-borderless.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/micromodal.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/sphinx_rtd_theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/hoverxref.js"></script>
+        <script src="../../../_static/js/tooltipster.bundle.min.js"></script>
+        <script src="../../../_static/js/micromodal.min.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Ask YouTube Playlists
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ask YouTube Playlists</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ask_youtube_playlists.data_processing.download_transcripts</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ask_youtube_playlists.data_processing.download_transcripts</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Code to download the transcripts from YouTube.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">streamlit</span> <span class="k">as</span> <span class="nn">st</span>
+
+<span class="kn">import</span> <span class="nn">pytube</span>
+<span class="kn">from</span> <span class="nn">youtube_transcript_api</span> <span class="kn">import</span> <span class="n">YouTubeTranscriptApi</span>
+
+
+<span class="k">def</span> <span class="nf">_get_playlist_info</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the video IDs and titles from a YouTube playlist.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url (str): The URL of the YouTube playlist.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[str, str]: A dictionary with the video titles as keys and the</span>
+<span class="sd">            video IDs as values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="n">playlist</span> <span class="o">=</span> <span class="n">pytube</span><span class="o">.</span><span class="n">Playlist</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="c1"># Dict to hold title-ID pairs</span>
+    <span class="n">video_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">video</span> <span class="ow">in</span> <span class="n">playlist</span><span class="o">.</span><span class="n">videos</span><span class="p">:</span>
+        <span class="n">video_dict</span><span class="p">[</span><span class="n">video</span><span class="o">.</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">video_id</span>
+
+    <span class="k">return</span> <span class="n">video_dict</span>
+
+
+<div class="viewcode-block" id="download_transcript"><a class="viewcode-back" href="../../../ask_youtube_playlists.data_processing.html#ask_youtube_playlists.data_processing.download_transcripts.download_transcript">[docs]</a><span class="k">def</span> <span class="nf">download_transcript</span><span class="p">(</span><span class="n">video_title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                        <span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                        <span class="n">output_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
+                        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Downloads the transcript of a YouTube video.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        video_title (str): The title of the YouTube video.</span>
+<span class="sd">        video_id (str): The ID of the YouTube video.</span>
+<span class="sd">        output_path (pathlib.Path): The path to the output file.</span>
+<span class="sd">        verbose (bool): Whether to print the progress of the download.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        Exception: If the transcript cannot be downloaded.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Download transcript with youtube_transcript_api</span>
+        <span class="n">transcript</span> <span class="o">=</span> <span class="n">YouTubeTranscriptApi</span><span class="o">.</span><span class="n">get_transcript</span><span class="p">(</span>
+            <span class="n">video_id</span><span class="p">,</span> <span class="n">languages</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;en&#39;</span><span class="p">,</span> <span class="s1">&#39;en-US&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Save transcript to a JSON file</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="c1"># Put the title and the video ID at the top of the JSON file and</span>
+            <span class="c1"># then dump the transcript</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span>
+                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">video_title</span><span class="p">,</span>
+                <span class="s1">&#39;video_id&#39;</span><span class="p">:</span> <span class="n">video_id</span><span class="p">,</span>
+                <span class="s1">&#39;transcript&#39;</span><span class="p">:</span> <span class="n">transcript</span><span class="p">,</span>
+            <span class="p">},</span> <span class="n">file</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error_msg</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not download transcript for video &#39;</span>
+                       <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">video_title</span><span class="si">}</span><span class="s1">.</span><span class="se">\n</span><span class="s1">Error message:</span><span class="se">\n</span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="download_playlist"><a class="viewcode-back" href="../../../ask_youtube_playlists.data_processing.html#ask_youtube_playlists.data_processing.download_transcripts.download_playlist">[docs]</a><span class="k">def</span> <span class="nf">download_playlist</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                      <span class="n">data_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
+                      <span class="n">use_st_progress_bar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Downloads the transcripts of a YouTube playlist.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url (str): The URL of the YouTube playlist.</span>
+<span class="sd">        data_path (pathlib.Path): The path to the data directory.</span>
+<span class="sd">        use_st_progress_bar (bool): Whether to use a Streamlit progress bar.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">video_id_dict</span> <span class="o">=</span> <span class="n">_get_playlist_info</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="n">total_videos</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">video_id_dict</span><span class="p">)</span>
+    <span class="n">progress_bar</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">use_st_progress_bar</span><span class="p">:</span>
+        <span class="n">progress_bar</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">video_title</span><span class="p">,</span> <span class="n">video_id</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">video_id_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">progress_bar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">progress_bar</span><span class="o">.</span><span class="n">progress</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_videos</span><span class="p">,</span>
+                                  <span class="sa">f</span><span class="s1">&#39;Downloading video </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1"> of &#39;</span>
+                                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">total_videos</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="n">data_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;Video_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s1">.json&#39;</span>
+        <span class="n">download_transcript</span><span class="p">(</span><span class="n">video_title</span><span class="p">,</span>
+                            <span class="n">video_id</span><span class="p">,</span>
+                            <span class="n">output_file</span><span class="p">,</span>
+                            <span class="n">verbose</span><span class="o">=</span><span class="n">use_st_progress_bar</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_replace_newlines</span><span class="p">(</span><span class="n">json_file</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replaces \n with a space</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        json_file (dict): The JSON file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">json_file</span><span class="p">[</span><span class="s1">&#39;transcript&#39;</span><span class="p">]:</span>
+        <span class="n">segment</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">segment</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_chunk_indices</span><span class="p">(</span><span class="n">segment_lengths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+                       <span class="n">max_chunk_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                       <span class="n">min_overlap_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the indices of the chunks.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        segment_lengths (List[int]): The lengths of the segments.</span>
+<span class="sd">        max_chunk_size (int): The maximum size of a chunk.</span>
+<span class="sd">        min_overlap_size (int): The minimum size of the overlap between two</span>
+<span class="sd">            chunks.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        List[Tuple[int, int]]: A list of tuples with the beginning and ending</span>
+<span class="sd">            indices of the chunks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Split the transcript into chunks</span>
+    <span class="n">chunks_indices</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">current_beginning_index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">current_ending_index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">current_chunk_size</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">current_index</span><span class="p">,</span> <span class="n">segment_length</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">segment_lengths</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">current_chunk_size</span> <span class="o">+</span> <span class="n">segment_length</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">max_chunk_size</span><span class="p">:</span>
+            <span class="n">current_chunk_size</span> <span class="o">+=</span> <span class="n">segment_length</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">current_ending_index</span> <span class="o">=</span> <span class="n">current_index</span>
+            <span class="k">continue</span>
+
+        <span class="n">chunks_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">current_beginning_index</span><span class="p">,</span> <span class="n">current_ending_index</span><span class="p">))</span>
+        <span class="c1"># Calculate the overlap</span>
+        <span class="c1"># current_chunk_size += segment_lengths[current_beginning_index] + 1</span>
+        <span class="n">segment_len</span> <span class="o">=</span> <span class="n">segment_lengths</span><span class="p">[</span><span class="n">current_beginning_index</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">current_chunk_size</span> <span class="o">-</span> <span class="n">segment_len</span> <span class="o">&gt;</span> <span class="n">min_overlap_size</span><span class="p">:</span>
+
+            <span class="n">current_chunk_size</span> <span class="o">-=</span> <span class="n">segment_len</span>
+            <span class="n">current_beginning_index</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">segment_len</span> <span class="o">=</span> <span class="n">segment_lengths</span><span class="p">[</span><span class="n">current_beginning_index</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="n">current_chunk_size</span> <span class="o">+=</span> <span class="n">segment_length</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">current_ending_index</span> <span class="o">=</span> <span class="n">current_index</span>
+        <span class="c1"># current_chunk_size += 1</span>
+
+    <span class="n">chunks_indices</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">current_beginning_index</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment_lengths</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">chunks_indices</span>
+
+
+<div class="viewcode-block" id="create_chunked_data"><a class="viewcode-back" href="../../../ask_youtube_playlists.data_processing.html#ask_youtube_playlists.data_processing.download_transcripts.create_chunked_data">[docs]</a><span class="k">def</span> <span class="nf">create_chunked_data</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span>
+                        <span class="n">max_chunk_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                        <span class="n">min_overlap_size</span><span class="p">:</span> <span class="nb">int</span>
+                        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates chunked data from a JSON file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_path (str): The path to the JSON file.</span>
+<span class="sd">        max_chunk_size (int): The maximum size of a chunk.</span>
+<span class="sd">        min_overlap_size (int): The minimum size of the overlap between two</span>
+<span class="sd">            chunks.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        List[Dict[str, Union[str, List[str]]]]: A dictionary with the chunked</span>
+<span class="sd">            data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">json_file</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="c1"># Replace \n with a space</span>
+    <span class="n">_replace_newlines</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+
+    <span class="n">segment_lengths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">json_file</span><span class="p">[</span><span class="s1">&#39;transcript&#39;</span><span class="p">][</span><span class="n">segment</span><span class="p">][</span><span class="s1">&#39;text&#39;</span><span class="p">])</span> <span class="k">for</span>
+                       <span class="n">segment</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">json_file</span><span class="p">[</span><span class="s1">&#39;transcript&#39;</span><span class="p">]))]</span>
+
+    <span class="c1"># Split the transcript into chunks</span>
+    <span class="n">chunks_indices</span> <span class="o">=</span> <span class="n">_get_chunk_indices</span><span class="p">(</span><span class="n">segment_lengths</span><span class="p">,</span>
+                                        <span class="n">max_chunk_size</span><span class="p">,</span>
+                                        <span class="n">min_overlap_size</span><span class="p">)</span>
+
+    <span class="c1"># Now that we have the chunk indices, we can create the chunks</span>
+    <span class="c1"># chunks = [{</span>
+    <span class="c1">#     &#39;text&#39;: &#39; &#39;.join(</span>
+    <span class="c1">#         [segment[&#39;text&#39;] for segment in</span>
+    <span class="c1">#          json_file[&#39;transcript&#39;][chunk_index[0]:chunk_index[1] + 1]]),</span>
+    <span class="c1">#     &#39;start&#39;: json_file[&#39;transcript&#39;][chunk_index[0]][&#39;start&#39;],</span>
+    <span class="c1">#     &#39;duration&#39;: sum(</span>
+    <span class="c1">#         segment[&#39;duration&#39;] for segment in</span>
+    <span class="c1">#         json_file[&#39;transcript&#39;][chunk_index[0]:chunk_index[1] + 1]),</span>
+    <span class="c1">#     &#39;url&#39;: json_file[&#39;url&#39;],</span>
+    <span class="c1">#     &#39;title&#39;: json_file[&#39;title&#39;]}</span>
+    <span class="c1">#     for chunk_index in chunks_indices]</span>
+
+    <span class="n">base_url</span> <span class="o">=</span> <span class="s1">&#39;https://www.youtube.com/watch?v=&#39;</span>
+    <span class="n">video</span> <span class="o">=</span> <span class="n">pytube</span><span class="o">.</span><span class="n">YouTube</span><span class="p">(</span><span class="n">base_url</span> <span class="o">+</span> <span class="n">json_file</span><span class="p">[</span><span class="s1">&#39;video_id&#39;</span><span class="p">])</span>
+    <span class="n">thumbnail_url</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">thumbnail_url</span>
+    <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk_index</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chunks_indices</span><span class="p">):</span>
+        <span class="n">text_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">duration_sum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">chunk_index</span>
+        <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">json_file</span><span class="p">[</span><span class="s1">&#39;transcript&#39;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
+            <span class="n">text_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">segment</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">])</span>
+            <span class="n">duration_sum</span> <span class="o">+=</span> <span class="n">segment</span><span class="p">[</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">json_file</span><span class="p">[</span><span class="s1">&#39;transcript&#39;</span><span class="p">][</span><span class="n">chunk_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s1">&#39;start&#39;</span><span class="p">]))</span>
+        <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text_list</span><span class="p">),</span>
+            <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">json_file</span><span class="p">[</span><span class="s1">&#39;transcript&#39;</span><span class="p">][</span><span class="n">chunk_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s1">&#39;start&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">duration_sum</span><span class="p">,</span>
+            <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">base_url</span> <span class="o">+</span> <span class="n">json_file</span><span class="p">[</span><span class="s1">&#39;video_id&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;&amp;t=</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s1">s&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">json_file</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;thumbnail&#39;</span><span class="p">:</span> <span class="n">thumbnail_url</span><span class="p">,</span>
+            <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">i</span>
+        <span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">chunks</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Pablo Ariño, Beatriz Correia, Álvaro Laguna.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

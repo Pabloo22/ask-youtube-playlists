@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ask_youtube_playlists.question_answering.generative &mdash; Ask YouTube Playlists 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster.custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster.bundle.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster-sideTip-shadow.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster-sideTip-punk.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster-sideTip-noir.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster-sideTip-light.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/tooltipster-sideTip-borderless.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/micromodal.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/sphinx_rtd_theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/hoverxref.js"></script>
+        <script src="../../../_static/js/tooltipster.bundle.min.js"></script>
+        <script src="../../../_static/js/micromodal.min.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Ask YouTube Playlists
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ask YouTube Playlists</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ask_youtube_playlists.question_answering.generative</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ask_youtube_playlists.question_answering.generative</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Contains the functionality to answer a question using generative</span>
+<span class="sd">models.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">streamlit</span> <span class="k">as</span> <span class="nn">st</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">langchain</span>
+<span class="kn">from</span> <span class="nn">langchain</span> <span class="kn">import</span> <span class="n">llms</span>
+<span class="kn">from</span> <span class="nn">langchain.schema</span> <span class="kn">import</span> <span class="n">Document</span>
+
+
+<div class="viewcode-block" id="LLMSpec"><a class="viewcode-back" href="../../../ask_youtube_playlists.question_answering.html#ask_youtube_playlists.question_answering.generative.LLMSpec">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">LLMSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to store the information of a language model.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        model_name (str): The name of the language model.</span>
+<span class="sd">        model_type (str): The class or method used to load the language model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">max_tokens</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<span class="n">GENERATIVE_MODELS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">LLMSpec</span><span class="p">(</span><span class="s2">&quot;gpt2&quot;</span><span class="p">,</span> <span class="s2">&quot;huggingface-pipeline&quot;</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1024</span><span class="p">),</span>
+    <span class="n">LLMSpec</span><span class="p">(</span><span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">,</span> <span class="s2">&quot;openai-chat&quot;</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">4096</span><span class="p">),</span>
+    <span class="n">LLMSpec</span><span class="p">(</span><span class="s2">&quot;gpt-3.5-turbo-16k&quot;</span><span class="p">,</span> <span class="s2">&quot;openai-chat&quot;</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">16384</span><span class="p">),</span>
+    <span class="n">LLMSpec</span><span class="p">(</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="s2">&quot;openai-chat&quot;</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">8192</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">GENERATIVE_MODEL_NAMES</span> <span class="o">=</span> <span class="p">[</span><span class="n">model_spec</span><span class="o">.</span><span class="n">model_name</span>
+                          <span class="k">for</span> <span class="n">model_spec</span> <span class="ow">in</span> <span class="n">GENERATIVE_MODELS</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="get_model_spec"><a class="viewcode-back" href="../../../ask_youtube_playlists.question_answering.html#ask_youtube_playlists.question_answering.generative.get_model_spec">[docs]</a><span class="k">def</span> <span class="nf">get_model_spec</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLMSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the language model specification.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model_name (str): The name of the language model.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        LLMSpec: The language model specification.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the language model is not available.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">model_spec</span> <span class="ow">in</span> <span class="n">GENERATIVE_MODELS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">model_spec</span><span class="o">.</span><span class="n">model_name</span> <span class="o">==</span> <span class="n">model_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">model_spec</span>
+
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model &#39;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&#39; not available. Available &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;models are: </span><span class="si">{</span><span class="n">GENERATIVE_MODELS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_model"><a class="viewcode-back" href="../../../ask_youtube_playlists.question_answering.html#ask_youtube_playlists.question_answering.generative.load_model">[docs]</a><span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+               <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span>
+               <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+               <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">llms</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">BaseLLM</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads the language model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model_name (str): The language model name.</span>
+<span class="sd">        temperature (float, optional): The temperature used to generate the</span>
+<span class="sd">            answer. The higher the temperature, the more &quot;creative&quot; the answer</span>
+<span class="sd">            will be. Defaults to 0.7.</span>
+<span class="sd">        max_length (int, optional): The maximum length of the generated answer.</span>
+<span class="sd">            Defaults to 128.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        llms.base.BaseLLM: The language model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_spec</span> <span class="o">=</span> <span class="n">get_model_spec</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">model_spec</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;openai-chat&quot;</span><span class="p">:</span>
+        <span class="n">llm</span> <span class="o">=</span> <span class="n">llms</span><span class="o">.</span><span class="n">OpenAIChat</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+            <span class="n">model_name</span><span class="o">=</span><span class="n">model_spec</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+            <span class="n">model_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="n">temperature</span><span class="p">,</span>
+                          <span class="s2">&quot;max_length&quot;</span><span class="p">:</span> <span class="n">max_length</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">llm</span>
+    <span class="k">if</span> <span class="n">model_spec</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;huggingface-pipeline&quot;</span><span class="p">:</span>
+        <span class="n">llm</span> <span class="o">=</span> <span class="n">llms</span><span class="o">.</span><span class="n">HuggingFacePipeline</span><span class="o">.</span><span class="n">from_model_id</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+            <span class="n">model_id</span><span class="o">=</span><span class="n">model_spec</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+            <span class="n">task</span><span class="o">=</span><span class="s2">&quot;text-generation&quot;</span><span class="p">,</span>
+            <span class="n">model_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="n">temperature</span><span class="p">,</span>
+                          <span class="s2">&quot;max_length&quot;</span><span class="p">:</span> <span class="n">max_length</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">llm</span>
+    <span class="n">available_models</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">model_name</span> <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">GENERATIVE_MODELS</span><span class="p">]</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model type &#39;</span><span class="si">{</span><span class="n">model_spec</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&#39; not available. &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;Available models are: </span><span class="si">{</span><span class="n">available_models</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_generative_prompt_template</span><span class="p">(</span><span class="n">retrieved_documents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Document</span><span class="p">],</span>
+                                    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">langchain</span><span class="o">.</span><span class="n">PromptTemplate</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the template used to generate the answer.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        langchain.PromptTemplate: The template used to generate the answer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">template_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">retrieved_documents</span><span class="p">):</span>
+        <span class="n">template_text</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">document</span><span class="o">.</span><span class="n">page_content</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+    <span class="n">template_text</span> <span class="o">+=</span> <span class="s2">&quot;Question: </span><span class="si">{question}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="n">template_text</span> <span class="o">+=</span> <span class="s2">&quot;Answer:&quot;</span>
+
+    <span class="n">template</span> <span class="o">=</span> <span class="n">langchain</span><span class="o">.</span><span class="n">PromptTemplate</span><span class="p">(</span><span class="n">template</span><span class="o">=</span><span class="n">template_text</span><span class="p">,</span>
+                                        <span class="n">input_variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">template</span>
+
+
+<div class="viewcode-block" id="get_generative_answer"><a class="viewcode-back" href="../../../ask_youtube_playlists.question_answering.html#ask_youtube_playlists.question_answering.generative.get_generative_answer">[docs]</a><span class="nd">@st</span><span class="o">.</span><span class="n">cache_data</span>
+<span class="k">def</span> <span class="nf">get_generative_answer</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">relevant_documents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Document</span><span class="p">],</span>
+                          <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">temperature</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                          <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the answer to the question as a string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        question (str): The question asked by the user.</span>
+<span class="sd">        relevant_documents (List[Document]): The list of relevant documents.</span>
+<span class="sd">        model_name (str): The name of the language model.</span>
+<span class="sd">        temperature (float): The temperature used to generate the answer.</span>
+<span class="sd">        max_length (int): The maximum length of the generated answer.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The answer to the question.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+                       <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+                       <span class="n">max_length</span><span class="o">=</span><span class="n">max_length</span><span class="p">)</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">_get_generative_prompt_template</span><span class="p">(</span><span class="n">relevant_documents</span><span class="p">)</span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="n">question</span><span class="p">)</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompts</span><span class="o">=</span><span class="p">[</span><span class="n">prompt</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">answer</span><span class="o">.</span><span class="n">generations</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Pablo Ariño, Beatriz Correia, Álvaro Laguna.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
